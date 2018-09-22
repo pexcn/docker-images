@@ -1,3 +1,3 @@
-FROM pexcn/dockerfiles:stretch
+FROM pexcn/docker-images:stretch
 
 # TODO

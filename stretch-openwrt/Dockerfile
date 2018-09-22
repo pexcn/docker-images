@@ -1,4 +1,4 @@
-FROM pexcn/dockerfiles:stretch
+FROM pexcn/docker-images:stretch
 
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
