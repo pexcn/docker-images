@@ -25,13 +25,7 @@ RUN groupadd --gid 2077 pexcn \
   && echo 'pexcn ALL=NOPASSWD: ALL' >> /etc/sudoers.d/50-pexcn \
   && echo 'Defaults    env_keep += "DEBIAN_FRONTEND"' >> /etc/sudoers.d/env_keep
 
+# set current user
 USER pexcn
-
-# set up git
-RUN git config --global user.name "pexcn" \
-  && git config --global user.email "i@pexcn.me" \
-  && git config --global color.ui auto \
-  && git config --global core.editor nano \
-  && git config --global log.date iso
 
 CMD ["/bin/bash"]

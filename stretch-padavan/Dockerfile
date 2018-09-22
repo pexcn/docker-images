@@ -1,5 +1,9 @@
 FROM pexcn/docker-images:stretch
 
+# restore current user as root
+USER root
+
+# install padavan buildroot dependencies
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
     autoconf automake autopoint build-essential make gcc libtool \
@@ -7,3 +11,6 @@ RUN apt-get update \
     libltdl-dev libgmp3-dev libmpc-dev libmpfr-dev zlib1g-dev \
     kmod \
   && rm -rf /var/lib/apt/lists/*
+
+# set current user
+USER pexcn
