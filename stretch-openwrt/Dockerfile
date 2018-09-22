@@ -1,4 +1,4 @@
-FROM pexcn/buildpack-deps:stretch
+FROM pexcn/dockerfiles:stretch
 
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
