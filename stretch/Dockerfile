@@ -8,8 +8,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 # install base dependencies
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
-    net-tools netcat unzip zip bzip2 tar gzip gnupg curl wget \
-    git locales sudo ca-certificates nano time parallel
+    git locales sudo ca-certificates curl wget nano gnupg time \
+    net-tools netcat unzip zip bzip2 tar gzip xz-utils parallel \
+  && rm -rf /var/lib/apt/lists/*
 
 # set timezone to Asia/Shanghai by default
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
@@ -18,13 +19,6 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 RUN locale-gen C.UTF-8 || true
 ENV LANG=C.UTF-8
 
-# set up git
-RUN git config --global user.name "pexcn" \
-  && git config --global user.email "i@pexcn.me" \
-  && git config --global color.ui auto \
-  && git config --global core.editor nano \
-  && git config --global log.date iso
-
 # create user
 RUN groupadd --gid 2077 pexcn \
   && useradd --uid 2077 --gid pexcn --shell /bin/bash --create-home pexcn \
@@ -32,5 +26,12 @@ RUN groupadd --gid 2077 pexcn \
   && echo 'Defaults    env_keep += "DEBIAN_FRONTEND"' >> /etc/sudoers.d/env_keep
 
 USER pexcn
+
+# set up git
+RUN git config --global user.name "pexcn" \
+  && git config --global user.email "i@pexcn.me" \
+  && git config --global color.ui auto \
+  && git config --global core.editor nano \
+  && git config --global log.date iso
 
 CMD ["/bin/bash"]
