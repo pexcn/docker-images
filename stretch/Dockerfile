@@ -8,7 +8,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # install base dependencies
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
-    git locales sudo ca-certificates curl wget nano gnupg time \
+    git locales sudo ca-certificates curl wget nano gnupg \
     net-tools netcat unzip zip bzip2 tar gzip xz-utils parallel \
   && rm -rf /var/lib/apt/lists/*
 
