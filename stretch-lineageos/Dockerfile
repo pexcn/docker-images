@@ -20,8 +20,3 @@ RUN curl https://storage.googleapis.com/git-repo-downloads/repo > /usr/local/bin
 
 # set current user
 USER pexcn
-
-# sync lineageos sources
-RUN mkdir ~/lineageos && cd ~/lineageos \
-  && repo init -u https://github.com/LineageOS/android.git -b cm-14.1 --depth 1 \
-  && repo sync -j8
