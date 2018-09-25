@@ -23,5 +23,5 @@ USER pexcn
 
 # sync lineageos sources
 RUN mkdir ~/lineageos && cd ~/lineageos \
-  && repo init -u https://github.com/LineageOS/android.git -b cm-14.1 --depth 1
+  && repo init -u https://github.com/LineageOS/android.git -b cm-14.1 --depth 1 \
   && repo sync -j8
