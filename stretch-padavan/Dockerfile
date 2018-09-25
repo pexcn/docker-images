@@ -9,7 +9,7 @@ RUN apt-get update \
     autoconf automake autopoint build-essential make gcc libtool \
     bison flex bzip2 git gawk gettext patch pkg-config texinfo \
     libltdl-dev libgmp3-dev libmpc-dev libmpfr-dev zlib1g-dev \
-    kmod \
+    kmod automake1.11 cpio \
   && rm -rf /var/lib/apt/lists/*
 
 # set current user
