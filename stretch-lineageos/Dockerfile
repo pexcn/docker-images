@@ -20,3 +20,6 @@ RUN curl https://storage.googleapis.com/git-repo-downloads/repo > /usr/local/bin
 
 # set current user
 USER pexcn
+
+# set environment variable
+ENV USER pexcn
