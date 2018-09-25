@@ -3,7 +3,7 @@ FROM pexcn/docker-images:stretch
 # restore current user as root
 USER root
 
-# install lineageos buildroot dependencies
+# install android buildroot dependencies
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
     bc bison build-essential ccache curl flex g++-multilib gcc-multilib \
