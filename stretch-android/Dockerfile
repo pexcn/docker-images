@@ -12,6 +12,7 @@ RUN apt-get update \
     libwxgtk3.0-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool \
     squashfs-tools xsltproc openjdk-8-jdk python zip unzip zlib1g-dev \
     libc6-dev-i386 x11proto-core-dev libx11-dev lib32z-dev libgl1-mesa-dev \
+    schedtool \
   && rm -rf /var/lib/apt/lists/*
 
 # setup repo
