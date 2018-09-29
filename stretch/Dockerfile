@@ -8,8 +8,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 # install base dependencies
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
-    git locales sudo ca-certificates curl wget nano gnupg \
-    net-tools netcat unzip zip bzip2 tar gzip xz-utils parallel \
+    locales sudo ca-certificates curl wget \
+    net-tools netcat nano gnupg parallel \
+    bzip2 gzip tar xz-utils zip unzip \
   && rm -rf /var/lib/apt/lists/*
 
 # set timezone to Asia/Shanghai by default
