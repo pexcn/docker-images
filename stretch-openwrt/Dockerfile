@@ -9,6 +9,9 @@ RUN apt-get update \
     automake autoconf gcc g++ make libtool build-essential \
     ccache file git patch curl fakeroot quilt gawk gettext \
     pkg-config python libssl-dev libncurses5-dev zlib1g-dev \
+    asciidoc bc binutils bzip2 fastjar flex util-linux \
+    libgtk2.0-dev intltool jikespg genisoimage perl-modules \
+    python-dev libpython-dev rsync sdcc unzip xsltproc \
     time groff help2man rpm texinfo libattr1-dev \
   && rm -rf /var/lib/apt/lists/*
 
