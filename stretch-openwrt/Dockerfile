@@ -12,7 +12,7 @@ RUN apt-get update \
     asciidoc bc binutils bzip2 fastjar flex util-linux \
     libgtk2.0-dev intltool jikespg genisoimage perl-modules \
     python-dev libpython-dev rsync sdcc unzip xsltproc \
-    time groff help2man rpm texinfo libattr1-dev \
+    time groff help2man rpm texinfo libattr1-dev texlive \
   && rm -rf /var/lib/apt/lists/*
 
 # set current user
