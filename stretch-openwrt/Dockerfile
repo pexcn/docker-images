@@ -13,7 +13,7 @@ RUN apt-get update \
     libgtk2.0-dev intltool jikespg genisoimage perl-modules \
     python-dev libpython-dev rsync sdcc unzip xsltproc \
     time groff help2man rpm texinfo libattr1-dev texlive \
-    libelf-dev \
+    libelf-dev xmlto \
   && rm -rf /var/lib/apt/lists/*
 
 # set current user
