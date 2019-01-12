@@ -7,7 +7,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # install base dependencies
 RUN apt-get update \
-  && apt-get install --no-install-recommends -y \
+  && apt-get install --no-install-recommends -y apt-utils
+RUN apt-get install --no-install-recommends -y \
     locales sudo ca-certificates curl wget \
     net-tools netcat nano gnupg parallel \
     bzip2 gzip tar xz-utils zip unzip \
