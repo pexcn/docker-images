@@ -7,7 +7,7 @@ USER root
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
     automake autoconf gcc g++ make libtool build-essential \
-    ccache file git patch curl fakeroot quilt gawk gettext \
+    file git patch curl fakeroot quilt gawk gettext \
     pkg-config python libssl-dev libncurses5-dev zlib1g-dev \
     asciidoc bc binutils bzip2 fastjar flex util-linux \
     libgtk2.0-dev intltool jikespg genisoimage perl-modules \

@@ -22,7 +22,7 @@ RUN echo 'deb http://deb.debian.org/debian stretch main' > /etc/apt/sources.list
 RUN apt-get update \
   && apt-get install --no-install-recommends -y apt-utils
 RUN apt-get install --no-install-recommends -y \
-    locales sudo ca-certificates curl wget \
+    locales sudo ca-certificates ccache curl wget \
     net-tools netcat nano gnupg parallel \
     bzip2 gzip tar xz-utils zip unzip \
   && apt-get dist-upgrade -y \
