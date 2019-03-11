@@ -5,6 +5,19 @@ RUN echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/90non-interactive 
   && echo 'DPkg::Options "--force-confnew";' >> /etc/apt/apt.conf.d/90non-interactive
 ENV DEBIAN_FRONTEND=noninteractive
 
+# update sources.list
+RUN echo 'deb http://deb.debian.org/debian stretch main' > /etc/apt/sources.list \
+  && echo 'deb-src http://deb.debian.org/debian stretch main' >> /etc/apt/sources.list \
+  && echo >> /etc/apt/sources.list \
+  && echo 'deb http://deb.debian.org/debian stretch-updates main' >> /etc/apt/sources.list \
+  && echo 'deb-src http://deb.debian.org/debian stretch-updates main' >> /etc/apt/sources.list \
+  && echo >> /etc/apt/sources.list \
+  && echo 'deb http://security.debian.org/debian-security stretch/updates main' >> /etc/apt/sources.list \
+  && echo 'deb-src http://security.debian.org/debian-security stretch/updates main' >> /etc/apt/sources.list \
+  && echo >> /etc/apt/sources.list \
+  && echo 'deb http://deb.debian.org/debian stretch-backports main' >> /etc/apt/sources.list \
+  && echo 'deb-src http://deb.debian.org/debian stretch-backports main' >> /etc/apt/sources.list
+
 # install base dependencies and upgrade all packages
 RUN apt-get update \
   && apt-get install --no-install-recommends -y apt-utils
