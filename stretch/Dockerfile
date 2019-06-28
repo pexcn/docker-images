@@ -44,5 +44,3 @@ RUN groupadd --gid 2077 pexcn \
 
 # set current user
 USER pexcn
-
-CMD ["/bin/bash"]
