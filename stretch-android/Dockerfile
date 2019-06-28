@@ -1,4 +1,5 @@
 FROM pexcn/docker-images:stretch
+MAINTAINER pexcn <i@pexcn.me>
 
 # restore current user as root
 USER root

@@ -1,4 +1,5 @@
 FROM buildpack-deps:stretch
+MAINTAINER pexcn <i@pexcn.me>
 
 # make apt non-interactive
 RUN echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/90non-interactive \
