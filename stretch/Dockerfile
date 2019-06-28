@@ -44,3 +44,7 @@ RUN groupadd --gid 2077 pexcn \
 
 # set current user
 USER pexcn
+
+# setup ccache
+ENV USE_CCACHE 1
+ENV CCACHE_SIZE 20G
