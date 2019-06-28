@@ -23,3 +23,9 @@ USER pexcn
 
 # set environment variable
 ENV USER pexcn
+
+# git config
+RUN git config --global user.name "Builder" \
+  && git config --global user.email "build@pexcn.me" \
+  && git config --global color.ui auto \
+  && git config --global log.date iso
