@@ -21,7 +21,7 @@ RUN echo 'deb http://deb.debian.org/debian stretch main' > /etc/apt/sources.list
 
 # install base dependencies and upgrade all packages
 RUN apt-get update \
-  && apt-get install --no-install-recommends -y apt-utils
+  && apt-get install --no-install-recommends -y apt-utils dialog
 RUN apt-get install --no-install-recommends -y \
     locales sudo ca-certificates ccache curl wget \
     net-tools netcat nano gnupg parallel \
