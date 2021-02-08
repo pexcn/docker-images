@@ -7,6 +7,12 @@ LABEL maintainer="pexcn <i@pexcn.me>"
 
 ENV VERSION=svn1113
 ENV BIN_URL=https://github.com/Wind4/vlmcsd/releases/download/$VERSION/binaries.tar.gz
+ENV TZ=Asia/Taipei
+
+# add depends
+RUN apk update \
+  && apk add --no-cache tzdata \
+  && rm -rf /var/cache/apk/*
 
 # get binary
 WORKDIR /app
