@@ -21,4 +21,5 @@ WORKDIR /
 COPY vlmcsd.ini /app/vlmcsd.ini
 
 USER nobody
+EXPOSE 1688
 ENTRYPOINT /app/vlmcsd -i /app/vlmcsd.ini -e -D
