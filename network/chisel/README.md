@@ -3,8 +3,6 @@
 ## Usage
 
 ```bash
-docker pull pexcn/docker-images:chisel
-
 # server mode
 docker run -d pexcn/docker-images:chisel \
   --name chisel \
