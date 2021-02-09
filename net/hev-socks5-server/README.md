@@ -4,12 +4,12 @@
 
 ```bash
 # Available environment variables:
-#   PORT=995
-#   LISTEN_ADDRESS=192.168.1.10
-#   DNS_ADDRESS=192.168.1.1
-#   IPV6_FIRST=true
+#   PORT=1080
+#   LISTEN_ADDRESS='::'
+#   DNS_ADDRESS=8.8.8.8
+#   IPV6_FIRST=false
 #   AUTH=freehk:revolutionnow
-#   LOG_LEVEL=error
+#   LOG_LEVEL=warn
 
 docker run -d --name hev-socks5-server \
   --restart always \
