@@ -65,8 +65,8 @@ RUN apk update \
       c-ares-dev mbedtls-dev pcre-dev libev-dev libsodium-dev \
   && rm -rf /var/cache/apk/*
 
-COPY --from=builder /app/ss-* /app
-COPY --from=builder /app/obfs-* /app
+COPY --from=builder /app/bin/ss-* /app
+COPY --from=builder /app/bin/obfs-* /app
 COPY entrypoint.sh /app/entrypoint.sh
 
 ENTRYPOINT ["/app/entrypoint.sh"]
