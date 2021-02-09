@@ -24,6 +24,7 @@ docker run -d --name ss-server \
   -e SERVER_HOST=0.0.0.0 \
   -e SERVER_PORT=443 \
   -e PASSWORD=FREEHK \
+  -e METHOD=chacha20-ietf-poly1305 \
   pexcn/docker-images:shadowsocks-libev
 
 # ss-local
@@ -32,5 +33,5 @@ docker run -d --name ss-local \
   -p 1080:1080 \
   -p 1080:1080/udp \
   pexcn/docker-images:shadowsocks-libev \
-  ss-local -s 201.90.60.9 -p 443 -l 1080 -k FREEHK -m chacha20-ietf-poly1305 -t 3600 -n 65535 -d 8.8.8.8,8.8.4.4 -u --mtu 1500 --fast-open --reuse-port --no-delay
+  ss-local -s 201.90.60.9 -p 443 -b 0.0.0.0 -l 1080 -k FREEHK -m chacha20-ietf-poly1305 -t 3600 -n 65535 -u --mtu 1500 --fast-open --reuse-port --no-delay
 ```
