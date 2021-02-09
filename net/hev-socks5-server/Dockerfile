@@ -29,5 +29,4 @@ COPY hev-socks5-server.yml /app/etc/hev-socks5-server.yml
 COPY entrypoint.sh /app/entrypoint.sh
 
 USER nobody
-EXPOSE 1080
 ENTRYPOINT ["/app/entrypoint.sh"]
