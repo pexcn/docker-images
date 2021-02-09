@@ -7,7 +7,10 @@ LABEL maintainer="pexcn <i@pexcn.me>"
 
 ENV VERSION=13f472077d52c147057a198e552ea8cd6791631a
 ENV GIT_URL=https://github.com/shadowsocks/shadowsocks-libev.git
+ENV OBFS_VERSION=486bebd9208539058e57e23a12f23103016e09b4
+ENV OBFS_GIT_URL=https://github.com/shadowsocks/simple-obfs.git
 ENV TZ=Asia/Taipei
+ENV PATH /app/bin:$PATH
 
 ENV SERVER_HOST=
 ENV SERVER_PORT=
@@ -17,6 +20,8 @@ ENV TIMEOUT 3600
 ENV NOFILE 65535
 ENV DNS_SERVERS 8.8.8.8,8.8.4.4
 ENV MTU 1500
+ENV PLUGIN=
+ENV PLUGIN_OPTS=
 
 #
 # Build stage
@@ -36,6 +41,15 @@ RUN git clone $GIT_URL --recurse-submodules -j2 \
   && make -j$(nproc) && make install-strip \
   && cd .. && rm -r shadowsocks-libev \
   && ls /app/bin/ss-* | xargs -n1 setcap cap_net_bind_service+ep
+
+# build executable (obfs)
+RUN git clone $OBFS_GIT_URL --recurse-submodules -j2 \
+  && cd simple-obfs && git checkout $OBFS_VERSION \
+  && ./autogen.sh \
+  && ./configure --prefix="/app" --disable-documentation --disable-assert \
+  && make -j$(nproc) && make install-strip \
+  && cd .. && rm -r simple-obfs \
+  && ls /app/bin/obfs-* | xargs -n1 setcap cap_net_bind_service+ep
 
 # clean up
 RUN apk del .build-deps \
