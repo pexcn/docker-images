@@ -2,16 +2,16 @@
 # Dockerfile for hev-socks5-server
 #
 
-FROM alpine
-LABEL maintainer="pexcn <i@pexcn.me>"
+#
+# Build stage
+#
+FROM alpine AS builder
 
 ENV VERSION=1.9.9
 ENV GIT_URL=https://github.com/heiher/hev-socks5-server.git
-ENV TZ=Asia/Taipei
 
 # add depends
 RUN apk update \
-  && apk add --no-cache tzdata \
   && apk add --no-cache --virtual .build-deps build-base git
 
 # build executable
@@ -23,7 +23,21 @@ RUN git clone $GIT_URL --branch $VERSION --recurse-submodules -j2 && cd hev-sock
 RUN apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
-# copy config
+#
+# Runtime stage
+#
+FROM alpine
+LABEL maintainer="pexcn <i@pexcn.me>"
+
+ENV TZ=Asia/Taipei
+
+# add depends
+RUN apk update \
+  && apk add --no-cache tzdata \
+  && rm -rf /var/cache/apk/*
+
+# copy files
+COPY --from=builder /app /app/
 RUN chown nobody:nobody /app/etc
 COPY hev-socks5-server.yml /app/etc/hev-socks5-server.yml
 COPY entrypoint.sh /app/entrypoint.sh
