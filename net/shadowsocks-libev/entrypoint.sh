@@ -10,7 +10,7 @@ if [[ -n "$SERVER_HOST" && -n "$SERVER_PORT" && -n "$PASSWORD" ]]; then
   if [[ -n "$ARGS_EXTRA" ]]; then
     ARGS="$ARGS_EXTRA $ARGS"
   fi
-  exec /app/bin/ss-server \
+  exec /app/ss-server \
     -s $SERVER_HOST \
     -p $SERVER_PORT \
     -k $PASSWORD \
@@ -25,5 +25,5 @@ if [[ -n "$SERVER_HOST" && -n "$SERVER_PORT" && -n "$PASSWORD" ]]; then
     --no-delay \
     $ARGS
 else
-  exec /app/bin/$@
+  exec /app/$@
 fi

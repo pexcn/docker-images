@@ -5,9 +5,7 @@
 #
 # Build stage
 #
-
 FROM golang:1.15-alpine AS builder
-LABEL maintainer="pexcn <i@pexcn.me>"
 
 ENV VERSION=v1.0.7
 ENV GIT_URL=https://github.com/9seconds/mtg.git
@@ -29,7 +27,6 @@ RUN apk del .build-deps \
 #
 # Runtime stage
 #
-
 FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
