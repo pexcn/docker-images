@@ -13,6 +13,8 @@ NOFILE
 DNS_SERVERS
 MTU
 ARGS
+PLUGIN
+PLUGIN_OPTS
 ```
 
 ```bash
@@ -25,6 +27,19 @@ docker run -d \
   -e SERVER_PORT=443 \
   -e PASSWORD=FREEHK \
   -e METHOD=chacha20-ietf-poly1305 \
+  pexcn/docker-images:shadowsocks-libev
+
+# ss-server with plugin
+docker run -d \
+  --name ss-server-obfs \
+  --restart always \
+  --net host \
+  -e SERVER_HOST=0.0.0.0 \
+  -e SERVER_PORT=1776 \
+  -e PASSWORD=FREEHK \
+  -e METHOD=chacha20-ietf-poly1305 \
+  -e PLUGIN="obfs-server" \
+  -e PLUGIN_OPTS="obfs=tls;fast-open" \
   pexcn/docker-images:shadowsocks-libev
 
 # ss-local
