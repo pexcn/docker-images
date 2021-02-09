@@ -3,8 +3,9 @@
 ## Usage
 
 ```bash
-docker run -d --name vlmcsd \
+docker run -d \
+  --name vlmcsd \
   --restart always \
-  -p 1688:1688 \
+  --net host \
   pexcn/docker-images:vlmcsd
 ```
