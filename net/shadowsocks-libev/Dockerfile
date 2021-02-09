@@ -62,7 +62,7 @@ ENV PATH /app:$PATH
 
 RUN apk update \
   && apk add --no-cache ca-certificates rng-tools tzdata \
-      c-ares-dev mbedtls-dev pcre-dev libev-dev libsodium-dev
+      c-ares-dev mbedtls-dev pcre-dev libev-dev libsodium-dev \
   && rm -rf /var/cache/apk/*
 
 COPY --from=builder /app/ss-* /app
