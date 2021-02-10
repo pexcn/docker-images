@@ -5,7 +5,6 @@
 FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
-# get binary
 ENV VERSION=svn1113
 RUN cd /tmp \
   && wget https://github.com/Wind4/vlmcsd/releases/download/$VERSION/binaries.tar.gz \
@@ -14,7 +13,6 @@ RUN cd /tmp \
   && chown root:root /app/vlmcsd \
   && rm binaries.tar.gz
 
-# copy config
 COPY vlmcsd.ini /app/vlmcsd.ini
 
 # set timezone
