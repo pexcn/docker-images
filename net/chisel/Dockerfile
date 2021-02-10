@@ -6,20 +6,18 @@ FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
 ENV VERSION=1.7.4
-ENV BIN_URL=https://github.com/jpillora/chisel/releases/download/v$VERSION/chisel_${VERSION}_linux_amd64.gz
-ENV TZ=Asia/Taipei
-
-# add depends
 RUN apk update \
-  && apk add --no-cache ca-certificates tzdata \
-  && rm -rf /var/cache/apk/*
-
-# get binary
-WORKDIR /app
-RUN wget -O chisel.gz $BIN_URL \
+  && apk add --no-cache ca-certificates \
+  && mkdir /app \
+  && cd /app \
+  && wget -O chisel.gz https://github.com/jpillora/chisel/releases/download/v$VERSION/chisel_${VERSION}_linux_amd64.gz \
   && gunzip chisel.gz \
   && chmod +x chisel
-WORKDIR /
+
+# set timezone
+ENV TZ=Asia/Taipei
+RUN apk add --no-cache tzdata \
+  && rm -rf /var/cache/apk/*
 
 USER nobody
 ENTRYPOINT ["/app/chisel"]
