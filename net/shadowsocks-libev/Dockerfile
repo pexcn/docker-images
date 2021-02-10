@@ -13,8 +13,7 @@ ENV OBFS_VERSION=486bebd9208539058e57e23a12f23103016e09b4
 ENV OBFS_GIT_URL=https://github.com/shadowsocks/simple-obfs.git
 
 # add depends
-RUN apk update \
-  && apk add --no-cache --virtual .build-deps \
+RUN apk add --no-cache --virtual .build-deps \
       build-base autoconf automake libtool linux-headers git libcap \
       c-ares-dev mbedtls-dev pcre-dev libev-dev libsodium-dev
 
@@ -60,8 +59,7 @@ ENV PLUGIN_OPTS=
 ENV TZ=Asia/Taipei
 ENV PATH /app:$PATH
 
-RUN apk update \
-  && apk add --no-cache ca-certificates rng-tools tzdata \
+RUN apk add --no-cache ca-certificates rng-tools tzdata \
       c-ares-dev mbedtls-dev pcre-dev libev-dev libsodium-dev \
   && rm -rf /var/cache/apk/*
 
