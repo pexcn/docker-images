@@ -10,7 +10,8 @@ ENV BIN_URL=https://github.com/jpillora/chisel/releases/download/v$VERSION/chise
 ENV TZ=Asia/Taipei
 
 # add depends
-RUN apk add --no-cache ca-certificates tzdata \
+RUN apk update \
+  && apk add --no-cache ca-certificates tzdata \
   && rm -rf /var/cache/apk/*
 
 # get binary

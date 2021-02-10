@@ -11,7 +11,8 @@ ENV VERSION=1.9.9
 ENV GIT_URL=https://github.com/heiher/hev-socks5-server.git
 
 # add depends
-RUN apk add --no-cache --virtual .build-deps build-base git
+RUN apk update \
+  && apk add --no-cache --virtual .build-deps build-base git
 
 # build executable
 RUN git clone $GIT_URL --branch $VERSION --recurse-submodules -j2 && cd hev-socks5-server \
@@ -31,7 +32,8 @@ LABEL maintainer="pexcn <i@pexcn.me>"
 ENV TZ=Asia/Taipei
 
 # add depends
-RUN apk add --no-cache tzdata \
+RUN apk update \
+  && apk add --no-cache tzdata \
   && rm -rf /var/cache/apk/*
 
 # copy files

@@ -10,7 +10,8 @@ ENV BIN_URL=https://github.com/Wind4/vlmcsd/releases/download/$VERSION/binaries.
 ENV TZ=Asia/Taipei
 
 # add depends
-RUN apk add --no-cache tzdata \
+RUN apk update \
+  && apk add --no-cache tzdata \
   && rm -rf /var/cache/apk/*
 
 # get binary
