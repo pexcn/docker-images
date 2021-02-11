@@ -33,13 +33,10 @@ LABEL maintainer="pexcn <i@pexcn.me>"
 
 # add depends
 RUN apk update \
-  && apk add --no-cache libpcap-dev libnet-dev
-
-# set timezone
-ENV TZ=Asia/Taipei
-RUN apk add --no-cache tzdata \
+  && apk add --no-cache libpcap-dev libnet-dev \
   && rm -rf /var/cache/apk/*
 
 COPY --from=builder /app/bin/netspeeder /app/netspeeder
 
+USER root
 ENTRYPOINT ["/app/netspeeder"]
