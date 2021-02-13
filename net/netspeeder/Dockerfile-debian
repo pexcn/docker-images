@@ -1,0 +1,46 @@
+#
+# Dockerfile for netspeeder
+#
+
+#
+# Build stage
+#
+FROM debian:buster-slim AS builder
+
+# add depends
+RUN apt-get update \
+  && apt-get install --no-install-recommends -y \
+      make gcc wget libnet1-dev libpcap0.8-dev
+
+# build
+ENV VERSION=b439a39c783f2bc11ec73ea7721c0d9373ff2815
+RUN wget -O - -o /dev/null --no-check-certificate https://github.com/pexcn/netspeeder/archive/$VERSION.tar.gz | tar -zxf - \
+  && cd netspeeder-$VERSION \
+  && make \
+  && make install DESTDIR="/app" \
+  && cd .. \
+  && rm -r netspeeder-$VERSION
+
+# clean up
+RUN apt-get purge -y \
+      make gcc wget libnet1-dev libpcap0.8-dev \
+  && apt-get autoremove -y \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
+#
+# Runtime stage
+#
+FROM debian:buster-slim
+LABEL maintainer="pexcn <i@pexcn.me>"
+
+# add depends
+RUN apt-get update \
+  && apt-get install --no-install-recommends -y libnet1 libpcap0.8 \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /app/bin/netspeeder /app/netspeeder
+
+USER root
+ENTRYPOINT ["/app/netspeeder"]
