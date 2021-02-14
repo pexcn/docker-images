@@ -36,13 +36,16 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GHCR_PAT }}
       - name: Set build tag
-        run: echo "BUILD_TAG=$(basename ${{ matrix.BUILD_CONTEXT }})" >> $GITHUB_ENV
+        run: |
+          echo "BUILD_TAG=$(basename ${{ matrix.BUILD_CONTEXT }})" >> $GITHUB_ENV
       - name: Build and Push to GitHub Packages
         uses: docker/build-push-action@v2
         #if: github.event_name == 'push'
         with:
-          context: ${{ matrix.BUILD_CONTEXT }}
-          file: ${{ matrix.BUILD_CONTEXT }}/Dockerfile
+          #context: ${{ matrix.BUILD_CONTEXT }}
+          context: .
+          #file: ${{ matrix.BUILD_CONTEXT }}/Dockerfile
+          file: ./${{ matrix.BUILD_CONTEXT }}/Dockerfile
           platforms: linux/amd64,linux/arm64
           tags: ghcr.io/pexcn/docker-images:${{ env.BUILD_TAG }}
           #tags: ${{ env.BUILD_TAG }}
