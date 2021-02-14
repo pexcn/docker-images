@@ -35,7 +35,7 @@ jobs:
           registry: ghcr.io
           #username: $GITHUB_ACTOR
           username: pexcn
-          password: ${{ secrets.GITHUB_PAT }}
+          password: ${{ secrets.GHCR_PAT }}
       - name: Set build tag
         run: echo "BUILD_TAG=$(basename ${{ matrix.BUILD_CONTEXT }})" >> $GITHUB_ENV
       - name: Build and Push to GitHub Packages
