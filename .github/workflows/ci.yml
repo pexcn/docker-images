@@ -42,9 +42,7 @@ jobs:
         #if: github.event_name == 'push'
         with:
           context: ${{ matrix.BUILD_CONTEXT }}
+          file: ${{ matrix.BUILD_CONTEXT }}/Dockerfile
           platforms: linux/amd64,linux/arm64
           tags: pexcn/docker-images:${{ env.BUILD_TAG }}
           push: true
-          secrets: |
-            GIT_AUTH_TOKEN=${{ secrets.GHCR_PAT }}
-            GHCR_PAT=${{ secrets.GHCR_PAT }}
