@@ -25,6 +25,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Set environment variables
+        run: |
+          echo $GITHUB_ENV
+          echo "BUILD_TAG=$(basename ${{ matrix.BUILD_CONTEXT }})" >> $GITHUB_ENV
+          echo $GITHUB_ENV
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
@@ -34,7 +39,6 @@ jobs:
         #if: github.event_name == 'push'
         with:
           context: ${{ matrix.BUILD_CONTEXT }}
-          #file: Dockerfile
           platforms: linux/amd64,linux/arm64
-          push: true
-          tags: test
+          #push: true
+          tags: $BUILD_TAG
