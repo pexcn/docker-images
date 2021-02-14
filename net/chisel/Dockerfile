@@ -5,6 +5,7 @@
 FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
+# download binary
 ENV VERSION=1.7.4
 RUN apk update \
   && apk add --no-cache ca-certificates \
