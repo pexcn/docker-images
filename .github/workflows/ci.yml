@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         BUILD_CONTEXT:
-          - /net/chisel
+          - net/chisel
           #- /net/hev-socks5-server
           #- /net/mtg
           #- /net/netspeeder
