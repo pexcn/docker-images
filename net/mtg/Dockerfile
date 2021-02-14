@@ -11,13 +11,13 @@ FROM golang:alpine AS builder
 ENV VERSION=v1.0.7
 RUN apk update \
   && apk add --no-cache --virtual .build-deps bash ca-certificates curl git make \
-  && git clone https://github.com/9seconds/mtg.git --branch $VERSION mtg-src \
-  && cd mtg-src \
+  && git clone https://github.com/9seconds/mtg.git --branch $VERSION /tmp/mtg-src \
+  && cd /tmp/mtg-src \
   && make -j$(nproc) static \
-  && mv mtg .. \
+  && mv mtg /mtg \
   && make clean \
-  && cd .. \
-  && rm -r mtg-src \
+  && cd / \
+  && rm -r /tmp/mtg-src \
   && apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
