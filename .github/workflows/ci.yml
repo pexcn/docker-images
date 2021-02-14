@@ -43,9 +43,8 @@ jobs:
         #if: github.event_name == 'push'
         with:
           #context: ${{ matrix.BUILD_CONTEXT }}
-          context: .
-          #file: ${{ matrix.BUILD_CONTEXT }}/Dockerfile
-          file: ./${{ matrix.BUILD_CONTEXT }}/Dockerfile
+          #context: .
+          file: ${{ matrix.BUILD_CONTEXT }}/Dockerfile
           platforms: linux/amd64,linux/arm64
           tags: ghcr.io/pexcn/docker-images:${{ env.BUILD_TAG }}
           #tags: ${{ env.BUILD_TAG }}
