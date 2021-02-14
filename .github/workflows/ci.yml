@@ -44,6 +44,6 @@ jobs:
           context: ${{ matrix.BUILD_CONTEXT }}
           file: ${{ matrix.BUILD_CONTEXT }}/Dockerfile
           platforms: linux/amd64,linux/arm64
-          #tags: pexcn/docker-images:${{ env.BUILD_TAG }}
-          tags: ${{ env.BUILD_TAG }}
+          tags: ghcr.io/pexcn/docker-images:${{ env.BUILD_TAG }}
+          #tags: ${{ env.BUILD_TAG }}
           push: true
