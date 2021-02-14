@@ -42,6 +42,7 @@ jobs:
         uses: docker/build-push-action@v2
         if: github.event_name == 'push'
         with:
+          context: .
           file: ${{ matrix.BUILD_CONTEXT }}/Dockerfile
           platforms: linux/amd64,linux/arm64
           tags: ghcr.io/${{ github.repository }}:${{ env.BUILD_TAG }}
