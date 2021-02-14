@@ -34,7 +34,6 @@ jobs:
         with:
           registry: ghcr.io
           username: $GITHUB_ACTOR
-          #username: pexcn
           password: ${{ secrets.GHCR_PAT }}
       - name: Set build tag
         run: echo "BUILD_TAG=$(basename ${{ matrix.BUILD_CONTEXT }})" >> $GITHUB_ENV
@@ -46,3 +45,6 @@ jobs:
           platforms: linux/amd64,linux/arm64
           tags: pexcn/docker-images:${{ env.BUILD_TAG }}
           push: true
+          secrets: |
+            GIT_AUTH_TOKEN=${{ secrets.GHCR_PAT }}
+            GHCR_PAT=${{ secrets.GHCR_PAT }}
