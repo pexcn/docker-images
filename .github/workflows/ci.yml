@@ -34,8 +34,7 @@ jobs:
         #if: github.event_name == 'push'
         with:
           context: ${{ matrix.BUILD_CONTEXT }}
-          #file: Dockerfile
+          file: Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          #tags: $(basename ${{ matrix.BUILD_CONTEXT }})
-          tags: ${{ $(basename ${{ matrix.BUILD_CONTEXT }}) }}
+          tags: test
