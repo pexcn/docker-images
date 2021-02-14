@@ -22,14 +22,6 @@ jobs:
           - /net/shadowsocks-libev
           - /utils/speedtest-go
           - /utils/vlmcsd
-        DOCKER_TAG:
-          - chisel
-          - hev-socks5-server
-          - mtg
-          - netspeeder
-          - shadowsocks-libev
-          - speedtest-go
-          - vlmcsd
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -45,4 +37,4 @@ jobs:
           #file: Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: $(basename $BUILD_CONTEXT)
+          tags: test
