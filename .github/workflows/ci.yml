@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    #branches: master
+    branches: master
   workflow_dispatch:
 
 env:
@@ -16,12 +16,12 @@ jobs:
       matrix:
         BUILD_CONTEXT:
           - net/chisel
-          #- net/hev-socks5-server
-          #- net/mtg
-          #- net/netspeeder
-          #- net/shadowsocks-libev
-          #- utils/speedtest-go
-          #- utils/vlmcsd
+          - net/hev-socks5-server
+          - net/mtg
+          - net/netspeeder
+          - net/shadowsocks-libev
+          - utils/speedtest-go
+          - utils/vlmcsd
     steps:
       - name: Checkout
         uses: actions/checkout@v2
