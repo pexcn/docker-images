@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    #branches: master
+  workflow_dispatch:
+
+env:
+  TZ: Asia/Taipei
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        BUILD_CONTEXT:
+          - /net/chisel
+          - /net/hev-socks5-server
+          - /net/mtg
+          - /net/netspeeder
+          - /net/shadowsocks-libev
+          - /utils/speedtest-go
+          - /utils/vlmcsd
+    steps:
+      - name: Checkout
+      - uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      - name: Build image and Push to GitHub Packages
+        #if: github.event_name == 'push'
+        with:
+          context: $BUILD_CONTEXT
+          #file: Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: $(basename $BUILD_CONTEXT)
