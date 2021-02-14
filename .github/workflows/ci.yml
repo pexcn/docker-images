@@ -14,14 +14,35 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        BUILD_CONTEXT:
-          - net/chisel
-          - net/hev-socks5-server
-          - net/mtg
-          - net/netspeeder
-          - net/shadowsocks-libev
-          - utils/speedtest-go
-          - utils/vlmcsd
+        include:
+          # chisel
+          - BUILD_CONTEXT: net/chisel
+            BUILD_TAG: chisel
+            PLATFORMS: linux/amd64
+          # hev-socks5-server
+          - BUILD_CONTEXT: net/hev-socks5-server
+            BUILD_TAG: hev-socks5-server
+            PLATFORMS: linux/amd64,linux/arm64
+          # mtg
+          - BUILD_CONTEXT: net/mtg
+            BUILD_TAG: mtg
+            PLATFORMS: linux/amd64,linux/arm64
+          # netspeeder
+          - BUILD_CONTEXT: net/netspeeder
+            BUILD_TAG: netspeeder
+            PLATFORMS: linux/amd64,linux/arm64
+          # shadowsocks-libev
+          - BUILD_CONTEXT: net/shadowsocks-libev
+            BUILD_TAG: shadowsocks-libev
+            PLATFORMS: linux/amd64,linux/arm64
+          # speedtest-go
+          - BUILD_CONTEXT: utils/speedtest-go
+            BUILD_TAG: speedtest-go
+            PLATFORMS: linux/amd64,linux/arm64
+          # vlmcsd
+          - BUILD_CONTEXT: utils/vlmcsd
+            BUILD_TAG: vlmcsd
+            PLATFORMS: linux/amd64
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -35,15 +56,12 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GHCR_PAT }}
-      - name: Set build tag
-        run: |
-          echo "BUILD_TAG=$(basename ${{ matrix.BUILD_CONTEXT }})" >> $GITHUB_ENV
       - name: Build image and Push to GitHub Container Registry
         uses: docker/build-push-action@v2
         if: github.event_name == 'push'
         with:
           context: .
           file: ${{ matrix.BUILD_CONTEXT }}/Dockerfile
-          platforms: linux/amd64,linux/arm64
-          tags: ghcr.io/${{ github.repository }}:${{ env.BUILD_TAG }}
+          platforms: ${{ matrix.PLATFORMS }}
+          tags: ghcr.io/${{ github.repository }}:${{ matrix.BUILD_TAG }}
           push: true
