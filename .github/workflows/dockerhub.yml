@@ -18,6 +18,7 @@ jobs:
       matrix:
         BUILD_CONTEXT:
           - buildbot/buster
+          - buildbot/buster-android
           - net/chisel
           - net/hev-socks5-server
           - net/mtg

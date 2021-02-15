@@ -1,5 +1,9 @@
+#
+# Dockerfile for buster
+#
+
 FROM debian:buster-slim
-MAINTAINER pexcn <i@pexcn.me>
+LABEL maintainer="pexcn <i@pexcn.me>"
 
 # apt non-interactive
 ENV DEBIAN_FRONTEND=noninteractive
