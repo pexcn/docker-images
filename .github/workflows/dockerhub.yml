@@ -3,6 +3,8 @@ name: DockerHub
 on:
   push:
     branches: master
+#  release:
+#    types: published
   workflow_dispatch:
 
 env:
@@ -60,3 +62,10 @@ jobs:
           push: true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
+
+#  trigger-build:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Trigger auto build
+#        if: github.event_name == 'published'
+#        run: curl -X POST ${{ secrets.DOCKERHUB_TRIGGER_URL }}
