@@ -15,46 +15,47 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # chisel
           - BUILD_CONTEXT: net/chisel
             BUILD_TAG: chisel
-          # hev-socks5-server
           - BUILD_CONTEXT: net/hev-socks5-server
             BUILD_TAG: hev-socks5-server
-          # mtg
           - BUILD_CONTEXT: net/mtg
             BUILD_TAG: mtg
-          # netspeeder
           - BUILD_CONTEXT: net/netspeeder
             BUILD_TAG: netspeeder
-          # shadowsocks-libev
           - BUILD_CONTEXT: net/shadowsocks-libev
             BUILD_TAG: shadowsocks-libev
-          # speedtest-go
           - BUILD_CONTEXT: utils/speedtest-go
             BUILD_TAG: speedtest-go
-          # vlmcsd
           - BUILD_CONTEXT: utils/vlmcsd
             BUILD_TAG: vlmcsd
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      # prepare
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
+
+      # login
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v1
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GHCR_PAT }}
+
+      # cache
       - name: Cache Docker layers
         uses: actions/cache@v2
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-${{ matrix.BUILD_TAG }}-buildx-${{ github.sha }}
           restore-keys: ${{ runner.os }}-${{ matrix.BUILD_TAG }}-buildx
+
+      # build & push
       - name: Build image and Push to GitHub Container Registry
         uses: docker/build-push-action@v2
         if: github.event_name == 'push'
