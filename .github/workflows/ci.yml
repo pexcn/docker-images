@@ -9,7 +9,7 @@ env:
   TZ: Asia/Taipei
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
@@ -23,10 +23,9 @@ jobs:
           - utils/speedtest-go
           - utils/vlmcsd
     steps:
+      # prepare
       - name: Checkout
         uses: actions/checkout@v2
-
-      # prepare
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
