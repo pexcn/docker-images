@@ -57,8 +57,8 @@ jobs:
         if: github.event_name == 'push'
         with:
           context: ${{ matrix.BUILD_CONTEXT }}
-          platforms: linux/amd64,linux/arm64
           tags: ghcr.io/${{ github.repository }}:${{ env.BUILD_TAG }}
+          platforms: linux/amd64,linux/arm64
           push: true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
