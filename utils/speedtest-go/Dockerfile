@@ -8,7 +8,7 @@
 FROM golang:alpine AS builder
 
 # build
-ENV VERSION=v1.1.2
+ARG VERSION=v1.1.2
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git gcc ca-certificates libc-dev \
   && git clone https://github.com/librespeed/speedtest-go.git --branch $VERSION /tmp/speedtest-go \

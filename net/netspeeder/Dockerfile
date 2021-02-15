@@ -13,7 +13,7 @@ RUN apk update \
       build-base libnet-dev libpcap-dev
 
 # build
-ENV VERSION=b439a39c783f2bc11ec73ea7721c0d9373ff2815
+ARG VERSION=b439a39c783f2bc11ec73ea7721c0d9373ff2815
 RUN wget -O - -o /dev/null --no-check-certificate https://github.com/pexcn/netspeeder/archive/$VERSION.tar.gz | tar -zxf - \
   && cd netspeeder-$VERSION \
   && make \

@@ -12,7 +12,7 @@ RUN apk update \
   && apk add --no-cache --virtual .build-deps build-base git
 
 # build
-ENV VERSION=1.9.9
+ARG VERSION=1.9.9
 RUN git clone https://github.com/heiher/hev-socks5-server.git --branch $VERSION --recurse-submodules -j2 \
   && cd hev-socks5-server \
   && make -j$(nproc) \

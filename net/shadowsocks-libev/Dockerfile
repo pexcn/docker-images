@@ -14,7 +14,7 @@ RUN apk update \
       c-ares-dev mbedtls-dev pcre-dev libev-dev libsodium-dev
 
 # build shadowsocks-libev
-ENV SS_VERSION=13f472077d52c147057a198e552ea8cd6791631a
+ARG SS_VERSION=13f472077d52c147057a198e552ea8cd6791631a
 RUN git clone https://github.com/shadowsocks/shadowsocks-libev.git --recurse-submodules -j2 \
   && cd shadowsocks-libev \
   && git checkout $SS_VERSION \
@@ -27,7 +27,7 @@ RUN git clone https://github.com/shadowsocks/shadowsocks-libev.git --recurse-sub
   && ls /app/bin/ss-* | xargs -n1 setcap cap_net_bind_service+ep
 
 # build simple-obfs
-ENV OBFS_VERSION=486bebd9208539058e57e23a12f23103016e09b4
+ARG OBFS_VERSION=486bebd9208539058e57e23a12f23103016e09b4
 RUN git clone https://github.com/shadowsocks/simple-obfs.git --recurse-submodules -j2 \
   && cd simple-obfs \
   && git checkout $OBFS_VERSION \

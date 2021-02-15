@@ -6,7 +6,7 @@ FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
 # download binary
-ENV VERSION=svn1113
+ARG VERSION=svn1113
 RUN cd /tmp \
   && wget https://github.com/Wind4/vlmcsd/releases/download/$VERSION/binaries.tar.gz \
   && tar -zxvf binaries.tar.gz binaries/Linux/intel/static/vlmcsd-x64-musl-static --strip-components 4 \

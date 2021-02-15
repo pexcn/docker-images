@@ -8,7 +8,7 @@
 FROM golang:alpine AS builder
 
 # build
-ENV VERSION=v1.0.7
+ARG VERSION=v1.0.7
 RUN apk update \
   && apk add --no-cache --virtual .build-deps bash ca-certificates curl git make \
   && git clone https://github.com/9seconds/mtg.git --branch $VERSION /tmp/mtg-src \
