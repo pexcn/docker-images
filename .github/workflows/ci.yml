@@ -14,21 +14,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - BUILD_CONTEXT: net/chisel
-            BUILD_TAG: chisel
-          - BUILD_CONTEXT: net/hev-socks5-server
-            BUILD_TAG: hev-socks5-server
-          - BUILD_CONTEXT: net/mtg
-            BUILD_TAG: mtg
-          - BUILD_CONTEXT: net/netspeeder
-            BUILD_TAG: netspeeder
-          - BUILD_CONTEXT: net/shadowsocks-libev
-            BUILD_TAG: shadowsocks-libev
-          - BUILD_CONTEXT: utils/speedtest-go
-            BUILD_TAG: speedtest-go
-          - BUILD_CONTEXT: utils/vlmcsd
-            BUILD_TAG: vlmcsd
+        BUILD_CONTEXT:
+          - net/chisel
+          - net/hev-socks5-server
+          - net/mtg
+          - net/netspeeder
+          - net/shadowsocks-libev
+          - utils/speedtest-go
+          - utils/vlmcsd
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -38,6 +31,9 @@ jobs:
         uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
+      - name: Append environment variables
+        run: |
+          echo "BUILD_TAG=$(basename ${{ matrix.BUILD_CONTEXT }})" >> $GITHUB_ENV
 
       # login
       - name: Login to GitHub Container Registry
@@ -52,8 +48,8 @@ jobs:
         uses: actions/cache@v2
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-${{ matrix.BUILD_TAG }}-buildx-${{ github.sha }}
-          restore-keys: ${{ runner.os }}-${{ matrix.BUILD_TAG }}-buildx
+          key: ${{ runner.os }}-${{ env.BUILD_TAG }}-buildx-${{ github.sha }}
+          restore-keys: ${{ runner.os }}-${{ env.BUILD_TAG }}-buildx
 
       # build & push
       - name: Build image and Push to GitHub Container Registry
@@ -62,7 +58,7 @@ jobs:
         with:
           context: ${{ matrix.BUILD_CONTEXT }}
           platforms: linux/amd64,linux/arm64
-          tags: ghcr.io/${{ github.repository }}:${{ matrix.BUILD_TAG }}
+          tags: ghcr.io/${{ github.repository }}:${{ env.BUILD_TAG }}
           push: true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
