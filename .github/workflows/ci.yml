@@ -14,16 +14,34 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        BUILD_CONTEXT:
-          - buildbot/buster
-          - buildbot/buster-android
-          - net/chisel
-          - net/hev-socks5-server
-          - net/mtg
-          - net/netspeeder
-          - net/shadowsocks-libev
-          - utils/speedtest-go
-          - utils/vlmcsd
+        include:
+          # buster
+          - BUILD_CONTEXT: buildbot/buster
+            TARGET_PLATFORMS: linux/amd64
+          # buster-android
+          - BUILD_CONTEXT: buildbot/buster-android
+            TARGET_PLATFORMS: linux/amd64
+          # chisel
+          - BUILD_CONTEXT: net/chisel
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # hev-socks5-server
+          - BUILD_CONTEXT: net/hev-socks5-server
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # mtg
+          - BUILD_CONTEXT: net/mtg
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # netspeeder
+          - BUILD_CONTEXT: net/netspeeder
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # shadowsocks-libev
+          - BUILD_CONTEXT: net/shadowsocks-libev
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # speedtest-go
+          - BUILD_CONTEXT: utils/speedtest-go
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # vlmcsd
+          - BUILD_CONTEXT: utils/vlmcsd
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
     steps:
       # prepare
       - name: Checkout
@@ -59,7 +77,7 @@ jobs:
         with:
           context: ${{ matrix.BUILD_CONTEXT }}
           tags: ghcr.io/${{ github.repository }}:${{ env.BUILD_TAG }}
-          platforms: linux/amd64,linux/arm64
+          platforms: ${{ matrix.BUILD_PLATFORMS }}
           push: true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
