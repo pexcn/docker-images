@@ -4,7 +4,7 @@ MAINTAINER pexcn <i@pexcn.me>
 # apt non-interactive
 ENV DEBIAN_FRONTEND=noninteractive
 
-# add base dependencies
+# install base depends
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
       apt-utils dialog \
