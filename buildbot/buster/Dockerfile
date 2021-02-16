@@ -35,7 +35,6 @@ ENV LANG=en_US.UTF-8
 # create user
 RUN groupadd builder --system \
   && useradd builder --system --no-log-init --create-home --gid builder --shell /bin/bash
-ENV HOME=/home/builder
 
 # set builder group run sudo without password
 RUN echo '%builder ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/50-builder
