@@ -80,7 +80,7 @@ jobs:
         with:
           context: ${{ matrix.BUILD_CONTEXT }}
           tags: ghcr.io/${{ github.repository }}:${{ env.BUILD_TAG }}
-          platforms: ${{ matrix.BUILD_PLATFORMS }}
+          platforms: ${{ matrix.TARGET_PLATFORMS }}
           push: true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
