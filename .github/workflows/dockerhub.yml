@@ -1,4 +1,4 @@
-name: CI
+name: DockerHub
 
 on:
   push:
@@ -55,12 +55,11 @@ jobs:
           echo "BUILD_TAG=$(basename ${{ matrix.BUILD_CONTEXT }})" >> $GITHUB_ENV
 
       # login
-      - name: Login to GitHub Container Registry
+      - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GHCR_PAT }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       # cache
       - name: Cache Docker layers
@@ -71,12 +70,12 @@ jobs:
           restore-keys: ${{ runner.os }}-${{ env.BUILD_TAG }}-buildx
 
       # build & push
-      - name: Build image and Push to GitHub Container Registry
+      - name: Build image and Push to DockerHub
         uses: docker/build-push-action@v2
         if: github.event_name == 'push'
         with:
           context: ${{ matrix.BUILD_CONTEXT }}
-          tags: ghcr.io/${{ github.repository }}:${{ env.BUILD_TAG }}
+          tags: ${{ github.repository }}:${{ env.BUILD_TAG }}
           platforms: ${{ matrix.BUILD_PLATFORMS }}
           push: true
           cache-from: type=local,src=/tmp/.buildx-cache
