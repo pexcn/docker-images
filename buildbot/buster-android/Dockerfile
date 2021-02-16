@@ -22,10 +22,11 @@ RUN curl https://storage.googleapis.com/git-repo-downloads/repo > /usr/local/bin
 
 # set non-root user
 USER builder
+WORKDIR /home/builder
 
 # set git configs
 RUN git config --global user.name "Android Builder" \
-  && git config --global user.email "android-buildbot@pexcn.me"
+  && git config --global user.email "buildbot-buster-android@pexcn.me"
 
 # set ccache
 # TODO...

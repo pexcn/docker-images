@@ -20,10 +20,19 @@ RUN apt-get update \
 
 # set non-root user
 USER builder
+WORKDIR /home/builder
 
 # set git configs
 RUN git config --global user.name "OpenWrt Builder" \
-  && git config --global user.email "openwrt-buildbot@pexcn.me"
+  && git config --global user.email "buildbot-buster-openwrt@pexcn.me"
+
+# install po2lmo
+RUN git clone https://github.com/openwrt-dev/po2lmo.git --single-branch -b master \
+  && cd po2lmo \
+  && make \
+  && sudo make install \
+  && cd .. \
+  && rm -r po2lmo
 
 # set ccache
 # TODO...
