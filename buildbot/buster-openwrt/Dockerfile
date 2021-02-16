@@ -14,7 +14,7 @@ RUN apt-get update \
       libncurses5-dev libssl-dev libtool make patch perl-modules \
       pkg-config python python2-dev python3 quilt rsync texinfo \
       texlive time unzip util-linux wget xmlto xsltproc xz-utils \
-      zlib1g-dev
+      zlib1g-dev \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
