@@ -13,7 +13,11 @@ RUN apk update \
   && apk add --no-cache ca-certificates \
   && mkdir /app \
   && cd /app \
-  && wget -O chisel.gz https://github.com/jpillora/chisel/releases/download/v$VERSION/chisel_${VERSION}_${TARGETOS}_${TARGETARCH}.gz \
+  && if [[ -n "$TARGETOS" && -n "$TARGETARCH" ]]; then \
+       wget -O chisel.gz https://github.com/jpillora/chisel/releases/download/v$VERSION/chisel_${VERSION}_${TARGETOS}_${TARGETARCH}.gz; \
+     else \
+       wget -O chisel.gz https://github.com/jpillora/chisel/releases/download/v$VERSION/chisel_${VERSION}_linux_amd64.gz; \
+     fi \
   && gunzip chisel.gz \
   && chmod +x chisel
 
