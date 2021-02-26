@@ -10,7 +10,7 @@ PASSWORD
 ```
 
 ```bash
-docker run --rm -d \
+docker run -d \
   --name speedtest-go \
   --restart always \
   --net host \

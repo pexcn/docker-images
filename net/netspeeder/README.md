@@ -3,7 +3,7 @@
 ## Usage
 
 ```bash
-docker run --rm -d \
+docker run -d \
   --name netspeeder \
   --restart always \
   --net host \
@@ -11,7 +11,7 @@ docker run --rm -d \
   pexcn/docker-images:netspeeder
 
 # speed up all ip packets
-docker run --rm -d \
+docker run -d \
   --name netspeeder \
   --restart always \
   --net host \
@@ -19,7 +19,7 @@ docker run --rm -d \
   pexcn/docker-images:netspeeder eth0 "ip"
 
 # speed up port 53 outbound packets and tcp port 80 outbound packets
-docker run --rm -d \
+docker run -d \
   --name netspeeder \
   --restart always \
   --net host \

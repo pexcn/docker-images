@@ -3,7 +3,7 @@
 ## Usage
 
 ```bash
-docker run --rm -d \
+docker run -d \
   --name vlmcsd \
   --restart always \
   --net host \

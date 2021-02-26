@@ -13,7 +13,7 @@ LOG_LEVEL
 ```
 
 ```bash
-docker run --rm -d \
+docker run -d \
   --name hev-socks5-server \
   --restart always \
   --net host \

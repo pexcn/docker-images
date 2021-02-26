@@ -19,7 +19,7 @@ PLUGIN_OPTS
 
 ```bash
 # ss-server
-docker run --rm -d \
+docker run -d \
   --name ss-server \
   --restart always \
   --net host \
@@ -30,7 +30,7 @@ docker run --rm -d \
   pexcn/docker-images:shadowsocks-libev
 
 # ss-server with plugin
-docker run --rm -d \
+docker run -d \
   --name ss-server-obfs \
   --restart always \
   --net host \
@@ -43,7 +43,7 @@ docker run --rm -d \
   pexcn/docker-images:shadowsocks-libev
 
 # ss-local
-docker run --rm -d \
+docker run -d \
   --name ss-local \
   --restart always \
   --net host \
