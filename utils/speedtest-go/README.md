@@ -13,7 +13,7 @@ PASSWORD
 docker run -d \
   --name speedtest-go \
   --restart always \
-  --net host \
+  --network host \
   -e TITLE="FREE 2501 Speedtest" \
   -e PASSWORD="FREE2501" \
   pexcn/docker-images:speedtest-go

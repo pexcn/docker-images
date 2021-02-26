@@ -6,7 +6,7 @@
 docker run -d \
   --name netspeeder \
   --restart always \
-  --net host \
+  --network host \
   --privileged \
   pexcn/docker-images:netspeeder
 
@@ -14,7 +14,7 @@ docker run -d \
 docker run -d \
   --name netspeeder \
   --restart always \
-  --net host \
+  --network host \
   --privileged \
   pexcn/docker-images:netspeeder eth0 "ip"
 
@@ -22,7 +22,7 @@ docker run -d \
 docker run -d \
   --name netspeeder \
   --restart always \
-  --net host \
+  --network host \
   --privileged \
   pexcn/docker-images:netspeeder eth0 "src port 53 || tcp src port 80"
 ```

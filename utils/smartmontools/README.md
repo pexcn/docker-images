@@ -23,7 +23,7 @@ The meaning of this directives is:
 # first send a mail test
 docker run --rm \
   --name smartmontools \
-  --net host \
+  --network host \
   --privileged \
   -e "SMARTD_PARAMS=DEVICESCAN -a -m pexcn97@gmail.com -M test" \
   -e "SMTP_CONFIG=who@free.hk#user:freehk@smtp.free.hk:587" \
@@ -33,7 +33,7 @@ docker run --rm \
 docker run -d \
   --name smartmontools \
   --restart always \
-  --net host \
+  --network host \
   --privileged \
   -e "SMARTD_PARAMS=DEVICESCAN -a -s (S/../../7/19|L/../15/./20) -W 0,0,45 -m pexcn97@gmail.com -M once" \
   -e "SMTP_CONFIG=who@free.hk#user:freehk@smtp.free.hk:587" \
