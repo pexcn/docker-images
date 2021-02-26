@@ -3,7 +3,7 @@
 ## Usage
 
 ```bash
-docker run -d \
+docker run --rm -d \
   --name mtg \
   --restart always \
   --net host \

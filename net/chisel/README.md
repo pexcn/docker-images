@@ -4,14 +4,14 @@
 
 ```bash
 # server mode
-docker run -d \
+docker run --rm -d \
   --name chisel-server \
   --restart always \
   --net host \
   pexcn/docker-images:chisel server -p 1985 --socks5 --keepalive 10m
 
 # client mode
-docker run -d \
+docker run --rm -d \
   --name chisel-client \
   --restart always \
   --net host \
