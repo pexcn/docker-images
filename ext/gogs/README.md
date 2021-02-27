@@ -7,7 +7,7 @@
 useradd git -m -d /home/git -s $(which git-shell)
 ```
 
-需要一个名为 lan 的 macvlan 网络才能运行
+需要一个名为 `lan` 的 `macvlan` 网络才能运行
 ```bash
 # 应用程序版本: 0.13.0+dev
 # Git 版本: 2.24.3
