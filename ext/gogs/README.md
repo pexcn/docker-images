@@ -13,8 +13,11 @@
 docker run -d \
   --name gogs \
   --restart always \
+  --hostname Git-Server \
   --network lan \
   --ip 192.168.1.21 \
   -v /mnt/storage/docker/gogs:/data \
+  -v /mnt/storage/docker/acme.sh:/data/gogs/certs \
+  -v /etc/localtime:/etc/localtime:ro \
   gogs/gogs
 ```

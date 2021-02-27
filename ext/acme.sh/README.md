@@ -10,6 +10,7 @@ docker run -d \
   -e "HE_Username=user" \
   -e "HE_Password=pass" \
   -v /mnt/storage/docker/acme.sh:/acme.sh \
+  -v /etc/localtime:/etc/localtime:ro \
   neilpang/acme.sh daemon
 
 # issue
