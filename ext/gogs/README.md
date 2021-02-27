@@ -2,7 +2,12 @@
 
 ## 使用
 
-首先新建一个名为 `lan` 的 `macvlan` 网络再运行
+确保系统有一个 `git` 用户，用来保持文件用户组的一致性
+```bash
+useradd git -m -d /home/git -s $(which git-shell)
+```
+
+需要一个名为 lan 的 macvlan 网络才能运行
 ```bash
 # 应用程序版本: 0.13.0+dev
 # Git 版本: 2.24.3
