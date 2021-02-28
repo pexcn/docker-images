@@ -9,13 +9,12 @@ useradd git -m -d /home/git -s $(which git-shell)
 
 需要一个名为 `lan` 的 `macvlan` 网络才能运行
 ```bash
-IP_ADDR=192.168.1.21
 docker run -d \
   --name gogs \
   --restart always \
   --hostname Git-Server \
   --network lan \
-  --ip $IP_ADDR \
+  --ip 192.168.1.21 \
   -e "PUID=$(id -u git)" \
   -e "PGID=$(id -g git)" \
   -v /mnt/storage/docker/gogs:/data \
@@ -23,3 +22,5 @@ docker run -d \
   -v /etc/localtime:/etc/localtime:ro \
   gogs/gogs:0.12.3
 ```
+
+如果 HTTP 要重定向到 HTTPS, 需要用到 caddy, 具体见：[@pexcn/docker-images/ext/caddy](https://github.com/pexcn/docker-images/tree/master/ext/caddy)

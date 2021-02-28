@@ -3,14 +3,12 @@
 ## Usage
 
 ```bash
-ACME_USERNAME=user
-ACME_PASSWORD=pass
 docker run -d \
   --name acme.sh \
   --restart always \
   --network host \
-  -e "HE_Username=$ACME_USERNAME" \
-  -e "HE_Password=$ACME_PASSWORD" \
+  -e "HE_Username=<user>" \
+  -e "HE_Password=<pass>" \
   -v /mnt/storage/docker/acme.sh:/acme.sh \
   -v /etc/localtime:/etc/localtime:ro \
   neilpang/acme.sh:2.8.8 daemon
