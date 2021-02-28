@@ -1,17 +1,19 @@
-# acme.sh for docker
+# acme.sh
 
 ## Usage
 
 ```bash
+ACME_USERNAME=user
+ACME_PASSWORD=pass
 docker run -d \
   --name acme.sh \
   --restart always \
   --network host \
-  -e "HE_Username=user" \
-  -e "HE_Password=pass" \
+  -e "HE_Username=$ACME_USERNAME" \
+  -e "HE_Password=$ACME_PASSWORD" \
   -v /mnt/storage/docker/acme.sh:/acme.sh \
   -v /etc/localtime:/etc/localtime:ro \
-  neilpang/acme.sh daemon
+  neilpang/acme.sh:2.8.8 daemon
 
 # issue
 docker exec acme.sh --issue --dns dns_he --dnssleep 30 -d pexcn.me -d *.pexcn.me -k ec-256
