@@ -5,16 +5,11 @@
 确保系统有一个 `git` 用户，用来保持文件用户组的一致性
 ```bash
 useradd git -m -d /home/git -s $(which git-shell)
-```
 
-先建立一个名为 `lan` 的 `macvlan` 网络再运行
-```bash
 docker run -d \
   --name gogs \
   --restart always \
-  --hostname Git-Server \
-  --network lan \
-  --ip 192.168.1.21 \
+  --network host \
   -e "PUID=$(id -u git)" \
   -e "PGID=$(id -g git)" \
   -v /mnt/storage/docker/gogs:/data \
