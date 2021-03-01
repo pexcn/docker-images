@@ -22,3 +22,5 @@ docker run -d \
   -v /etc/localtime:/etc/localtime:ro \
   gogs/gogs:0.12.3
 ```
+
+如果需要自定义 logo, 只需要把 logo 放置到 `/data/gogs/public/img/favicon.png`
