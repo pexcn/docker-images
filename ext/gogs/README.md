@@ -2,9 +2,9 @@
 
 ## 使用
 
-确保系统有一个 `git` 用户，用来保持文件用户组的一致性
+确保系统存在 `git` 用户，以保持文件用户组的一致性
 ```bash
-useradd git -m -d /home/git -s $(which git-shell)
+useradd git -m -s $(which git-shell)
 
 docker run -d \
   --name gogs \
