@@ -7,7 +7,7 @@
 useradd git -m -d /home/git -s $(which git-shell)
 ```
 
-需要一个名为 `lan` 的 `macvlan` 网络才能运行
+先建立一个名为 `lan` 的 `macvlan` 网络再运行
 ```bash
 docker run -d \
   --name gogs \
@@ -22,5 +22,3 @@ docker run -d \
   -v /etc/localtime:/etc/localtime:ro \
   gogs/gogs:0.12.3
 ```
-
-如果 HTTP 要重定向到 HTTPS, 需要用到 caddy, 具体见：[@pexcn/docker-images/ext/caddy](https://github.com/pexcn/docker-images/tree/master/ext/caddy)
