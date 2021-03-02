@@ -15,3 +15,17 @@ https://git.local.pexcn.me {
   header Strict-Transport-Security max-age=31536000;
   reverse_proxy 127.0.0.1:3000
 }
+
+
+
+#
+# Caddyfile for speedtest-go
+#
+http://nas.local.pexcn.me {
+  reverse_proxy 127.0.0.1:8989
+}
+
+https://nas.local.pexcn.me {
+  tls /certs/local.pexcn.me_ecc/fullchain.cer /certs/local.pexcn.me_ecc/local.pexcn.me.key
+  reverse_proxy 127.0.0.1:8989
+}
