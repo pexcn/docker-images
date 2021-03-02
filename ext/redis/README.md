@@ -11,6 +11,7 @@ sysctl --system
 ```
 
 ```bash
+# run redis bind localhost
 docker run -d \
   --name redis \
   --restart always \
@@ -19,6 +20,7 @@ docker run -d \
   -v /etc/localtime:/etc/localtime:ro \
   redis:6.2.0-alpine --bind 127.0.0.1
 
+# run redis with password
 docker run -d \
   --name redis \
   --restart always \
