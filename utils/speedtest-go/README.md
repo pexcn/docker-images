@@ -24,7 +24,6 @@ docker run -d \
   --restart always \
   --network host \
   -e TITLE="NAS Speedtest" \
-  -e ADDR="127.0.0.1" \
   -e PORT="8989" \
   -e PASSWORD="FREE2501" \
   pexcn/docker-images:speedtest-go
