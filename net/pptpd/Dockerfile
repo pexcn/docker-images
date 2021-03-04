@@ -13,8 +13,9 @@ RUN apk update \
 # copy config
 COPY pptpd.conf /etc/pptpd.conf
 COPY pptpd-options /etc/ppp/pptpd-options
-COPY chap-secrets /etc/ppp/chap-secrets
 COPY entrypoint.sh /app/entrypoint.sh
 
-EXPOSE 1723/tcp
+ENV AUTH=
+ENV FIX_MTU=
+
 ENTRYPOINT ["/app/entrypoint.sh"]

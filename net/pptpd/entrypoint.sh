@@ -1,5 +1,12 @@
 #!/bin/sh
 
+# generate chap-secrets
+if [ -n "$AUTH" ]; then
+  for account in ${AUTH//,/ }; do
+    echo "${account%:*}  pptpd  ${account#*:}  *" >> /etc/ppp/chap-secrets
+  done
+fi
+
 sysctl -w net.ipv4.ip_forward=1
 iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
 
