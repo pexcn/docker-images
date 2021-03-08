@@ -6,6 +6,6 @@
 docker run -d \
   --name vlmcsd \
   --restart always \
-  --net host \
+  --network host \
   pexcn/docker-images:vlmcsd
 ```

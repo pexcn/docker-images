@@ -16,6 +16,6 @@ LOG_LEVEL
 docker run -d \
   --name hev-socks5-server \
   --restart always \
-  --net host \
+  --network host \
   pexcn/docker-images:hev-socks5-server
 ```
