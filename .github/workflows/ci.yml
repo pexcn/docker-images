@@ -85,7 +85,7 @@ jobs:
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-${{ env.BUILD_TAG }}-buildx-${{ github.sha }}
-          restore-keys: ${{ runner.os }}-${{ env.BUILD_TAG }}-buildx
+          restore-keys: ${{ runner.os }}-${{ env.BUILD_TAG }}-buildx-
 
       # build & push
       - name: Build image and Push to Container Registries
