@@ -9,8 +9,8 @@ LABEL maintainer="pexcn <i@pexcn.me>"
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
       autoconf automake automake1.11 autopoint bison \
-      build-essential bzip2 cpio flex gawk gcc gettext \
-      git kmod libgmp3-dev libltdl-dev libmpc-dev \
+      build-essential bzip2 ccache cpio flex gawk gcc \
+      gettext git kmod libgmp3-dev libltdl-dev libmpc-dev \
       libmpfr-dev libtool make patch pkg-config texinfo \
       xz-utils zlib1g-dev \
   && apt-get clean \
