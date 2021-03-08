@@ -29,5 +29,6 @@ RUN git config --global user.name "Android Builder" \
   && git config --global user.email "buildbot-buster-android@pexcn.me"
 
 # setup ccache
-RUN ccache -M 20G
+#RUN ccache -M 20G
+RUN echo "max_size = 20G" | sudo tee -a /etc/ccache.conf
 ENV USE_CCACHE 1

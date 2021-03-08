@@ -35,5 +35,6 @@ RUN git clone https://github.com/openwrt-dev/po2lmo.git --single-branch -b maste
   && rm -r po2lmo
 
 # setup ccache
-RUN ccache -M 20G
+#RUN ccache -M 20G
+RUN echo "max_size = 20G" | sudo tee -a /etc/ccache.conf
 ENV USE_CCACHE 1
