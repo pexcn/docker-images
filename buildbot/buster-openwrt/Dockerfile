@@ -34,5 +34,6 @@ RUN git clone https://github.com/openwrt-dev/po2lmo.git --single-branch -b maste
   && cd .. \
   && rm -r po2lmo
 
-# set ccache
-# TODO...
+# setup ccache
+RUN ccache -M 20G
+ENV USE_CCACHE 1

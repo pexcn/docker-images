@@ -24,5 +24,6 @@ WORKDIR /home/builder
 RUN git config --global user.name "Padavan Builder" \
   && git config --global user.email "buildbot-buster-padavan@pexcn.me"
 
-# set ccache
-# TODO...
+# setup ccache
+RUN ccache -M 20G
+ENV USE_CCACHE 1
