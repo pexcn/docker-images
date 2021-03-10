@@ -21,6 +21,9 @@ jobs:
           # buster-android
           - BUILD_CONTEXT: buildbot/buster-android
             TARGET_PLATFORMS: linux/amd64
+          # buster-kernel
+          - BUILD_CONTEXT: buildbot/buster-kernel
+            TARGET_PLATFORMS: linux/amd64
           # buster-openwrt
           - BUILD_CONTEXT: buildbot/buster-openwrt
             TARGET_PLATFORMS: linux/amd64
