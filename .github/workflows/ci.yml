@@ -48,6 +48,9 @@ jobs:
           # shadowsocks-libev
           - BUILD_CONTEXT: net/shadowsocks-libev
             TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # dsm-open-vm-tools
+          - BUILD_CONTEXT: utils/dsm-open-vm-tools
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # smartmontools
           - BUILD_CONTEXT: utils/smartmontools
             TARGET_PLATFORMS: linux/amd64,linux/arm64
