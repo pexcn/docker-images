@@ -1,4 +1,4 @@
-# mtg for docker
+# mtg
 
 ## Usage
 

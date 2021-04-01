@@ -1,4 +1,4 @@
-# netspeeder for docker
+# netspeeder
 
 ## Usage
 

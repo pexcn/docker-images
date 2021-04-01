@@ -1,4 +1,4 @@
-# hev-socks5-server for docker
+# hev-socks5-server
 
 ## Usage
 

@@ -1,4 +1,4 @@
-# pptpd for docker
+# pptpd
 
 ## Usage
 
@@ -14,7 +14,7 @@ docker run -d \
   --restart always \
   --network host \
   --privileged \
-  -e "AUTH=fuck:china" \
+  -e "AUTH=user:pass" \
   -e "FIX_MTU=1" \
   pexcn/docker-images:pptpd
 ```

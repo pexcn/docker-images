@@ -1,4 +1,4 @@
-# dsm-open-vm-tools for docker
+# dsm-open-vm-tools
 
 ## Usage
 

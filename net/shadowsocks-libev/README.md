@@ -1,4 +1,4 @@
-# shadowsocks-libev for docker
+# shadowsocks-libev
 
 ## Usage
 
@@ -25,7 +25,7 @@ docker run -d \
   --network host \
   -e "SERVER_HOST=0.0.0.0" \
   -e "SERVER_PORT=443" \
-  -e "PASSWORD=FREEHK" \
+  -e "PASSWORD=PASSWD" \
   -e "METHOD=chacha20-ietf-poly1305" \
   pexcn/docker-images:shadowsocks-libev
 
@@ -36,7 +36,7 @@ docker run -d \
   --network host \
   -e "SERVER_HOST=0.0.0.0" \
   -e "SERVER_PORT=1776" \
-  -e "PASSWORD=FREEHK" \
+  -e "PASSWORD=PASSWD" \
   -e "METHOD=chacha20-ietf-poly1305" \
   -e "PLUGIN=obfs-server" \
   -e "PLUGIN_OPTS=obfs=tls;fast-open" \
@@ -48,5 +48,5 @@ docker run -d \
   --restart always \
   --network host \
   pexcn/docker-images:shadowsocks-libev \
-  ss-local -s 201.90.60.9 -p 443 -b 0.0.0.0 -l 1080 -k FREEHK -m chacha20-ietf-poly1305 -t 3600 -n 65535 -u --mtu 1500 --fast-open --reuse-port --no-delay
+  ss-local -s 201.90.60.9 -p 443 -b 0.0.0.0 -l 1080 -k PASSWD -m chacha20-ietf-poly1305 -t 3600 -n 65535 -u --mtu 1500 --fast-open --reuse-port --no-delay
 ```

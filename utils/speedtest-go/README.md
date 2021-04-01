@@ -1,4 +1,4 @@
-# speedtest-go for docker
+# speedtest-go
 
 ## Usage
 

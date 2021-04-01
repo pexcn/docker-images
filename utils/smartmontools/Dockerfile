@@ -27,7 +27,7 @@ RUN ln -sf /usr/bin/msmtp /usr/sbin/sendmail
 RUN mkdir /app && ln -s /usr/sbin/smartd /app/smartd
 
 ENV SMARTD_PARAMS=
-ENV SMTP_CONFIG="who@free.hk#user:freehk@smtp.free.hk:587"
+ENV SMTP_CONFIG="mail@example.com#user:pass@smtp.example.com:587"
 
 COPY entrypoint.sh /app/entrypoint.sh
 

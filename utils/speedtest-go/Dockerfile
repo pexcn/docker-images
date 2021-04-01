@@ -33,7 +33,7 @@ FROM alpine
 
 ENV TITLE="LibreSpeed"
 ENV PORT=80
-ENV PASSWORD="FREEHK"
+ENV PASSWORD="PASSWD"
 
 # add depends
 RUN apk update \

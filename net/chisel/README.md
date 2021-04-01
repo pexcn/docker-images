@@ -1,4 +1,4 @@
-# chisel for docker
+# chisel
 
 ## Usage
 

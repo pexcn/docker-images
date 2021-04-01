@@ -1,4 +1,4 @@
-# vlmcsd for docker
+# vlmcsd
 
 ## Usage
 

@@ -27,5 +27,5 @@ docker run -d \
   --network host \
   -v /mnt/storage/docker/redis:/data \
   -v /etc/localtime:/etc/localtime:ro \
-  redis:6.2.0-alpine --requirepass freehk
+  redis:6.2.0-alpine --requirepass pass
 ```
