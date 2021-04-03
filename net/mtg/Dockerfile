@@ -34,10 +34,14 @@ ENV SECRET_KEY=ee3471158e7a53644c047d6b6b8743f8ba62696e672e636f6d
 # set timezone
 ENV TZ=Asia/Taipei
 RUN apk update \
-  && apk add --no-cache tzdata \
-  && rm -rf /var/cache/apk/*
+  && apk add --no-cache tzdata
 
 COPY --from=builder /mtg /app/mtg
+
+# allow bind port less than 1024
+RUN apk add --no-cache libcap \
+  && setcap cap_net_bind_service+ep /app/mtg \
+  && rm -rf /var/cache/apk/*
 
 USER nobody
 ENTRYPOINT /app/mtg run -b $BIND_ADDRESS $ARGS $SECRET_KEY
