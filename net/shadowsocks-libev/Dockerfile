@@ -23,7 +23,7 @@ RUN git clone https://github.com/shadowsocks/shadowsocks-libev.git --recurse-sub
   && make -j$(nproc) \
   && make install-strip \
   && cd .. \
-  && rm -r shadowsocks-libev \
+  && rm -r shadowsocks-libev
 
 # build simple-obfs
 ARG OBFS_VERSION=486bebd9208539058e57e23a12f23103016e09b4
@@ -35,7 +35,7 @@ RUN git clone https://github.com/shadowsocks/simple-obfs.git --recurse-submodule
   && make -j$(nproc) \
   && make install-strip \
   && cd .. \
-  && rm -r simple-obfs \
+  && rm -r simple-obfs
 
 # clean up
 RUN apk del .build-deps \
