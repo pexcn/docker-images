@@ -21,12 +21,6 @@ RUN cd /tmp \
   && chown root:root /app/vlmcsd \
   && rm binaries.tar.gz
 
-# set timezone
-ENV TZ=Asia/Taipei
-RUN apk update \
-  && apk add --no-cache tzdata \
-  && rm -rf /var/cache/apk/*
-
 COPY vlmcsd.ini /app/vlmcsd.ini
 
 USER nobody
