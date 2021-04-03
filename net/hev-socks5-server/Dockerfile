@@ -36,5 +36,11 @@ RUN chown nobody:nobody /app/etc
 COPY hev-socks5-server.yml /app/etc/hev-socks5-server.yml
 COPY entrypoint.sh /app/entrypoint.sh
 
+# allow bind port less than 1024
+RUN apk update \
+  && apk add --no-cache libcap \
+  && rm -rf /var/cache/apk/*
+RUN setcap cap_net_bind_service+ep /app/bin/hev-socks5-server
+
 USER nobody
 ENTRYPOINT ["/app/entrypoint.sh"]
