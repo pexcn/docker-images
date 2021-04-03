@@ -37,14 +37,7 @@ ENV PASSWORD="PASSWD"
 
 # add depends
 RUN apk update \
-  && apk add --no-cache ca-certificates \
-  && rm -rf /var/cache/apk/*
-
-# set timezone
-ENV TZ=Asia/Taipei
-RUN apk update \
-  && apk add --no-cache tzdata \
-  && rm -rf /var/cache/apk/*
+  && apk add --no-cache ca-certificates
 
 COPY --from=builder /app/assets /app/assets
 COPY --from=builder /app/speedtest-go /app/speedtest-go
@@ -53,10 +46,9 @@ COPY assets-override /app/assets
 COPY entrypoint.sh /app/entrypoint.sh
 
 # fix permissions
-RUN apk update \
-  && apk add --no-cache libcap \
-  && rm -rf /var/cache/apk/* \
-  && setcap cap_net_bind_service+ep /app/speedtest-go \
+RUN apk add --no-cache libcap \
+  && rm -rf /var/cache/apk/*
+RUN setcap cap_net_bind_service+ep /app/speedtest-go \
   && chown nobody:nobody /app /app/assets
 USER nobody
 
