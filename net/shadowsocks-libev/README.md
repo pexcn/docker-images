@@ -23,10 +23,10 @@ docker run -d \
   --name ss-server \
   --restart always \
   --network host \
-  -e "SERVER_HOST=0.0.0.0" \
-  -e "SERVER_PORT=443" \
-  -e "PASSWORD=PASSWD" \
-  -e "METHOD=chacha20-ietf-poly1305" \
+  -e SERVER_HOST=0.0.0.0 \
+  -e SERVER_PORT=443 \
+  -e PASSWORD=PASSWD \
+  -e METHOD=chacha20-ietf-poly1305 \
   -v /etc/localtime:/etc/localtime:ro \
   pexcn/docker-images:shadowsocks-libev
 
@@ -35,12 +35,12 @@ docker run -d \
   --name ss-server-obfs \
   --restart always \
   --network host \
-  -e "SERVER_HOST=0.0.0.0" \
-  -e "SERVER_PORT=1776" \
-  -e "PASSWORD=PASSWD" \
-  -e "METHOD=chacha20-ietf-poly1305" \
-  -e "PLUGIN=obfs-server" \
-  -e "PLUGIN_OPTS=obfs=tls;fast-open" \
+  -e SERVER_HOST=0.0.0.0 \
+  -e SERVER_PORT=1776 \
+  -e PASSWORD=PASSWD \
+  -e METHOD=chacha20-ietf-poly1305 \
+  -e PLUGIN="obfs-server" \
+  -e PLUGIN_OPTS="obfs=tls;fast-open" \
   -v /etc/localtime:/etc/localtime:ro \
   pexcn/docker-images:shadowsocks-libev
 

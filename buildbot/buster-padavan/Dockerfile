@@ -23,4 +23,4 @@ WORKDIR /home/builder
 # setup ccache
 #RUN ccache -M 20G
 RUN echo "max_size = 20G" | sudo tee -a /etc/ccache.conf
-ENV USE_CCACHE 1
+ENV USE_CCACHE=1

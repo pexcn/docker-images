@@ -10,8 +10,8 @@ docker run -d \
   --name gogs \
   --restart always \
   --network host \
-  -e "PUID=$(id -u git)" \
-  -e "PGID=$(id -g git)" \
+  -e PUID="$(id -u git)" \
+  -e PGID="$(id -g git)" \
   -v /mnt/storage/docker/gogs:/data \
   -v /mnt/storage/docker/acme.sh:/certs \
   -v /etc/localtime:/etc/localtime:ro \

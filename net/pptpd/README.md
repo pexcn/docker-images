@@ -14,8 +14,8 @@ docker run -d \
   --restart always \
   --network host \
   --privileged \
-  -e "AUTH=user:pass" \
-  -e "FIX_MTU=1" \
+  -e AUTH="user:pass" \
+  -e FIX_MTU=1 \
   pexcn/docker-images:pptpd
 ```
 

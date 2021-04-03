@@ -16,7 +16,7 @@ docker run -d \
   --restart always \
   --network host \
   -e TITLE="FREE 2501 Speedtest" \
-  -e PASSWORD="FREE2501" \
+  -e PASSWORD=FREE2501 \
   -v /etc/localtime:/etc/localtime:ro \
   pexcn/docker-images:speedtest-go
 
@@ -25,8 +25,8 @@ docker run -d \
   --restart always \
   --network host \
   -e TITLE="NAS Speedtest" \
-  -e PORT="8989" \
-  -e PASSWORD="FREE2501" \
+  -e PORT=8989 \
+  -e PASSWORD=FREE2501 \
   -v /etc/localtime:/etc/localtime:ro \
   pexcn/docker-images:speedtest-go
 ```
