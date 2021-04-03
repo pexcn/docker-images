@@ -21,5 +21,10 @@ RUN apk update \
   && gunzip chisel.gz \
   && chmod +x chisel
 
+# allow bind port less than 1024
+RUN apk add --no-cache libcap \
+  && rm -rf /var/cache/apk/*
+RUN setcap cap_net_bind_service+ep /app/chisel
+
 USER nobody
 ENTRYPOINT ["/app/chisel"]
