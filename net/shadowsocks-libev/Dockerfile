@@ -58,11 +58,10 @@ ENV MTU=1500
 ENV PLUGIN=
 ENV PLUGIN_OPTS=
 
-ENV TZ=Asia/Taipei
 ENV PATH=/app:$PATH
 
 RUN apk update \
-  && apk add --no-cache ca-certificates rng-tools tzdata \
+  && apk add --no-cache ca-certificates rng-tools \
       c-ares-dev mbedtls-dev pcre-dev libev-dev libsodium-dev
 
 COPY --from=builder /app/bin/ss-* /app/
