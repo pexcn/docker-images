@@ -27,19 +27,15 @@ RUN apk update \
 FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
-ENV BIND_ADDRESS=0.0.0.0:995
-ENV ARGS=
+ENV BIND_ADDRESS=0.0.0.0:990
 ENV SECRET_KEY=ee3471158e7a53644c047d6b6b8743f8ba62696e672e636f6d
-
-# set timezone
-ENV TZ=Asia/Taipei
-RUN apk update \
-  && apk add --no-cache tzdata
+ENV ARGS=
 
 COPY --from=builder /mtg /app/mtg
 
 # allow bind port less than 1024
-RUN apk add --no-cache libcap \
+RUN apk update \
+  && apk add --no-cache libcap \
   && setcap cap_net_bind_service+ep /app/mtg \
   && rm -rf /var/cache/apk/*
 
