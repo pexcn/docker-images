@@ -10,11 +10,11 @@ FROM alpine AS builder
 # add depends
 RUN apk update \
   && apk add --no-cache --virtual .build-deps \
-      build-base autoconf automake libtool linux-headers git libcap \
+      build-base autoconf automake libtool linux-headers git \
       c-ares-dev mbedtls-dev pcre-dev libev-dev libsodium-dev
 
 # build shadowsocks-libev
-ARG SS_VERSION=13f472077d52c147057a198e552ea8cd6791631a
+ARG SS_VERSION=6329526199674ddda8d8396a66072890b244972b
 RUN git clone https://github.com/shadowsocks/shadowsocks-libev.git --recurse-submodules -j2 \
   && cd shadowsocks-libev \
   && git checkout $SS_VERSION \
@@ -24,7 +24,6 @@ RUN git clone https://github.com/shadowsocks/shadowsocks-libev.git --recurse-sub
   && make install-strip \
   && cd .. \
   && rm -r shadowsocks-libev \
-  && ls /app/bin/ss-* | xargs -n1 setcap cap_net_bind_service+ep
 
 # build simple-obfs
 ARG OBFS_VERSION=486bebd9208539058e57e23a12f23103016e09b4
@@ -37,7 +36,6 @@ RUN git clone https://github.com/shadowsocks/simple-obfs.git --recurse-submodule
   && make install-strip \
   && cd .. \
   && rm -r simple-obfs \
-  && ls /app/bin/obfs-* | xargs -n1 setcap cap_net_bind_service+ep
 
 # clean up
 RUN apk del .build-deps \
@@ -65,11 +63,16 @@ ENV PATH=/app:$PATH
 
 RUN apk update \
   && apk add --no-cache ca-certificates rng-tools tzdata \
-      c-ares-dev mbedtls-dev pcre-dev libev-dev libsodium-dev \
-  && rm -rf /var/cache/apk/*
+      c-ares-dev mbedtls-dev pcre-dev libev-dev libsodium-dev
 
 COPY --from=builder /app/bin/ss-* /app/
 COPY --from=builder /app/bin/obfs-* /app/
 COPY entrypoint.sh /app/entrypoint.sh
 
+# allow bind port less than 1024
+RUN apk add --no-cache libcap \
+  && setcap cap_net_bind_service+ep /app/bin/ss-* /app/bin/obfs-* \
+  && rm -rf /var/cache/apk/*
+
+USER root
 ENTRYPOINT ["/app/entrypoint.sh"]
