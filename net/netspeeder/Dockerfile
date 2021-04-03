@@ -37,6 +37,7 @@ RUN apk update \
   && rm -rf /var/cache/apk/*
 
 COPY --from=builder /app/bin/netspeeder /app/netspeeder
+COPY entrypoint.sh /app/entrypoint.sh
 
 USER root
-ENTRYPOINT ["/app/netspeeder"]
+ENTRYPOINT ["/app/entrypoint.sh"]
