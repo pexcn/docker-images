@@ -27,6 +27,7 @@ docker run --rm \
   --privileged \
   -e "SMARTD_PARAMS=DEVICESCAN -a -m pexcn97@gmail.com -M test" \
   -e "SMTP_CONFIG=mail@example.com#user:pass@smtp.example.com:587" \
+  -v /etc/localtime:/etc/localtime:ro \
   pexcn/docker-images:smartmontools
 
 # then use it normally
@@ -37,5 +38,6 @@ docker run -d \
   --privileged \
   -e "SMARTD_PARAMS=DEVICESCAN -a -s (S/../../7/19|L/../15/./20) -W 0,0,45 -m pexcn97@gmail.com -M once" \
   -e "SMTP_CONFIG=mail@example.com#user:pass@smtp.example.com:587" \
+  -v /etc/localtime:/etc/localtime:ro \
   pexcn/docker-images:smartmontools
 ```

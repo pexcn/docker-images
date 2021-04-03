@@ -30,12 +30,6 @@ RUN apk del .build-deps \
 FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
-# set timezone
-ENV TZ=Asia/Taipei
-RUN apk update \
-  && apk add --no-cache tzdata \
-  && rm -rf /var/cache/apk/*
-
 # copy files
 COPY --from=builder /app/ /app/
 RUN chown nobody:nobody /app/etc

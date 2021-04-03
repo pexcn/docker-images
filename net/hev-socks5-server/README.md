@@ -17,5 +17,6 @@ docker run -d \
   --name hev-socks5-server \
   --restart always \
   --network host \
+  -v /etc/localtime:/etc/localtime:ro \
   pexcn/docker-images:hev-socks5-server
 ```

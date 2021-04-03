@@ -21,10 +21,5 @@ RUN apk update \
   && gunzip chisel.gz \
   && chmod +x chisel
 
-# set timezone
-ENV TZ=Asia/Taipei
-RUN apk add --no-cache tzdata \
-  && rm -rf /var/cache/apk/*
-
 USER nobody
 ENTRYPOINT ["/app/chisel"]

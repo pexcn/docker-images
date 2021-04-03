@@ -45,11 +45,11 @@ COPY --from=builder /app/settings.toml /app/settings.toml
 COPY assets-override /app/assets
 COPY entrypoint.sh /app/entrypoint.sh
 
-# fix permissions
+# allow bind port less than 1024 & fix permissions
 RUN apk add --no-cache libcap \
   && rm -rf /var/cache/apk/*
 RUN setcap cap_net_bind_service+ep /app/speedtest-go \
   && chown nobody:nobody /app /app/assets
-USER nobody
 
+USER nobody
 ENTRYPOINT ["/app/entrypoint.sh"]

@@ -15,11 +15,6 @@ RUN apk update \
       msmtp=$MSMTP_VERSION \
       s-nail=$S_NAIL_VERSION
 
-# set timezone
-ENV TZ=Asia/Taipei
-RUN apk add --no-cache tzdata \
-  && rm -rf /var/cache/apk/*
-
 # make msmtp as sendmail alias
 RUN ln -sf /usr/bin/msmtp /usr/sbin/sendmail
 
