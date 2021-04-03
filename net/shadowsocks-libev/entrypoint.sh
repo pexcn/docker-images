@@ -25,5 +25,5 @@ if [[ -n "$SERVER_HOST" && -n "$SERVER_PORT" && -n "$PASSWORD" ]]; then
     --no-delay \
     $ARGS
 else
-  exec /app/$@
+  exec /app/"$@"
 fi
