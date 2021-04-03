@@ -11,7 +11,7 @@ FIX_MTU
 ```bash
 docker run -d \
   --name pptpd \
-  --restart always \
+  --restart unless-stopped \
   --network host \
   --privileged \
   -e AUTH="user:pass" \

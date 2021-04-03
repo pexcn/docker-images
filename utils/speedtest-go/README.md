@@ -13,7 +13,7 @@ PASSWORD
 ```bash
 docker run -d \
   --name speedtest-go \
-  --restart always \
+  --restart unless-stopped \
   --network host \
   -e TITLE="FREE 2501 Speedtest" \
   -e PASSWORD=FREE2501 \
@@ -22,7 +22,7 @@ docker run -d \
 
 docker run -d \
   --name speedtest-go \
-  --restart always \
+  --restart unless-stopped \
   --network host \
   -e TITLE="NAS Speedtest" \
   -e PORT=8989 \

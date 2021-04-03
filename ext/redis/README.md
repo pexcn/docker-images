@@ -14,7 +14,7 @@ sysctl --system
 # run redis bind localhost
 docker run -d \
   --name redis \
-  --restart always \
+  --restart unless-stopped \
   --network host \
   -v /mnt/storage/docker/redis:/data \
   -v /etc/localtime:/etc/localtime:ro \
@@ -23,7 +23,7 @@ docker run -d \
 # run redis with password
 docker run -d \
   --name redis \
-  --restart always \
+  --restart unless-stopped \
   --network host \
   -v /mnt/storage/docker/redis:/data \
   -v /etc/localtime:/etc/localtime:ro \

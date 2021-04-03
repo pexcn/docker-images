@@ -21,7 +21,7 @@ PLUGIN_OPTS
 # ss-server
 docker run -d \
   --name ss-server \
-  --restart always \
+  --restart unless-stopped \
   --network host \
   -e SERVER_HOST=0.0.0.0 \
   -e SERVER_PORT=443 \
@@ -33,7 +33,7 @@ docker run -d \
 # ss-server with plugin
 docker run -d \
   --name ss-server-obfs \
-  --restart always \
+  --restart unless-stopped \
   --network host \
   -e SERVER_HOST=0.0.0.0 \
   -e SERVER_PORT=1776 \
@@ -47,7 +47,7 @@ docker run -d \
 # ss-local
 docker run -d \
   --name ss-local \
-  --restart always \
+  --restart unless-stopped \
   --network host \
   -v /etc/localtime:/etc/localtime:ro \
   pexcn/docker-images:shadowsocks-libev \

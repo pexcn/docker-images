@@ -5,7 +5,7 @@
 ```bash
 docker run -d \
   --name mtg \
-  --restart always \
+  --restart unless-stopped \
   --network host \
   -e BIND_ADDRESS=0.0.0.0:990 \
   -e SECRET_KEY=ee3471158e7a53644c047d6b6b8743f8ba62696e672e636f6d \

@@ -7,7 +7,7 @@
 sudo mkdir /root/.ssh
 sudo docker run -d \
   --name open-vm-tools \
-  --restart always \
+  --restart unless-stopped \
   --network host \
   -v /root/.ssh/:/root/.ssh/ \
   pexcn/docker-images:dsm-open-vm-tools

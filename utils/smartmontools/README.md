@@ -33,7 +33,7 @@ docker run --rm \
 # then use it normally
 docker run -d \
   --name smartmontools \
-  --restart always \
+  --restart unless-stopped \
   --network host \
   --privileged \
   -e SMARTD_PARAMS="DEVICESCAN -a -s (S/../../7/19|L/../15/./20) -W 0,0,45 -m pexcn97@gmail.com -M once" \

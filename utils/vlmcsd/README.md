@@ -5,7 +5,7 @@
 ```bash
 docker run -d \
   --name vlmcsd \
-  --restart always \
+  --restart unless-stopped \
   --network host \
   -v /etc/localtime:/etc/localtime:ro \
   pexcn/docker-images:vlmcsd

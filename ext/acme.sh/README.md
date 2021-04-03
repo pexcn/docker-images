@@ -5,7 +5,7 @@
 ```bash
 docker run -d \
   --name acme.sh \
-  --restart always \
+  --restart unless-stopped \
   --network host \
   -e HE_Username=user \
   -e HE_Password=pass \

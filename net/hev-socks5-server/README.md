@@ -15,7 +15,7 @@ LOG_LEVEL
 ```bash
 docker run -d \
   --name hev-socks5-server \
-  --restart always \
+  --restart unless-stopped \
   --network host \
   -v /etc/localtime:/etc/localtime:ro \
   pexcn/docker-images:hev-socks5-server

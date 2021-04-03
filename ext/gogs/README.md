@@ -8,7 +8,7 @@ useradd git -m -s $(which git-shell)
 
 docker run -d \
   --name gogs \
-  --restart always \
+  --restart unless-stopped \
   --network host \
   -e PUID="$(id -u git)" \
   -e PGID="$(id -g git)" \

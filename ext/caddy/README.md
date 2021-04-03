@@ -5,7 +5,7 @@
 ```bash
 docker run -d \
   --name caddy \
-  --restart always \
+  --restart unless-stopped \
   --network host \
   -v /mnt/storage/docker/caddy/Caddyfile:/etc/caddy/Caddyfile \
   -v /mnt/storage/docker/acme.sh:/certs \
