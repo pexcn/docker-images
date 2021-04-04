@@ -3,7 +3,7 @@
 ## Usage
 
 ```bash
-# server mode
+# server
 docker run -d \
   --name chisel-server \
   --restart unless-stopped \
@@ -11,7 +11,7 @@ docker run -d \
   -v /etc/localtime:/etc/localtime:ro \
   pexcn/docker-images:chisel server -p 1985 --socks5 --keepalive 10m
 
-# client mode
+# client
 docker run -d \
   --name chisel-client \
   --restart unless-stopped \
