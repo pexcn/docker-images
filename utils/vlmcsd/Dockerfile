@@ -2,26 +2,39 @@
 # Dockerfile for vlmcsd
 #
 
+#
+# Build stage
+#
+FROM alpine AS builder
+
+# depends
+RUN apk update \
+  && apk add --no-cache --virtual .build-deps build-base git
+
+# build
+ARG VERSION=svn1113
+RUN git clone https://github.com/Wind4/vlmcsd.git --branch $VERSION --recurse-submodules -j2 vlmcsd-src \
+  && cd vlmcsd-src \
+  && make -j$(nproc) CFLAGS="-O3 -DFULL_INTERNAL_DATA" \
+  && cp bin/vlmcs bin/vlmcsd etc/vlmcsd.ini / \
+  && make clean \
+  && cd .. \
+  && rm -r vlmcsd-src
+
+# clean
+RUN apk del .build-deps \
+  && rm -rf /var/cache/apk/*
+
+#
+# Runtime stage
+#
 FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
-# download binary
-ARG TARGETPLATFORM
-ARG VERSION=svn1113
-RUN cd /tmp \
-  && wget https://github.com/Wind4/vlmcsd/releases/download/$VERSION/binaries.tar.gz \
-  && if [[ "$TARGETPLATFORM" == "linux/amd64" ]]; then \
-       tar -zxvf binaries.tar.gz binaries/Linux/intel/static/vlmcsd-x64-musl-static --strip-components 4; \
-     elif [[ "$TARGETPLATFORM" == "linux/arm64" ]]; then \
-       tar -zxvf binaries.tar.gz binaries/Linux/arm/little-endian/static/vlmcsd-armv7el-uclibc-static --strip-components 5; \
-     else \
-       tar -zxvf binaries.tar.gz binaries/Linux/intel/static/vlmcsd-x64-musl-static --strip-components 4; \
-     fi \
-  && mkdir /app && mv vlmcsd-* /app/vlmcsd \
-  && chown root:root /app/vlmcsd \
-  && rm binaries.tar.gz
-
-COPY vlmcsd.ini /app/vlmcsd.ini
+COPY --from=builder /vlmcs /app/
+COPY --from=builder /vlmcsd /app/
+COPY --from=builder /vlmcsd.ini /app/
 
 USER nobody
+EXPOSE 1688/tcp
 ENTRYPOINT /app/vlmcsd -i /app/vlmcsd.ini -e -D
