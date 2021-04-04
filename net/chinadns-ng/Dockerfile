@@ -16,7 +16,7 @@ ARG VERSION=df3bb7c6310df9b3c0f874b7a0c38ea5ce0996cb
 RUN git clone https://github.com/zfl9/chinadns-ng.git \
   && cd chinadns-ng \
   && git checkout $VERSION \
-  && make -j$(nproc) CFLAGS="-O3 -pipe" \
+  && make -j$(nproc) CFLAGS="-std=c99 -Wall -Wextra -O3 -pipe" \
   && make install DESTDIR="/app" \
   && make clean \
   && cd .. \
