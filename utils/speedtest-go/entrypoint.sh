@@ -13,9 +13,5 @@ if [[ -n "$PORT" && "$PORT" != 8989 ]]; then
   sed -i "s/listen_port=8989/listen_port=$PORT/" /app/settings.toml
 fi
 
-if [[ -n "$PASSWORD" && "$PASSWORD" != "PASSWORD" ]]; then
-  sed -i "s/statistics_password=\"PASSWORD\"/statistics_password=\"$PASSWORD\"/" /app/settings.toml
-fi
-
 cd /app
 exec /app/speedtest-go

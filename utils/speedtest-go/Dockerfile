@@ -8,7 +8,7 @@
 FROM golang:alpine AS builder
 
 # build
-ARG VERSION=v1.1.2
+ARG VERSION=v1.1.3
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git gcc ca-certificates libc-dev \
   && git clone https://github.com/librespeed/speedtest-go.git --branch $VERSION /tmp/speedtest-go \
@@ -32,8 +32,8 @@ RUN apk del .build-deps \
 FROM alpine
 
 ENV TITLE="LibreSpeed"
+ENV ADDR=
 ENV PORT=80
-ENV PASSWORD="PASSWD"
 
 # add depends
 RUN apk update \
