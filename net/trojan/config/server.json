@@ -8,7 +8,7 @@
         "password1",
         "password2"
     ],
-    "log_level": 1,
+    "log_level": 2,
     "ssl": {
         "cert": "/app/etc/fullchain.cer",
         "key": "/app/etc/private.key",

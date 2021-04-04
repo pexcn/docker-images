@@ -5,7 +5,7 @@
 ```bash
 # server
 docker run -d \
-  --name trojan \
+  --name trojan-server \
   --restart unless-stopped \
   --network host \
   -v /root/trojan/server.json:/app/etc/trojan/config.json \
@@ -16,7 +16,7 @@ docker run -d \
 
 # client
 docker run -d \
-  --name trojan \
+  --name trojan-client \
   --restart unless-stopped \
   --network host \
   -v /root/trojan/client.json:/app/etc/trojan/config.json \

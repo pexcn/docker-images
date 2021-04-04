@@ -7,7 +7,7 @@
     "password": [
         "password1"
     ],
-    "log_level": 1,
+    "log_level": 2,
     "ssl": {
         "verify": true,
         "verify_hostname": true,
