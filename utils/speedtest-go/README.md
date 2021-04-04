@@ -23,6 +23,7 @@ docker run -d \
   --restart unless-stopped \
   --network host \
   -e TITLE="NAS Speedtest" \
+  -e ADDR=127.0.0.1 \
   -e PORT=8989 \
   -v /etc/localtime:/etc/localtime:ro \
   pexcn/docker-images:speedtest-go
