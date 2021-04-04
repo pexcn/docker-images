@@ -37,6 +37,9 @@ jobs:
           # chisel
           - BUILD_CONTEXT: net/chisel
             TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # dns2tcp
+          - BUILD_CONTEXT: net/dns2tcp
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # hev-socks5-server
           - BUILD_CONTEXT: net/hev-socks5-server
             TARGET_PLATFORMS: linux/amd64,linux/arm64
