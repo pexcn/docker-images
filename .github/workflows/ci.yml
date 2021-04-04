@@ -43,6 +43,9 @@ jobs:
           # hev-socks5-server
           - BUILD_CONTEXT: net/hev-socks5-server
             TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # ipt2socks
+          - BUILD_CONTEXT: net/ipt2socks
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # mtg
           - BUILD_CONTEXT: net/mtg
             TARGET_PLATFORMS: linux/amd64,linux/arm64
