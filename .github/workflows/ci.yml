@@ -2,11 +2,15 @@ name: CI
 
 on:
   push:
-    branches: master
+    branches:
+      - master
+    paths-ignore:
+      - 'ext/**'
   workflow_dispatch:
 
 jobs:
   build-and-push:
+    #if: "!startsWith(github.event.head_commit.message, 'ext:')"
     runs-on: ubuntu-20.04
     env:
       TZ: Asia/Taipei
