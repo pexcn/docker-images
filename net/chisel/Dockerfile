@@ -6,7 +6,7 @@ FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
 # download binary
-ARG VERSION=1.7.4
+ARG VERSION=1.7.6
 ARG TARGETOS
 ARG TARGETARCH
 RUN apk update \
