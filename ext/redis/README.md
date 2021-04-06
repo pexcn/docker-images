@@ -16,7 +16,7 @@ docker run -d \
   --name redis \
   --restart unless-stopped \
   --network host \
-  -v /mnt/storage/docker/redis:/data \
+  -v /root/docker/redis:/data \
   -v /etc/localtime:/etc/localtime:ro \
   redis:6.2.0-alpine --bind 127.0.0.1
 
@@ -25,7 +25,7 @@ docker run -d \
   --name redis \
   --restart unless-stopped \
   --network host \
-  -v /mnt/storage/docker/redis:/data \
+  -v /root/docker/redis:/data \
   -v /etc/localtime:/etc/localtime:ro \
   redis:6.2.0-alpine --requirepass pass
 ```

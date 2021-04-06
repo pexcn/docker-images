@@ -12,8 +12,8 @@ docker run -d \
   --network host \
   -e PUID="$(id -u git)" \
   -e PGID="$(id -g git)" \
-  -v /mnt/storage/docker/gogs:/data \
-  -v /mnt/storage/docker/acme.sh:/certs \
+  -v /root/docker/gogs:/data \
+  -v /root/docker/acme.sh:/certs \
   -v /etc/localtime:/etc/localtime:ro \
   gogs/gogs:0.12.3
 ```
