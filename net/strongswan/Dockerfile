@@ -11,3 +11,9 @@ RUN apk update \
   && apk add --no-cache \
       strongswan=$STRONGSWAN_VER \
       xl2tpd=$XL2TPD_VER
+
+ENV PSK=pre_shared_key
+
+COPY entrypoint.sh /app/entrypoint.sh
+
+ENTRYPOINT ["/app/entrypoint.sh"]
