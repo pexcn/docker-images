@@ -10,11 +10,10 @@ gen_ipsec_secrets() {
 }
 
 gen_ipsec_conf() {
-  # common
   cat <<- EOF >> /etc/ipsec.conf
 	config setup
 	    uniqueids=no
-  EOF
+EOF
 
   # l2tp-psk
   cat <<- EOF >> /etc/ipsec.conf
@@ -28,10 +27,13 @@ gen_ipsec_conf() {
 	    dpdaction=clear
 	    rekey=no
 	    auto=add
-  EOF
+EOF
+}
 
-  # l2tp-xauth
-  # ikev2
+apply_sysctl() {
+  sysctl -w net.ipv4.ip_forward=1
+  sysctl -w net.ipv4.conf.all.accept_redirects=0
+  sysctl -w net.ipv4.conf.all.send_redirects=0
 }
 
 build_config() {
@@ -40,12 +42,8 @@ build_config() {
   gen_ipsec_conf
 }
 
-
-
-sysctl -w net.ipv4.ip_forward=1
-sysctl -w net.ipv4.conf.all.accept_redirects=0
-sysctl -w net.ipv4.conf.all.send_redirects=0
-
+apply_sysctl
 build_config
 
 ipsec start
+sleep 65535
