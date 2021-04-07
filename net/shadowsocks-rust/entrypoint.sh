@@ -1,3 +1,6 @@
 #!/bin/sh
+set -e
 
-exec /app/"$@"
+PATH=/app:$PATH
+
+exec "$@"
