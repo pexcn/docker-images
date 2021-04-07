@@ -58,6 +58,9 @@ jobs:
           # shadowsocks-libev
           - BUILD_CONTEXT: net/shadowsocks-libev
             TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # shadowsocks-rust
+          - BUILD_CONTEXT: net/shadowsocks-rust
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # tor
           - BUILD_CONTEXT: net/tor
             TARGET_PLATFORMS: linux/amd64,linux/arm64
