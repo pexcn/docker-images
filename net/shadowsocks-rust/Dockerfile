@@ -33,11 +33,13 @@ LABEL maintainer="pexcn <i@pexcn.me>"
 COPY --from=builder /app/ /app/
 COPY entrypoint.sh /app/
 
-# allow bind port less than 1024
+# allow bind port less than 1024 & grant network admin capability
 RUN apk update \
   && apk add --no-cache libcap \
   && rm -rf /var/cache/apk/*
-RUN ls /app/ss* | xargs -n 1 setcap cap_net_bind_service+ep
+RUN setcap cap_net_bind_service,cap_net_admin+ep /app/sslocal \
+  && setcap cap_net_bind_service+ep /app/ssserver \
+  && setcap cap_net_bind_service+ep /app/ssmanager
 
 USER nobody
 ENTRYPOINT ["/app/entrypoint.sh"]
