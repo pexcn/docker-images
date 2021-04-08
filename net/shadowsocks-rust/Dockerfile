@@ -84,14 +84,16 @@ RUN apk del .build-deps \
 FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
+RUN apk update \
+  && apk add --no-cache libev
+
 COPY --from=builder /app/ /app/
 COPY --from=builder-c /app/bin/ /app/
 COPY --from=builder-go /app/ /app/
 COPY entrypoint.sh /app/
 
 # allow bind port less than 1024 & grant network admin capability
-RUN apk update \
-  && apk add --no-cache libcap \
+RUN apk add --no-cache libcap \
   && rm -rf /var/cache/apk/*
 RUN setcap cap_net_bind_service,cap_net_admin+ep /app/sslocal \
   && setcap cap_net_bind_service+ep /app/ssserver \
