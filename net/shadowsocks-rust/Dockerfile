@@ -25,9 +25,33 @@ RUN apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
 #
-# Build stage (golang)
+# Build stage (C)
 #
-FROM golang:alpine AS builder-golang
+FROM alpine AS builder-c
+
+RUN apk update \
+  && apk add --no-cache --virtual .build-deps \
+      build-base autoconf automake libtool \
+      git linux-headers libev-dev
+
+ARG OBFS_VERSION=486bebd9208539058e57e23a12f23103016e09b4
+RUN git clone https://github.com/shadowsocks/simple-obfs.git --recurse-submodules -j2 \
+  && cd simple-obfs \
+  && git checkout $OBFS_VERSION \
+  && ./autogen.sh \
+  && ./configure --prefix="/app" --disable-documentation --disable-assert \
+  && make -j$(nproc) \
+  && make install-strip \
+  && cd .. \
+  && rm -r simple-obfs
+
+RUN apk del .build-deps \
+  && rm -rf /var/cache/apk/*
+
+#
+# Build stage (Go)
+#
+FROM golang:alpine AS builder-go
 
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git
@@ -61,7 +85,8 @@ FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
 COPY --from=builder /app/ /app/
-COPY --from=builder-golang /app/ /app/
+COPY --from=builder-c /app/bin/ /app/
+COPY --from=builder-go /app/ /app/
 COPY entrypoint.sh /app/
 
 # allow bind port less than 1024 & grant network admin capability
@@ -71,6 +96,8 @@ RUN apk update \
 RUN setcap cap_net_bind_service,cap_net_admin+ep /app/sslocal \
   && setcap cap_net_bind_service+ep /app/ssserver \
   && setcap cap_net_bind_service+ep /app/ssmanager \
+  && setcap cap_net_bind_service+ep /app/obfs-local \
+  && setcap cap_net_bind_service+ep /app/obfs-server \
   && setcap cap_net_bind_service+ep /app/v2ray-plugin \
   && setcap cap_net_bind_service+ep /app/xray-plugin
 

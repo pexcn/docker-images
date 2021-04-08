@@ -38,9 +38,9 @@ RUN apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
 #
-# Build stage (golang)
+# Build stage (Go)
 #
-FROM golang:alpine AS builder-golang
+FROM golang:alpine AS builder-go
 
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git
@@ -78,7 +78,7 @@ RUN apk update \
       c-ares mbedtls pcre libev libsodium
 
 COPY --from=builder /app/bin/ /app/
-COPY --from=builder-golang /app/ /app/
+COPY --from=builder-go /app/ /app/
 COPY entrypoint.sh /app/
 
 # set capabilities
