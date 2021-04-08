@@ -90,8 +90,6 @@ docker run -d \
 
 ```bash
 # TODO
-ssmanager
-
 --plugin
 --plugin-opts
 --inbound-recv-buffer-size
