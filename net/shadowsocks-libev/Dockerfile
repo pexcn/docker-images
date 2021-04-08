@@ -7,13 +7,11 @@
 #
 FROM alpine AS builder
 
-# add depends
 RUN apk update \
   && apk add --no-cache --virtual .build-deps \
       build-base autoconf automake libtool linux-headers git \
       c-ares-dev mbedtls-dev pcre-dev libev-dev libsodium-dev
 
-# build shadowsocks-libev
 ARG SS_VERSION=6329526199674ddda8d8396a66072890b244972b
 RUN git clone https://github.com/shadowsocks/shadowsocks-libev.git --recurse-submodules -j2 \
   && cd shadowsocks-libev \
@@ -25,11 +23,10 @@ RUN git clone https://github.com/shadowsocks/shadowsocks-libev.git --recurse-sub
   && cd .. \
   && rm -r shadowsocks-libev
 
-# build simple-obfs
-ARG OBFS_VERSION=486bebd9208539058e57e23a12f23103016e09b4
+ARG OBFS_VER=486bebd9208539058e57e23a12f23103016e09b4
 RUN git clone https://github.com/shadowsocks/simple-obfs.git --recurse-submodules -j2 \
   && cd simple-obfs \
-  && git checkout $OBFS_VERSION \
+  && git checkout $OBFS_VER \
   && ./autogen.sh \
   && ./configure --prefix="/app" --disable-documentation --disable-assert \
   && make -j$(nproc) \
@@ -37,7 +34,6 @@ RUN git clone https://github.com/shadowsocks/simple-obfs.git --recurse-submodule
   && cd .. \
   && rm -r simple-obfs
 
-# clean up
 RUN apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
@@ -47,31 +43,18 @@ RUN apk del .build-deps \
 FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
-ENV SERVER_HOST=
-ENV SERVER_PORT=
-ENV PASSWORD=
-ENV METHOD=chacha20-ietf-poly1305
-ENV TIMEOUT=3600
-ENV NOFILE=65535
-ENV DNS_SERVERS=8.8.8.8,8.8.4.4
-ENV MTU=1500
-ENV PLUGIN=
-ENV PLUGIN_OPTS=
-
-ENV PATH=/app:$PATH
-
 RUN apk update \
   && apk add --no-cache ca-certificates rng-tools \
-      c-ares-dev mbedtls-dev pcre-dev libev-dev libsodium-dev
+      c-ares mbedtls pcre libev libsodium
 
-COPY --from=builder /app/bin/ss-* /app/
-COPY --from=builder /app/bin/obfs-* /app/
-COPY entrypoint.sh /app/entrypoint.sh
+COPY --from=builder /app/bin/ /app/
+COPY entrypoint.sh /app/
 
-# allow bind port less than 1024
+# set capabilities
 RUN apk add --no-cache libcap \
   && rm -rf /var/cache/apk/*
-RUN ls /app/ss-* /app/obfs-* | xargs -n 1 setcap cap_net_bind_service+ep
+RUN ls /app/ss-* /app/obfs-* | xargs -n 1 setcap cap_net_bind_service+ep \
+  && ls /app/ss-redir | xargs -n 1 setcap cap_net_bind_service,cap_net_admin+ep
 
-USER root
+USER nobody
 ENTRYPOINT ["/app/entrypoint.sh"]

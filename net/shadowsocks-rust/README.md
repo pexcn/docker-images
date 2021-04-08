@@ -30,7 +30,7 @@ docker run -d \
   --privileged \
   -v /etc/localtime:/etc/localtime:ro \
   pexcn/docker-images:shadowsocks-rust sslocal \
-    --local-addr 127.0.0.1:1080 \
+    --local-addr 0.0.0.0:1080 \
     --server-addr 111.222.33.44:80 \
     --password password \
     --encrypt-method aes-128-gcm \
