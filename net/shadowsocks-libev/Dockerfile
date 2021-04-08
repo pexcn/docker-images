@@ -23,16 +23,37 @@ RUN git clone https://github.com/shadowsocks/shadowsocks-libev.git --recurse-sub
   && cd .. \
   && rm -r shadowsocks-libev
 
-ARG OBFS_VER=486bebd9208539058e57e23a12f23103016e09b4
+ARG OBFS_VERSION=486bebd9208539058e57e23a12f23103016e09b4
 RUN git clone https://github.com/shadowsocks/simple-obfs.git --recurse-submodules -j2 \
   && cd simple-obfs \
-  && git checkout $OBFS_VER \
+  && git checkout $OBFS_VERSION \
   && ./autogen.sh \
   && ./configure --prefix="/app" --disable-documentation --disable-assert \
   && make -j$(nproc) \
   && make install-strip \
   && cd .. \
   && rm -r simple-obfs
+
+RUN apk del .build-deps \
+  && rm -rf /var/cache/apk/*
+
+#
+# Build stage (golang)
+#
+FROM golang:alpine AS builder-golang
+
+RUN apk update \
+  && apk add --no-cache --virtual .build-deps git
+
+ARG V2RAY_VERSION=997ef6e19da10e689c1b9b724d36e9e869935523
+RUN git clone https://github.com/shadowsocks/v2ray-plugin.git \
+  && cd v2ray-plugin \
+  && git checkout $V2RAY_VERSION \
+  && env CGO_ENABLED=0 go build -v -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w" -o v2ray-plugin \
+  && mkdir /app \
+  && mv v2ray-plugin /app \
+  && cd .. \
+  && rm -r v2ray-plugin
 
 RUN apk del .build-deps \
   && rm -rf /var/cache/apk/*
@@ -48,6 +69,7 @@ RUN apk update \
       c-ares mbedtls pcre libev libsodium
 
 COPY --from=builder /app/bin/ /app/
+COPY --from=builder-golang /app/ /app/
 COPY entrypoint.sh /app/
 
 # set capabilities
