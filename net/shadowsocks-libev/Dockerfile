@@ -49,7 +49,7 @@ ARG V2RAY_VERSION=997ef6e19da10e689c1b9b724d36e9e869935523
 RUN git clone https://github.com/shadowsocks/v2ray-plugin.git \
   && cd v2ray-plugin \
   && git checkout $V2RAY_VERSION \
-  && env CGO_ENABLED=0 go build -v -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w" -o v2ray-plugin \
+  && env CGO_ENABLED=0 go build -v -trimpath -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w" -o v2ray-plugin \
   && mkdir /app \
   && mv v2ray-plugin /app \
   && cd .. \
@@ -75,7 +75,7 @@ COPY entrypoint.sh /app/
 # set capabilities
 RUN apk add --no-cache libcap \
   && rm -rf /var/cache/apk/*
-RUN ls /app/ss-* /app/obfs-* | xargs -n 1 setcap cap_net_bind_service+ep \
+RUN ls /app/ss-* /app/obfs-* /app/v2ray-plugin | xargs -n 1 setcap cap_net_bind_service+ep \
   && ls /app/ss-redir | xargs -n 1 setcap cap_net_bind_service,cap_net_admin+ep
 
 USER nobody

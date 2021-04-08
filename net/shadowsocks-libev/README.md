@@ -24,6 +24,8 @@ docker run -d \
     --no-delay \
     --mtu 1500
 # --plugin "obfs-server" --plugin-opts "obfs=tls;fast-open"
+# --plugin "v2ray-plugin" --plugin-opts "server;tls;fast-open;mode=websocket;host=example.com"
+# --plugin "v2ray-plugin" --plugin-opts "server;tls;fast-open;mode=quic;host=example.com"
 
 # ss-local
 docker run -d \
@@ -47,6 +49,8 @@ docker run -d \
     --no-delay \
     --mtu 1500
 # --plugin "obfs-local" --plugin-opts "obfs=tls;obfs-host=www.bing.com;fast-open"
+# --plugin "v2ray-plugin" --plugin-opts "tls;fast-open;mode=websocket;host=example.com"
+# --plugin "v2ray-plugin" --plugin-opts "tls;fast-open;mode=quic;host=example.com"
 
 # ss-redir
 docker run -d \
@@ -70,7 +74,6 @@ docker run -d \
     --fast-open \
     --no-delay \
     --mtu 1500
-# --plugin "obfs-local" --plugin-opts "obfs=tls;obfs-host=www.bing.com;fast-open"
 
 # ss-tunnel
 docker run -d \
@@ -94,7 +97,6 @@ docker run -d \
     --fast-open \
     --no-delay \
     --mtu 1500
-# --plugin "obfs-local" --plugin-opts "obfs=tls;obfs-host=www.bing.com;fast-open"
 ```
 
 ```bash
