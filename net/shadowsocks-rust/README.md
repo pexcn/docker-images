@@ -21,10 +21,8 @@ docker run -d \
     --nofile 1048576 \
     --no-delay \
     -U
-# --plugin "v2ray-plugin" --plugin-opts "server;tls;fast-open;mode=websocket;host=example.com"
-# --plugin "v2ray-plugin" --plugin-opts "server;tls;fast-open;mode=quic;host=example.com"
-# --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;mode=websocket;host=example.com"
-# --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;mode=quic;host=example.com"
+# --plugin "v2ray-plugin" --plugin-opts "server;tls;fast-open;host=example.com"
+# --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;host=example.com"
 
 # sslocal
 docker run -d \
@@ -46,10 +44,8 @@ docker run -d \
     -U
 # --protocol http
 # --dns tcp://127.0.0.1:5300
-# --plugin "v2ray-plugin" --plugin-opts "tls;fast-open;mode=websocket;host=example.com"
-# --plugin "v2ray-plugin" --plugin-opts "tls;fast-open;mode=quic;host=example.com"
-# --plugin "xray-plugin" --plugin-opts "tls;fast-open;mode=websocket;host=example.com"
-# --plugin "xray-plugin" --plugin-opts "tls;fast-open;mode=quic;host=example.com"
+# --plugin "v2ray-plugin" --plugin-opts "tls;fast-open;host=example.com"
+# --plugin "xray-plugin" --plugin-opts "tls;fast-open;host=example.com"
 
 # ssredir
 docker run -d \
