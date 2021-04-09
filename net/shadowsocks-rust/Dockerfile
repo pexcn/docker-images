@@ -10,7 +10,7 @@ FROM rust:alpine AS builder
 RUN apk update \
   && apk add --no-cache --virtual .build-deps musl-dev git
 
-ARG SS_VERSION=v1.10.3
+ARG SS_VERSION=v1.10.4
 RUN git clone https://github.com/shadowsocks/shadowsocks-rust.git --branch $SS_VERSION \
   && cd shadowsocks-rust \
   && RUSTFLAGS="-C link-arg=-s" cargo build --release --features "local-redir" \
