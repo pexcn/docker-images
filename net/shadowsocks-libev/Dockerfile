@@ -84,8 +84,15 @@ COPY entrypoint.sh /app/
 # set capabilities
 RUN apk add --no-cache libcap \
   && rm -rf /var/cache/apk/*
-RUN ls /app/ss-* /app/obfs-* /app/v2ray-plugin /app/xray-plugin | xargs -n 1 setcap cap_net_bind_service+ep \
-  && ls /app/ss-redir | xargs -n 1 setcap cap_net_bind_service,cap_net_admin+ep
+RUN setcap cap_net_bind_service,cap_net_admin+ep /app/ss-redir \
+  && setcap cap_net_bind_service+ep /app/ss-server \
+  && setcap cap_net_bind_service+ep /app/ss-local \
+  && setcap cap_net_bind_service+ep /app/ss-tunnel \
+  && setcap cap_net_bind_service+ep /app/ss-manager \
+  && setcap cap_net_bind_service+ep /app/obfs-server \
+  && setcap cap_net_bind_service+ep /app/obfs-local \
+  && setcap cap_net_bind_service+ep /app/v2ray-plugin \
+  && setcap cap_net_bind_service+ep /app/xray-plugin
 
 USER nobody
 ENTRYPOINT ["/app/entrypoint.sh"]

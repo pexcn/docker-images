@@ -92,7 +92,7 @@ COPY --from=builder-c /app/bin/ /app/
 COPY --from=builder-go /app/ /app/
 COPY entrypoint.sh /app/
 
-# allow bind port less than 1024 & grant network admin capability
+# set capabilities
 RUN apk add --no-cache libcap \
   && rm -rf /var/cache/apk/*
 RUN setcap cap_net_bind_service,cap_net_admin+ep /app/sslocal \

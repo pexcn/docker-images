@@ -21,6 +21,7 @@ docker run -d \
     --nofile 1048576 \
     --no-delay \
     -U
+# --plugin "obfs-server" --plugin-opts "obfs=tls;fast-open"
 # --plugin "v2ray-plugin" --plugin-opts "server;tls;fast-open;host=example.com"
 # --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;host=example.com"
 
@@ -44,6 +45,7 @@ docker run -d \
     -U
 # --protocol http
 # --dns tcp://127.0.0.1:5300
+# --plugin "obfs-local" --plugin-opts "obfs=tls;obfs-host=www.bing.com;fast-open"
 # --plugin "v2ray-plugin" --plugin-opts "tls;fast-open;host=example.com"
 # --plugin "xray-plugin" --plugin-opts "tls;fast-open;host=example.com"
 
