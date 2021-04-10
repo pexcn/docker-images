@@ -45,4 +45,4 @@ RUN apk add --no-cache libcap \
 RUN setcap cap_net_bind_service+ep /app/bin/trojan
 
 USER nobody
-ENTRYPOINT /app/bin/trojan -c /app/etc/trojan/config.json
+ENTRYPOINT ["/app/bin/trojan", "-c", "/app/etc/trojan/config.json"]

@@ -52,4 +52,5 @@ setup_firewall() {
 
 build_config
 setup_firewall
+
 exec pptpd -f

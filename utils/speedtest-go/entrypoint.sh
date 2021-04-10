@@ -13,5 +13,6 @@ if [[ -n "$PORT" && "$PORT" != 8989 ]]; then
   sed -i "s/listen_port=8989/listen_port=$PORT/" /app/settings.toml
 fi
 
+# must use /app as the base path
 cd /app
 exec /app/speedtest-go
