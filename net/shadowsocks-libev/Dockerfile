@@ -9,15 +9,23 @@ FROM alpine AS builder
 
 RUN apk update \
   && apk add --no-cache --virtual .build-deps \
-      build-base autoconf automake libtool linux-headers git \
-      c-ares-dev mbedtls-dev pcre-dev libev-dev libsodium-dev
+      build-base autoconf automake libtool pkgconfig linux-headers git \
+      c-ares-dev mbedtls-dev pcre-dev libev-dev libsodium-dev \
+      c-ares-static mbedtls-static libsodium-static
 
 ARG SS_VERSION=6329526199674ddda8d8396a66072890b244972b
 RUN git clone https://github.com/shadowsocks/shadowsocks-libev.git --recurse-submodules -j2 \
   && cd shadowsocks-libev \
   && git checkout $SS_VERSION \
   && ./autogen.sh \
-  && ./configure --prefix="/app" --disable-documentation --disable-assert \
+  && ./configure \
+      --prefix="/app" \
+      --disable-documentation \
+      --disable-assert \
+      --enable-static \
+      LIBS="-lpthread -lm" \
+      CFLAGS="-O3 -pipe" \
+      LDFLAGS="-Wl,--build-id=none -Wl,-static -static -static-libgcc -no-pie" \
   && make -j$(nproc) \
   && make install-strip \
   && cd .. \
@@ -28,7 +36,14 @@ RUN git clone https://github.com/shadowsocks/simple-obfs.git --recurse-submodule
   && cd simple-obfs \
   && git checkout $OBFS_VERSION \
   && ./autogen.sh \
-  && ./configure --prefix="/app" --disable-documentation --disable-assert \
+  && ./configure \
+      --prefix="/app" \
+      --disable-documentation \
+      --disable-assert \
+      --enable-static \
+      LIBS="-lpthread -lm" \
+      CFLAGS="-O3 -pipe" \
+      LDFLAGS="-Wl,--build-id=none -Wl,-static -static -static-libgcc -no-pie" \
   && make -j$(nproc) \
   && make install-strip \
   && cd .. \
@@ -74,8 +89,7 @@ FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
 RUN apk update \
-  && apk add --no-cache ca-certificates rng-tools \
-      c-ares mbedtls pcre libev libsodium
+  && apk add --no-cache ca-certificates rng-tools
 
 COPY --from=builder /app/bin/ /app/
 COPY --from=builder-go /app/ /app/
