@@ -3,9 +3,9 @@
 #
 
 #
-# Build stage
+# Build stage (shadowsocks-libev)
 #
-FROM alpine AS builder
+FROM alpine AS builder-ss
 
 RUN apk update \
   && apk add --no-cache --virtual .build-deps \
@@ -53,9 +53,9 @@ RUN apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
 #
-# Build stage (Go)
+# Build stage (v2ray-plugin & xray-plugin)
 #
-FROM golang:alpine AS builder-go
+FROM golang:alpine AS builder-ray
 
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git
@@ -91,8 +91,8 @@ LABEL maintainer="pexcn <i@pexcn.me>"
 RUN apk update \
   && apk add --no-cache ca-certificates rng-tools
 
-COPY --from=builder /app/bin/ /app/
-COPY --from=builder-go /app/ /app/
+COPY --from=builder-ss /app/bin/ /app/
+COPY --from=builder-ray /app/ /app/
 COPY entrypoint.sh /app/
 
 # set capabilities
