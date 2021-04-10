@@ -3,9 +3,9 @@
 #
 
 #
-# Build stage
+# Build stage (shadowsocks-rust)
 #
-FROM rust:alpine AS builder
+FROM rust:alpine AS builder-ss
 
 RUN apk update \
   && apk add --no-cache --virtual .build-deps musl-dev git
@@ -25,21 +25,28 @@ RUN apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
 #
-# Build stage (C)
+# Build stage (simple-obfs)
 #
-FROM alpine AS builder-c
+FROM alpine AS builder-obfs
 
 RUN apk update \
   && apk add --no-cache --virtual .build-deps \
-      build-base autoconf automake libtool \
-      git linux-headers libev-dev
+      build-base autoconf automake libtool pkgconfig linux-headers git \
+      libev-dev
 
 ARG OBFS_VERSION=486bebd9208539058e57e23a12f23103016e09b4
 RUN git clone https://github.com/shadowsocks/simple-obfs.git --recurse-submodules -j2 \
   && cd simple-obfs \
   && git checkout $OBFS_VERSION \
   && ./autogen.sh \
-  && ./configure --prefix="/app" --disable-documentation --disable-assert \
+  && ./configure \
+      --prefix="/app" \
+      --disable-documentation \
+      --disable-assert \
+      --enable-static \
+      LIBS="-lpthread -lm" \
+      CFLAGS="-O3 -pipe" \
+      LDFLAGS="-Wl,--build-id=none -Wl,-static -static -static-libgcc -no-pie" \
   && make -j$(nproc) \
   && make install-strip \
   && cd .. \
@@ -49,9 +56,9 @@ RUN apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
 #
-# Build stage (Go)
+# Build stage (v2ray-plugin & xray-plugin)
 #
-FROM golang:alpine AS builder-go
+FROM golang:alpine AS builder-ray
 
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git
@@ -84,16 +91,14 @@ RUN apk del .build-deps \
 FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
-RUN apk update \
-  && apk add --no-cache libev
-
-COPY --from=builder /app/ /app/
-COPY --from=builder-c /app/bin/ /app/
-COPY --from=builder-go /app/ /app/
+COPY --from=builder-ss /app/ /app/
+COPY --from=builder-obfs /app/bin/ /app/
+COPY --from=builder-ray /app/ /app/
 COPY entrypoint.sh /app/
 
 # set capabilities
-RUN apk add --no-cache libcap \
+RUN apk update \
+  && apk add --no-cache libcap \
   && rm -rf /var/cache/apk/*
 RUN setcap cap_net_bind_service,cap_net_admin+ep /app/sslocal \
   && setcap cap_net_bind_service+ep /app/ssserver \
