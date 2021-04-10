@@ -94,7 +94,6 @@ LABEL maintainer="pexcn <i@pexcn.me>"
 COPY --from=builder-ss /app/ /app/
 COPY --from=builder-obfs /app/bin/ /app/
 COPY --from=builder-ray /app/ /app/
-COPY entrypoint.sh /app/
 
 # set capabilities
 RUN apk update \
@@ -109,4 +108,5 @@ RUN setcap cap_net_bind_service,cap_net_admin+ep /app/sslocal \
   && setcap cap_net_bind_service+ep /app/xray-plugin
 
 USER nobody
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENV PATH=/app:$PATH
+CMD ["ssserver", "--version"]

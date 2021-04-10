@@ -93,7 +93,6 @@ RUN apk update \
 
 COPY --from=builder-ss /app/bin/ /app/
 COPY --from=builder-ray /app/ /app/
-COPY entrypoint.sh /app/
 
 # set capabilities
 RUN apk add --no-cache libcap \
@@ -109,4 +108,5 @@ RUN setcap cap_net_bind_service,cap_net_admin+ep /app/ss-redir \
   && setcap cap_net_bind_service+ep /app/xray-plugin
 
 USER nobody
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENV PATH=/app:$PATH
+CMD ["ss-server", "--help"]
