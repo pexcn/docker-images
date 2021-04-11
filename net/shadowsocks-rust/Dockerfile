@@ -95,18 +95,5 @@ COPY --from=builder-ss /app/ /app/
 COPY --from=builder-obfs /app/bin/ /app/
 COPY --from=builder-ray /app/ /app/
 
-# set capabilities
-RUN apk update \
-  && apk add --no-cache libcap \
-  && rm -rf /var/cache/apk/*
-RUN setcap cap_net_bind_service,cap_net_admin+ep /app/sslocal \
-  && setcap cap_net_bind_service+ep /app/ssserver \
-  && setcap cap_net_bind_service+ep /app/ssmanager \
-  && setcap cap_net_bind_service+ep /app/obfs-local \
-  && setcap cap_net_bind_service+ep /app/obfs-server \
-  && setcap cap_net_bind_service+ep /app/v2ray-plugin \
-  && setcap cap_net_bind_service+ep /app/xray-plugin
-
-USER nobody
 ENV PATH=/app:$PATH
 CMD ["ssserver", "--version"]

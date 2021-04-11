@@ -8,7 +8,6 @@ docker run -d \
   --name ssserver \
   --restart unless-stopped \
   --network host \
-  --privileged \
   -v /etc/localtime:/etc/localtime:ro \
   pexcn/docker-images:shadowsocks-rust ssserver \
     --server-addr 0.0.0.0:80 \
@@ -30,7 +29,6 @@ docker run -d \
   --name sslocal \
   --restart unless-stopped \
   --network host \
-  --privileged \
   -v /etc/localtime:/etc/localtime:ro \
   pexcn/docker-images:shadowsocks-rust sslocal \
     --local-addr 0.0.0.0:1080 \
@@ -54,7 +52,6 @@ docker run -d \
   --name ssredir \
   --restart unless-stopped \
   --network host \
-  --privileged \
   -v /etc/localtime:/etc/localtime:ro \
   pexcn/docker-images:shadowsocks-rust sslocal \
     --protocol redir \
@@ -77,7 +74,6 @@ docker run -d \
   --name sstunnel \
   --restart unless-stopped \
   --network host \
-  --privileged \
   -v /etc/localtime:/etc/localtime:ro \
   pexcn/docker-images:shadowsocks-rust sslocal \
     --protocol tunnel \
@@ -92,13 +88,14 @@ docker run -d \
     --nofile 1048576 \
     --no-delay \
     -U
+```
 
+```bash
 # ssmanager
 docker run -d \
   --name ssmanager \
   --restart unless-stopped \
   --network host \
-  --privileged \
   -v /etc/localtime:/etc/localtime:ro \
   pexcn/docker-images:shadowsocks-rust ssmanager \
     --manager-address 127.0.0.1:6000 \
