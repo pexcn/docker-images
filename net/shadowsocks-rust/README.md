@@ -92,6 +92,22 @@ docker run -d \
     --nofile 1048576 \
     --no-delay \
     -U
+
+# ssmanager
+docker run -d \
+  --name ssmanager \
+  --restart unless-stopped \
+  --network host \
+  --privileged \
+  -v /etc/localtime:/etc/localtime:ro \
+  pexcn/docker-images:shadowsocks-rust ssmanager \
+    --manager-address 127.0.0.1:6000 \
+    --encrypt-method aes-128-gcm \
+    --dns udp://8.8.8.8,8.8.4.4 \
+    --timeout 3600 \
+    --nofile 1048576 \
+    --no-delay \
+    -U
 ```
 
 ```bash
