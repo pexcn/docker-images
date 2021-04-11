@@ -96,6 +96,29 @@ docker run -d \
 ```
 
 ```bash
+# ss-manager
+docker run -d \
+  --name ss-manager \
+  --restart unless-stopped \
+  --network host \
+  -v /etc/localtime:/etc/localtime:ro \
+  pexcn/docker-images:shadowsocks-libev ss-manager \
+    --manager-address 127.0.0.1:6000 \
+    -m aes-128-gcm \
+    -t 3600 \
+    -n 1048576 \
+    -d 8.8.8.8,8.8.4.4 \
+    -u \
+    --reuse-port \
+    --fast-open \
+    --no-delay \
+    --mtu 1500
+# --plugin "obfs-server" --plugin-opts "obfs=tls;fast-open"
+# --plugin "v2ray-plugin" --plugin-opts "server;tls;fast-open;host=example.com"
+# --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;host=example.com"
+```
+
+```bash
 # TODO
 --tcp-incoming-sndbuf
 --tcp-incoming-rcvbuf
