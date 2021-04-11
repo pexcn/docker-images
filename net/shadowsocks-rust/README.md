@@ -114,4 +114,9 @@ docker run -d \
 --outbound-send-buffer-size
 --outbound-fwmark
 --worker-threads
+
+# new ver.
+--tcp-no-delay
+tcp fast open
+ssmanager support --udp-timeout & --udp-max-associations
 ```
