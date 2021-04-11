@@ -41,11 +41,10 @@ docker run -d \
     --nofile 1048576 \
     --no-delay \
     -U
-# --protocol http
 # --dns tcp://127.0.0.1:5300
 # --plugin "obfs-local" --plugin-opts "obfs=tls;obfs-host=www.bing.com;fast-open"
-# --plugin "v2ray-plugin" --plugin-opts "tls;fast-open;host=example.com;mux=5"
-# --plugin "xray-plugin" --plugin-opts "tls;fast-open;host=example.com;mux=5"
+# --plugin "v2ray-plugin" --plugin-opts "tls;fast-open;host=example.com;loglevel=none;mux=5"
+# --plugin "xray-plugin" --plugin-opts "tls;fast-open;host=example.com;loglevel=none;mux=5"
 
 # ssredir
 docker run -d \

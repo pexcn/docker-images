@@ -47,8 +47,8 @@ docker run -d \
     --no-delay \
     --mtu 1500
 # --plugin "obfs-local" --plugin-opts "obfs=tls;obfs-host=www.bing.com;fast-open"
-# --plugin "v2ray-plugin" --plugin-opts "tls;fast-open;host=example.com;mux=5"
-# --plugin "xray-plugin" --plugin-opts "tls;fast-open;host=example.com;mux=5"
+# --plugin "v2ray-plugin" --plugin-opts "tls;fast-open;host=example.com;loglevel=none;mux=5"
+# --plugin "xray-plugin" --plugin-opts "tls;fast-open;host=example.com;loglevel=none;mux=5"
 
 # ss-redir
 docker run -d \
