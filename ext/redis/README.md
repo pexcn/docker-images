@@ -18,7 +18,7 @@ docker run -d \
   --network host \
   -v /root/docker/redis:/data \
   -v /etc/localtime:/etc/localtime:ro \
-  redis:6.2.0-alpine --bind 127.0.0.1
+  redis:6.2.1-alpine --bind 127.0.0.1
 
 # run redis with password
 docker run -d \
@@ -27,5 +27,5 @@ docker run -d \
   --network host \
   -v /root/docker/redis:/data \
   -v /etc/localtime:/etc/localtime:ro \
-  redis:6.2.0-alpine --requirepass pass
+  redis:6.2.1-alpine --requirepass pass
 ```

@@ -7,7 +7,7 @@ http://git.local.pexcn.me {
   redir https://{host}{uri} permanent
 }
 
-# reverse proxy to gogs http endpoint
+# reverse proxy to gogs endpoint
 https://git.local.pexcn.me {
   encode zstd gzip
   tls /certs/local.pexcn.me_ecc/fullchain.cer /certs/local.pexcn.me_ecc/local.pexcn.me.key
@@ -29,4 +29,28 @@ http://nas.local.pexcn.me {
 https://nas.local.pexcn.me {
   tls /certs/local.pexcn.me_ecc/fullchain.cer /certs/local.pexcn.me_ecc/local.pexcn.me.key
   reverse_proxy 127.0.0.1:8989
+}
+
+##########################################################################################
+
+#
+# Caddyfile for shadowsocks-manager
+#
+
+# redirect http to https
+http://ss.pexcn.me {
+  redir https://{host}{uri} permanent
+}
+
+# reverse proxy to shadowsocks-manager endpoint
+https://ss.pexcn.me {
+  encode zstd gzip
+  tls /certs/ss.pexcn.me_ecc/fullchain.cer /certs/ss.pexcn.me_ecc/ss.pexcn.me.key
+
+  header Strict-Transport-Security max-age=31536000;
+  header_up X-Real-IP {remote}
+  header_up Host {host}
+  header_up X-Frame-Options DENY
+
+  reverse_proxy 127.0.0.1:8080
 }
