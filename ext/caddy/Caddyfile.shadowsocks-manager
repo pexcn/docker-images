@@ -1,0 +1,22 @@
+#
+# Caddyfile for shadowsocks-manager
+#
+
+# redirect http to https
+http://ss.pexcn.me {
+  redir https://{host}{uri} permanent
+}
+
+# reverse proxy to shadowsocks-manager endpoint
+https://ss.pexcn.me {
+  encode zstd gzip
+  tls /certs/ss.pexcn.me_ecc/fullchain.cer /certs/ss.pexcn.me_ecc/ss.pexcn.me.key
+
+  header Strict-Transport-Security max-age=31536000;
+
+  reverse_proxy 127.0.0.1:8080 {
+    header_up X-Real-IP {remote}
+    header_up Host {host}
+    header_up X-Frame-Options DENY
+  }
+}

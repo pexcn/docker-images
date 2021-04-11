@@ -1,0 +1,12 @@
+#
+# Caddyfile for speedtest-go
+#
+
+http://nas.local.pexcn.me {
+  reverse_proxy 127.0.0.1:8989
+}
+
+https://nas.local.pexcn.me {
+  tls /certs/local.pexcn.me_ecc/fullchain.cer /certs/local.pexcn.me_ecc/local.pexcn.me.key
+  reverse_proxy 127.0.0.1:8989
+}
