@@ -1,8 +1,8 @@
 type: m
 
-manager:
-  address: 127.0.0.1:6001
-  password: 'password'
+#manager:
+#  address: 127.0.0.1:6001
+#  password: 'password'
 
 db: 'db.sqlite'
 
