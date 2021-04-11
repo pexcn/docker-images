@@ -1,9 +1,5 @@
 type: m
 
-#manager:
-#  address: 127.0.0.1:6001
-#  password: 'password'
-
 db: 'db.sqlite'
 
 redis:
@@ -19,8 +15,6 @@ plugins:
     use: true
   account:
     use: true
-  macAccount:
-    use: true
   group:
     use: true
   giftcard:
@@ -33,11 +27,11 @@ plugins:
     password: 'password'
   webgui:
     use: true
-    host: '0.0.0.0'
+    host: '127.0.0.1'
     port: '8080'
-    site: 'http://example.com'
-    admin_username: 'admin@example.com'
-    admin_password: 'password'
+    site: 'https://example.com'
+    #admin_username: 'admin@example.com'
+    #admin_password: 'password'
     #icon: 'icon.png'
     #skin: 'default'
     #googleAnalytics: 'UA-xxxxxxxx-x'
@@ -49,7 +43,7 @@ plugins:
   #alipay:
     #use: true
     #appid: 2015012104922471
-    #notifyUrl: 'http://yourwebsite.com/api/user/alipay/callback'
+    #notifyUrl: 'https://example.com/api/user/alipay/callback'
     #merchantPrivateKey: 'xxxxxxxxxxxx'
     #alipayPublicKey: 'xxxxxxxxxxx'
     #gatewayUrl: 'https://openapi.alipay.com/gateway.do'
