@@ -26,7 +26,7 @@
         "session_ticket": false,
         "session_timeout": 600,
         "plain_http_response": "",
-        "curves": "X25519:P-256",
+        "curves": "X25519",
         "dhparam": ""
     },
     "tcp": {
