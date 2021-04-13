@@ -8,5 +8,11 @@ http://nas.local.pexcn.me {
 
 https://nas.local.pexcn.me {
   tls /certs/local.pexcn.me_ecc/fullchain.cer /certs/local.pexcn.me_ecc/local.pexcn.me.key
-  reverse_proxy 127.0.0.1:8989
+
+  reverse_proxy 127.0.0.1:8989 {
+    header_up Host {host}
+    header_up X-Real-IP {remote}
+    header_up X-Forwarded-For {remote}
+    header_up X-Forwarded-Proto {scheme}
+  }
 }
