@@ -40,5 +40,6 @@ RUN apk update \
   && rm -rf /var/cache/apk/*
 RUN setcap cap_net_bind_service+ep /app/chinadns-ng
 
+EXPOSE 65353/udp
 USER nobody
 ENTRYPOINT ["/app/chinadns-ng"]

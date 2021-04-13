@@ -40,5 +40,7 @@ RUN apk update \
   && rm -rf /var/cache/apk/*
 RUN setcap cap_net_bind_service,cap_net_admin+ep /app/ipt2socks
 
+EXPOSE 60080
+EXPOSE 60080/udp
 USER nobody
 ENTRYPOINT ["/app/ipt2socks"]

@@ -40,5 +40,6 @@ RUN apk add --no-cache libcap \
   && rm -rf /var/cache/apk/*
 RUN setcap cap_net_bind_service+ep /app/chisel
 
+EXPOSE 8080
 USER nobody
 ENTRYPOINT ["/app/chisel"]

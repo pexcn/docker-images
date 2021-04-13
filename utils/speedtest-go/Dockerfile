@@ -52,5 +52,6 @@ RUN setcap cap_net_bind_service+ep /app/speedtest-go
 # fix permissions
 RUN chown nobody:nobody /app /app/assets
 
+EXPOSE 8989
 USER nobody
 ENTRYPOINT ["/app/entrypoint.sh"]

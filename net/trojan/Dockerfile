@@ -44,5 +44,6 @@ RUN apk add --no-cache libcap \
   && rm -rf /var/cache/apk/*
 RUN setcap cap_net_bind_service+ep /app/bin/trojan
 
+EXPOSE 443
 USER nobody
 ENTRYPOINT ["/app/bin/trojan", "-c", "/app/etc/trojan/config.json"]

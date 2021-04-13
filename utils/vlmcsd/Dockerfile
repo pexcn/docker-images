@@ -35,6 +35,6 @@ COPY --from=builder /vlmcs /app/
 COPY --from=builder /vlmcsd /app/
 COPY --from=builder /vlmcsd.ini /app/
 
+EXPOSE 1688
 USER nobody
-EXPOSE 1688/tcp
 ENTRYPOINT ["/app/vlmcsd", "-i", "/app/vlmcsd.ini", "-e", "-D"]

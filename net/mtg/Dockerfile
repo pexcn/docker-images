@@ -35,5 +35,6 @@ RUN apk update \
   && rm -rf /var/cache/apk/*
 RUN setcap cap_net_bind_service+ep /app/mtg
 
+EXPOSE 3128 3129
 USER nobody
 ENTRYPOINT ["/app/mtg"]

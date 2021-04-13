@@ -40,5 +40,6 @@ RUN apk update \
   && rm -rf /var/cache/apk/*
 RUN setcap cap_net_bind_service+ep /app/dns2tcp
 
+EXPOSE 5300/udp
 USER nobody
 ENTRYPOINT ["/app/dns2tcp"]

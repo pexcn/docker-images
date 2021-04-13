@@ -42,5 +42,6 @@ RUN apk update \
   && rm -rf /var/cache/apk/*
 RUN setcap cap_net_bind_service+ep /app/bin/hev-socks5-server
 
+EXPOSE 1080
 USER nobody
 ENTRYPOINT ["/app/entrypoint.sh"]
