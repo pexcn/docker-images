@@ -24,7 +24,7 @@ RUN git clone https://github.com/shadowsocks/shadowsocks-libev.git --recurse-sub
       --disable-assert \
       --enable-static \
       LIBS="-lpthread -lm" \
-      CFLAGS="-O3 -pipe -DTCP_FASTOPEN=23 -DTCP_FASTOPEN_CONNECT=30" \
+      CFLAGS="-O3 -pipe" \
       LDFLAGS="-Wl,--build-id=none -Wl,-static -static -static-libgcc -no-pie" \
   && make -j$(nproc) \
   && make install-strip \
@@ -42,7 +42,7 @@ RUN git clone https://github.com/shadowsocks/simple-obfs.git --recurse-submodule
       --disable-assert \
       --enable-static \
       LIBS="-lpthread -lm" \
-      CFLAGS="-O3 -pipe -DTCP_FASTOPEN=23 -DTCP_FASTOPEN_CONNECT=30" \
+      CFLAGS="-O3 -pipe" \
       LDFLAGS="-Wl,--build-id=none -Wl,-static -static -static-libgcc -no-pie" \
   && make -j$(nproc) \
   && make install-strip \
