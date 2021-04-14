@@ -46,7 +46,7 @@ RUN apk add --no-cache libcap \
 RUN setcap cap_net_bind_service+ep /app/bin/tor
 
 # run as an unprivileged user
-RUN addgroup -S tor && adduser -S tor -G tor
+RUN addgroup -S tor && adduser -S -G tor tor
 USER tor
 
 EXPOSE 9050
