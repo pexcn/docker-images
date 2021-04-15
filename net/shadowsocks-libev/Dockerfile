@@ -142,7 +142,8 @@ FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
 RUN apk update \
-  && apk add --no-cache ca-certificates rng-tools
+  && apk add --no-cache ca-certificates \
+  && rm -rf /var/cache/apk/*
 
 COPY --from=builder-ss /app/bin/ /app/
 COPY --from=builder-ray /app/ /app/

@@ -12,7 +12,6 @@ docker run -d \
   --name ss-server \
   --restart unless-stopped \
   --network host \
-  --privileged \
   -v /etc/localtime:/etc/localtime:ro \
   pexcn/docker-images:shadowsocks-libev ss-server \
     -s 0.0.0.0 \
@@ -34,7 +33,6 @@ docker run -d \
   --name ss-local \
   --restart unless-stopped \
   --network host \
-  --privileged \
   -v /etc/localtime:/etc/localtime:ro \
   pexcn/docker-images:shadowsocks-libev ss-local \
     -s 111.222.33.44 \
@@ -57,7 +55,6 @@ docker run -d \
   --name ss-manager \
   --restart unless-stopped \
   --network host \
-  --privileged \
   -v /etc/localtime:/etc/localtime:ro \
   pexcn/docker-images:shadowsocks-libev ss-manager \
     --manager-address 127.0.0.1:6000 \
