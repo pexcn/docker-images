@@ -1,10 +1,10 @@
-# 🐳 Docker Images
+# :whale: Docker Images
 
 [![CI](https://github.com/pexcn/docker-images/workflows/CI/badge.svg)](https://github.com/pexcn/docker-images/actions)
 
 Personally made docker images.
 
-## 📔 Usage
+## :notebook_with_decorative_cover: Usage
 
 ```bash
 # from dockerhub
@@ -14,7 +14,7 @@ docker pull pexcn/docker-images:<tag>
 docker pull ghcr.io/pexcn/docker-images:<tag>
 ```
 
-## 📝 License
+## :memo: License
 
 ```
 Copyright (C) 2018-2021, pexcn <i@pexcn.me>
