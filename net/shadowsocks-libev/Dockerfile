@@ -62,10 +62,9 @@ RUN apk update \
       build-base autoconf automake libtool pkgconfig git \
       c-ares-dev mbedtls-dev pcre-dev libev-dev libsodium-dev \
       c-ares-static mbedtls-static libsodium-static
-RUN cd /tmp \
-  && wget https://dl-cdn.alpinelinux.org/alpine/v3.8/main/x86_64/linux-headers-4.4.6-r2.apk \
-  && apk add --no-cache ./linux-headers-4.4.6-r2.apk \
-  && rm ./linux-headers-4.4.6-r2.apk
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.8/main" >> /etc/apk/repositories \
+  && apk update \
+  && apk add --no-cache linux-headers=4.4.6-r2
 
 ARG SS_VERSION=6329526199674ddda8d8396a66072890b244972b
 RUN git clone https://github.com/shadowsocks/shadowsocks-libev.git --recurse-submodules -j2 \
