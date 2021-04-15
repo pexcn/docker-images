@@ -64,6 +64,9 @@ jobs:
           # trojan
           - BUILD_CONTEXT: net/trojan
             TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # rng-tools
+          - BUILD_CONTEXT: utils/rng-tools
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # shadowsocks-manager
           - BUILD_CONTEXT: utils/shadowsocks-manager
             TARGET_PLATFORMS: linux/amd64
