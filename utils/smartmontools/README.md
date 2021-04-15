@@ -4,8 +4,8 @@
 
 Environment variable | Default value | Description
 ---------------------|---------------|------------
-`SMARTD_CONFIG` | `DEVICESCAN` | Configuration line in `/etc/smartd.conf`, only one line is supported
-`SMTP_CONFIG` | `mail@example.com#user:pass@smtp.example.com:587` | SMTP client config, format: `<email>#<user>:<password>@<host>:<port>`
+`SMARTD_CONFIG` | `DEVICESCAN` | Configuration line in `/etc/smartd.conf`<br />Only one line is supported
+`SMTP_CONFIG` | `mail@example.com#user:pass@smtp.example.com:587` | SMTP client config<br />Format: `<email>#<user>:<password>@<host>:<port>`
 
 ```bash
 # Send a mail test at first
