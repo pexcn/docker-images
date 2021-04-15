@@ -1,12 +1,13 @@
 #!/bin/sh
+set -e
 
 update_smartd_conf() {
-  if [[ -n "$SMARTD_PARAMS" && "$SMARTD_PARAMS" != "DEVICESCAN" ]]; then
-    echo $SMARTD_PARAMS > /etc/smartd.conf
+  if [[ -n "$SMARTD_CONFIG" && "$SMARTD_CONFIG" != "DEVICESCAN" ]]; then
+    echo $SMARTD_CONFIG > /etc/smartd.conf
   fi
 }
 
-create_msmtprc() {
+create_msmtp_conf() {
   local host=$(echo $SMTP_CONFIG | cut -d '@' -f 3 | cut -d ':' -f 1)
   local port=$(echo $SMTP_CONFIG | cut -d ':' -f 3)
   local from=$(echo $SMTP_CONFIG | cut -d '#' -f 1)
@@ -39,6 +40,6 @@ create_msmtprc() {
 }
 
 update_smartd_conf
-create_msmtprc
+create_msmtp_conf
 
-exec /app/smartd --no-fork
+exec smartd --no-fork
