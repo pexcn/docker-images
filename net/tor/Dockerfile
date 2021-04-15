@@ -49,5 +49,7 @@ RUN setcap cap_net_bind_service+ep /app/bin/tor
 RUN addgroup -S tor && adduser -S -G tor tor
 USER tor
 
+VOLUME /app/etc/tor/torrc
+
 EXPOSE 9050
 ENTRYPOINT ["/app/bin/tor", "-f", "/app/etc/tor/torrc"]
