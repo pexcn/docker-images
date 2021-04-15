@@ -2,12 +2,11 @@
 
 ## Usage
 
-Available environment variables:
-```bash
-TITLE
-ADDR
-PORT
-```
+Environment variable | Default value | Description
+---------------------|---------------|------------
+`TITLE` | `LibreSpeed` | Web UI title
+`ADDR` | all interfaces | Backend bind address
+`PORT` | `8989` | Backend bind port
 
 ```bash
 docker run -d \
@@ -15,16 +14,8 @@ docker run -d \
   --restart unless-stopped \
   --network host \
   -e TITLE="FREE 2501 Speedtest" \
-  -v /etc/localtime:/etc/localtime:ro \
-  pexcn/docker-images:speedtest-go
-
-docker run -d \
-  --name speedtest-go \
-  --restart unless-stopped \
-  --network host \
-  -e TITLE="NAS Speedtest" \
   -e ADDR=127.0.0.1 \
-  -e PORT=8989 \
+  -e PORT=80 \
   -v /etc/localtime:/etc/localtime:ro \
   pexcn/docker-images:speedtest-go
 ```

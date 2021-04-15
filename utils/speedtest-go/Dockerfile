@@ -7,50 +7,41 @@
 #
 FROM golang:alpine AS builder
 
-# build
-ARG VERSION=v1.1.3
 RUN apk update \
-  && apk add --no-cache --virtual .build-deps git gcc ca-certificates libc-dev \
-  && git clone https://github.com/librespeed/speedtest-go.git --branch $VERSION /tmp/speedtest-go \
-  && cd /tmp/speedtest-go \
-  && go build -ldflags "-w -s" -trimpath -o speedtest main.go
+  && apk add --no-cache --virtual .build-deps git gcc ca-certificates libc-dev
 
-# install
-RUN mkdir /app \
-  && cp -r /tmp/speedtest-go/assets /app \
-  && cp /tmp/speedtest-go/speedtest /app/speedtest-go \
-  && cp /tmp/speedtest-go/settings.toml /app/settings.toml
+ARG VERSION=v1.1.3
+RUN git clone https://github.com/librespeed/speedtest-go.git --branch $VERSION \
+  && cd speedtest-go \
+  && go build -ldflags "-w -s" -trimpath -o speedtest main.go \
+  && mkdir /app \
+  && cp -r assets speedtest settings.toml /app/ \
+  && cd .. \
+  && rm -r speedtest-go
 
-# clean
 RUN apk del .build-deps \
-  && rm -rf /var/cache/apk/* \
-  && rm -r /tmp/speedtest-go
+  && rm -rf /var/cache/apk/*
 
 #
 # Runtime stage
 #
 FROM alpine
 
-ENV TITLE="LibreSpeed"
-ENV ADDR=
-ENV PORT=80
-
-# add depends
 RUN apk update \
   && apk add --no-cache ca-certificates
 
-COPY --from=builder /app/assets /app/assets
-COPY --from=builder /app/speedtest-go /app/speedtest-go
-COPY --from=builder /app/settings.toml /app/settings.toml
-COPY assets-override /app/assets
-COPY entrypoint.sh /app/entrypoint.sh
+COPY --from=builder /app/ /app/
+COPY assets /app/assets/
+COPY entrypoint.sh /app/
 
-# allow bind port less than 1024
 RUN apk add --no-cache libcap \
   && rm -rf /var/cache/apk/*
-RUN setcap cap_net_bind_service+ep /app/speedtest-go
-# fix permissions
+RUN setcap cap_net_bind_service+ep /app/speedtest
 RUN chown nobody:nobody /app /app/assets
+
+ENV TITLE="LibreSpeed"
+ENV ADDR=
+ENV PORT=
 
 EXPOSE 8989
 USER nobody

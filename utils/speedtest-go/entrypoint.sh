@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 if [[ -n "$TITLE" && "$TITLE" != "LibreSpeed Example" ]]; then
   sed -i "s/<title>LibreSpeed Example<\/title>/<title>$TITLE<\/title>/" /app/assets/index.html
@@ -15,4 +16,4 @@ fi
 
 # must use /app as the base path
 cd /app
-exec /app/speedtest-go
+exec /app/speedtest
