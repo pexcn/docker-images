@@ -130,9 +130,8 @@ jobs:
         if: github.event_name == 'push'
         with:
           context: ${{ matrix.BUILD_CONTEXT }}
-          tags: |
-            ${{ github.repository }}:${{ env.BUILD_TAG }}
-            ghcr.io/${{ github.repository }}:${{ env.BUILD_TAG }}
+          tags: ${{ github.repository }}:${{ env.BUILD_TAG }}
+          #tags: ghcr.io/${{ github.repository }}:${{ env.BUILD_TAG }}
           platforms: ${{ matrix.TARGET_PLATFORMS }}
           push: true
           cache-from: type=local,src=/tmp/.buildx-cache
