@@ -17,7 +17,7 @@ docker pull ghcr.io/pexcn/docker-images:<tag>
 ## :memo: License
 
 ```
-Copyright (C) 2018-2021, pexcn <i@pexcn.me>
+Copyright (C) 2021, pexcn <i@pexcn.me>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
