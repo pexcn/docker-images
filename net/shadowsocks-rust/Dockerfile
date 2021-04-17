@@ -13,7 +13,7 @@ RUN apk update \
 ARG SS_VERSION=v1.10.7
 RUN git clone https://github.com/shadowsocks/shadowsocks-rust.git --branch $SS_VERSION \
   && cd shadowsocks-rust \
-  && RUSTFLAGS="-C link-arg=-s" cargo build --release --features "local-redir aead-ciphers-extra" \
+  && RUSTFLAGS="-C link-arg=-s" cargo build --release --features "local-redir aead-cipher-extra" \
   && mkdir /app \
   && cp /shadowsocks-rust/target/release/sslocal /app \
   && cp /shadowsocks-rust/target/release/ssserver /app \
