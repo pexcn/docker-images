@@ -64,6 +64,12 @@ jobs:
           # trojan
           - BUILD_CONTEXT: net/trojan
             TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # iperf
+          - BUILD_CONTEXT: utils/iperf
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # iperf3
+          - BUILD_CONTEXT: utils/iperf3
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # rng-tools
           - BUILD_CONTEXT: utils/rng-tools
             TARGET_PLATFORMS: linux/amd64,linux/arm64
