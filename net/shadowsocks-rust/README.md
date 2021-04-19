@@ -18,7 +18,7 @@ docker run -d \
     --udp-timeout 300 \
     --udp-max-associations 512 \
     --nofile 1048576 \
-    --no-delay \
+    --tcp-no-delay \
     -U
 # --plugin "obfs-server" --plugin-opts "obfs=tls;fast-open"
 # --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;host=example.com"
@@ -38,7 +38,7 @@ docker run -d \
     --udp-timeout 300 \
     --udp-max-associations 512 \
     --nofile 1048576 \
-    --no-delay \
+    --tcp-no-delay \
     -U
 # --dns tcp://127.0.0.1:5300
 # --plugin "obfs-local" --plugin-opts "obfs=tls;obfs-host=www.bing.com;fast-open"
@@ -55,22 +55,18 @@ docker run -d \
     --encrypt-method aes-128-gcm \
     --dns udp://8.8.8.8,8.8.4.4 \
     --timeout 3600 \
+    --udp-timeout 300 \
+    --udp-max-associations 512 \
     --nofile 1048576 \
-    --no-delay \
+    --tcp-no-delay \
     -U
 ```
 
 ```bash
 # TODO
---inbound-recv-buffer-size
---inbound-send-buffer-size
---outbound-recv-buffer-size
---outbound-send-buffer-size
 --outbound-fwmark
 --worker-threads
 
 # for new ver.
-rename to --tcp-no-delay ?
 add tcp fast open ?
-ssmanager will support --udp-timeout & --udp-max-associations
 ```
