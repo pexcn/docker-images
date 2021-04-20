@@ -67,11 +67,3 @@ docker run -d \
     --fast-open \
     --no-delay
 ```
-
-```bash
-# TODO
---tcp-incoming-sndbuf
---tcp-incoming-rcvbuf
---tcp-outgoing-sndbuf
---tcp-outgoing-rcvbuf
-```
