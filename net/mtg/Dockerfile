@@ -8,16 +8,16 @@
 FROM golang:alpine AS builder
 
 # build
-ARG VERSION=v1.0.9
+ARG VERSION=v2.0.0-rc1
 RUN apk update \
-  && apk add --no-cache --virtual .build-deps bash ca-certificates curl git make \
-  && git clone https://github.com/9seconds/mtg.git --branch $VERSION /tmp/mtg-src \
-  && cd /tmp/mtg-src \
+  && apk add --no-cache --virtual .build-deps bash git make \
+  && git clone https://github.com/9seconds/mtg.git --branch $VERSION \
+  && cd mtg \
   && make -j$(nproc) static \
-  && mv mtg /mtg \
-  && make clean \
-  && cd / \
-  && rm -r /tmp/mtg-src \
+  && cp mtg /usr/local/bin/mtg \
+  && cp example.config.toml /config.toml \
+  && cd .. \
+  && rm -r mtg \
   && apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
@@ -27,14 +27,16 @@ RUN apk update \
 FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
-COPY --from=builder /mtg /app/mtg
+COPY --from=builder /usr/local/bin/mtg /usr/local/bin/mtg
+COPY --from=builder /config.toml /config.toml
 
 # allow bind port less than 1024
 RUN apk update \
   && apk add --no-cache libcap \
   && rm -rf /var/cache/apk/*
-RUN setcap cap_net_bind_service+ep /app/mtg
+RUN setcap cap_net_bind_service+ep /usr/local/bin/mtg
 
-EXPOSE 3128 3129
+EXPOSE 3128
 USER nobody
-ENTRYPOINT ["/app/mtg"]
+ENTRYPOINT ["mtg"]
+CMD ["run", "/config.toml"]
