@@ -7,7 +7,6 @@
 #
 FROM golang:alpine AS builder
 
-# build
 ARG VERSION=v2.0.0-rc1
 RUN apk update \
   && apk add --no-cache --virtual .build-deps bash git make \
@@ -15,7 +14,6 @@ RUN apk update \
   && cd mtg \
   && make -j$(nproc) static \
   && cp mtg /usr/local/bin/mtg \
-  && cp example.config.toml /config.toml \
   && cd .. \
   && rm -r mtg \
   && apk del .build-deps \
@@ -27,8 +25,9 @@ RUN apk update \
 FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
-COPY --from=builder /usr/local/bin/mtg /usr/local/bin/mtg
-COPY --from=builder /config.toml /config.toml
+COPY --from=builder /usr/local/bin/mtg /usr/local/bin/
+COPY entrypoint.sh /usr/local/bin/
+COPY config.toml /etc/mtg/
 
 # allow bind port less than 1024
 RUN apk update \
@@ -36,7 +35,8 @@ RUN apk update \
   && rm -rf /var/cache/apk/*
 RUN setcap cap_net_bind_service+ep /usr/local/bin/mtg
 
-EXPOSE 3128
+RUN chmod o+w /etc/mtg
 USER nobody
-ENTRYPOINT ["mtg"]
-CMD ["run", "/config.toml"]
+
+EXPOSE 3128
+ENTRYPOINT ["entrypoint.sh"]
