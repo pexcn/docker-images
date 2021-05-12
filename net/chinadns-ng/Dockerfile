@@ -12,7 +12,7 @@ RUN apk update \
   && apk add --no-cache --virtual .build-deps build-base linux-headers git
 
 # build
-ARG VERSION=df3bb7c6310df9b3c0f874b7a0c38ea5ce0996cb
+ARG VERSION=14cc6348d67b09cae37d9bce554c89c2c0e0b265
 RUN git clone https://github.com/zfl9/chinadns-ng.git \
   && cd chinadns-ng \
   && git checkout $VERSION \
