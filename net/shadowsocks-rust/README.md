@@ -18,6 +18,7 @@ docker run -d \
     --udp-timeout 300 \
     --udp-max-associations 512 \
     --nofile 1048576 \
+    --tcp-fast-open \
     --tcp-no-delay \
     -U
 # --plugin "obfs-server" --plugin-opts "obfs=tls;fast-open"
@@ -38,6 +39,7 @@ docker run -d \
     --udp-timeout 300 \
     --udp-max-associations 512 \
     --nofile 1048576 \
+    --tcp-fast-open \
     --tcp-no-delay \
     -U
 # --dns tcp://127.0.0.1:5300
@@ -58,6 +60,7 @@ docker run -d \
     --udp-timeout 300 \
     --udp-max-associations 512 \
     --nofile 1048576 \
+    --tcp-fast-open \
     --tcp-no-delay \
     -U
 ```
@@ -66,7 +69,4 @@ docker run -d \
 # TODO
 --outbound-fwmark
 --worker-threads
-
-# for new ver.
-add tcp fast open ?
 ```
