@@ -13,7 +13,6 @@ docker run -d \
     --server-addr 0.0.0.0:80 \
     --password password \
     --encrypt-method aes-128-gcm \
-    --dns udp://8.8.8.8,8.8.4.4 \
     --timeout 3600 \
     --udp-timeout 300 \
     --udp-max-associations 512 \
@@ -55,7 +54,6 @@ docker run -d \
   pexcn/docker-images:shadowsocks-rust ssmanager \
     --manager-address 127.0.0.1:6000 \
     --encrypt-method aes-128-gcm \
-    --dns udp://8.8.8.8,8.8.4.4 \
     --timeout 3600 \
     --udp-timeout 300 \
     --udp-max-associations 512 \
