@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  rng-tools:
+    image: pexcn/docker-images:rng-tools
+    container_name: rng-tools
+    restart: unless-stopped
+    network_mode: host
+    privileged: true
