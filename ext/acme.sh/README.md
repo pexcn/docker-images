@@ -11,7 +11,7 @@ docker run -d \
   -e HE_Password=pass \
   -v /root/docker/acme.sh:/acme.sh \
   -v /etc/localtime:/etc/localtime:ro \
-  neilpang/acme.sh:2.8.9 daemon
+  neilpang/acme.sh:2.9.0 daemon
 
 # issue
 docker exec acme.sh --issue --dns dns_he --dnssleep 30 -d pexcn.me -d *.pexcn.me -k ec-256
