@@ -20,7 +20,6 @@ docker run -d \
     -m aes-256-gcm \
     -t 3600 \
     -n 1048576 \
-    -d 8.8.8.8,8.8.4.4 \
     -u \
     --reuse-port \
     --fast-open \
@@ -61,7 +60,6 @@ docker run -d \
     -m aes-256-gcm \
     -t 3600 \
     -n 1048576 \
-    -d 8.8.8.8,8.8.4.4 \
     -u \
     --reuse-port \
     --fast-open \
