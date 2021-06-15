@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  ssserver:
+    image: pexcn/docker-images:shadowsocks-rust
+    container_name: ssserver
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    # --plugin "obfs-server" --plugin-opts "obfs=tls;fast-open"
+    # --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;host=example.com"
+    command: ssserver --server-addr 0.0.0.0:80 --password password --encrypt-method aes-128-gcm --timeout 3600 --udp-timeout 300 --udp-max-associations 512 --nofile 1048576 --tcp-fast-open --tcp-no-delay -U

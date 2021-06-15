@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  ss-server:
+    image: pexcn/docker-images:shadowsocks-libev
+    container_name: ss-server
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    # --plugin "obfs-server" --plugin-opts "obfs=tls;fast-open"
+    # --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;host=example.com"
+    command: ss-server -s 0.0.0.0 -p 80 -k password -m aes-256-gcm -t 3600 -n 1048576 -u --reuse-port --fast-open --no-delay
