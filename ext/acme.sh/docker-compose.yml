@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  acme.sh:
+    image: neilpang/acme.sh:2.9.0
+    container_name: acme.sh
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      HE_Username: user
+      HE_Password: pass
+    volumes:
+      - acme.sh:/acme.sh
+      - /etc/localtime:/etc/localtime:ro
+    command: daemon
