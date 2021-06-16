@@ -1,0 +1,10 @@
+version: '3.9'
+
+services:
+  netspeeder:
+    image: pexcn/docker-images:netspeeder
+    container_name: netspeeder
+    restart: unless-stopped
+    network_mode: host
+    privileged: true
+    command: eth0 "src port 993 || src port 2222"
