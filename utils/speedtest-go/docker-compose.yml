@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  speedtest-go:
+    image: pexcn/docker-images:speedtest-go
+    container_name: speedtest-go
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TITLE: LibreSpeed
+      PORT: 8080
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
