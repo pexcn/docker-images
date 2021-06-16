@@ -1,0 +1,9 @@
+version: '3.9'
+
+services:
+  mtg:
+    image: pexcn/docker-images:mtg
+    container_name: mtg
+    restart: unless-stopped
+    network_mode: host
+    command: 0.0.0.0:990 7kgi5pN2PoUloLUu4FPEVDJ3d3cuYmluZy5jb20
