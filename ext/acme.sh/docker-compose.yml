@@ -10,6 +10,6 @@ services:
       HE_Username: user
       HE_Password: pass
     volumes:
-      - acme.sh:/acme.sh
+      - ./acme.sh:/acme.sh
       - /etc/localtime:/etc/localtime:ro
     command: daemon
