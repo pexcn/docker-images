@@ -14,8 +14,9 @@ services:
       --encrypt-method aes-128-gcm
       --timeout 3600
       --udp-timeout 300
-      --udp-max-associations 512
+      --udp-max-associations 1024
       --nofile 1048576
+      --tcp-keep-alive 300
       --tcp-fast-open
       --tcp-no-delay
       -U
@@ -33,8 +34,9 @@ services:
       --encrypt-method chacha20-ietf-poly1305
       --timeout 3600
       --udp-timeout 300
-      --udp-max-associations 512
+      --udp-max-associations 1024
       --nofile 1048576
+      --tcp-keep-alive 300
       --tcp-fast-open
       --tcp-no-delay
       -U
@@ -52,8 +54,9 @@ services:
       --encrypt-method chacha20-ietf-poly1305
       --timeout 3600
       --udp-timeout 300
-      --udp-max-associations 512
+      --udp-max-associations 1024
       --nofile 1048576
+      --tcp-keep-alive 300
       --tcp-fast-open
       --tcp-no-delay
       -U
@@ -74,8 +77,9 @@ services:
       --encrypt-method chacha20-ietf-poly1305
       --timeout 3600
       --udp-timeout 300
-      --udp-max-associations 512
+      --udp-max-associations 1024
       --nofile 1048576
+      --tcp-keep-alive 300
       --tcp-fast-open
       --tcp-no-delay
       -U

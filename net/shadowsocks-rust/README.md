@@ -15,8 +15,9 @@ docker run -d \
     --encrypt-method aes-128-gcm \
     --timeout 3600 \
     --udp-timeout 300 \
-    --udp-max-associations 512 \
+    --udp-max-associations 1024 \
     --nofile 1048576 \
+    --tcp-keep-alive 300 \
     --tcp-fast-open \
     --tcp-no-delay \
     -U
@@ -36,8 +37,9 @@ docker run -d \
     --encrypt-method aes-128-gcm \
     --timeout 3600 \
     --udp-timeout 300 \
-    --udp-max-associations 512 \
+    --udp-max-associations 1024 \
     --nofile 1048576 \
+    --tcp-keep-alive 300 \
     --tcp-fast-open \
     --tcp-no-delay \
     -U
@@ -56,8 +58,9 @@ docker run -d \
     --encrypt-method aes-128-gcm \
     --timeout 3600 \
     --udp-timeout 300 \
-    --udp-max-associations 512 \
+    --udp-max-associations 1024 \
     --nofile 1048576 \
+    --tcp-keep-alive 300 \
     --tcp-fast-open \
     --tcp-no-delay \
     -U
