@@ -29,6 +29,10 @@ COPY --from=builder /usr/local/bin/mtg /usr/local/bin/
 COPY entrypoint.sh /usr/local/bin/
 COPY config.toml /etc/mtg/
 
+ENV BIND_TO=
+ENV SECRET=
+ENV TCP_BUFFER=
+
 # allow bind port less than 1024
 RUN apk update \
   && apk add --no-cache libcap \
