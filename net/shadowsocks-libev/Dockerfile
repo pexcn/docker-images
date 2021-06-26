@@ -3,7 +3,7 @@
 #
 
 #
-# Build stage (shadowsocks-libev)
+# Build stage [shadowsocks-libev]
 #
 FROM alpine AS builder-ss
 
@@ -53,9 +53,9 @@ RUN apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
 #
-# Build stage (shadowsocks-libev TFO compatible)
+# Build stage [shadowsocks-libev TFO compatible]
 #
-FROM alpine AS builder-ss-tfo
+FROM alpine AS builder-ss-tfo-cpt
 
 RUN apk update \
   && apk add --no-cache --virtual .build-deps \
@@ -106,7 +106,7 @@ RUN apk del .build-deps linux-headers \
   && rm -rf /var/cache/apk/*
 
 #
-# Build stage (v2ray-plugin & xray-plugin)
+# Build stage [v2ray-plugin & xray-plugin]
 #
 FROM golang:alpine AS builder-ray
 
@@ -147,7 +147,7 @@ RUN apk update \
 
 COPY --from=builder-ss /app/bin/ /app/
 COPY --from=builder-ray /app/ /app/
-COPY --from=builder-ss-tfo /app/bin/ /app-compat/
+COPY --from=builder-ss-tfo-cpt /app/bin/ /app-compat/
 COPY entrypoint.sh /app/
 
 ENV PATH=/app:$PATH

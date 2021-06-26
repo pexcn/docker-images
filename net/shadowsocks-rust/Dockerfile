@@ -3,7 +3,7 @@
 #
 
 #
-# Build stage (shadowsocks-rust)
+# Build stage [shadowsocks-rust]
 #
 FROM rust:alpine AS builder-ss
 
@@ -25,7 +25,7 @@ RUN apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
 #
-# Build stage (simple-obfs)
+# Build stage [simple-obfs]
 #
 FROM alpine AS builder-obfs
 
@@ -56,7 +56,7 @@ RUN apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
 #
-# Build stage (v2ray-plugin & xray-plugin)
+# Build stage [v2ray-plugin & xray-plugin]
 #
 FROM golang:alpine AS builder-ray
 
