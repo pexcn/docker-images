@@ -84,4 +84,4 @@ services:
       --tcp-no-delay
       -U
       --plugin "xray-plugin"
-      --plugin-opts "server;tls;fast-open;host=example.com"
+      --plugin-opts "server;tls;fast-open;mode=grpc;host=example.com"
