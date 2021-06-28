@@ -60,9 +60,9 @@ services:
       --plugin "obfs-server"
       --plugin-opts "obfs=tls;fast-open"
 
-  ss-server-v2ray:
+  ss-server-websocket:
     image: pexcn/docker-images:shadowsocks-libev
-    container_name: ss-server-v2ray
+    container_name: ss-server-websocket
     restart: unless-stopped
     network_mode: host
     volumes:
@@ -71,6 +71,28 @@ services:
     command: ss-server
       -s 0.0.0.0
       -p 443
+      -k password
+      -m chacha20-ietf-poly1305
+      -t 3600
+      -n 1048576
+      -u
+      --reuse-port
+      --fast-open
+      --no-delay
+      --plugin "xray-plugin"
+      --plugin-opts "server;tls;fast-open;host=example.com;path=/ws?ed=2048"
+
+  ss-server-grpc:
+    image: pexcn/docker-images:shadowsocks-libev
+    container_name: ss-server-grpc
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ../acme.sh/acme.sh/example.com_ecc/:/root/.acme.sh/example.com/
+      - /etc/localtime:/etc/localtime:ro
+    command: ss-server
+      -s 0.0.0.0
+      -p 993
       -k password
       -m chacha20-ietf-poly1305
       -t 3600
