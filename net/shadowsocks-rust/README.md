@@ -22,6 +22,7 @@ docker run -d \
     --tcp-no-delay \
     -U
 # --plugin "obfs-server" --plugin-opts "obfs=tls;fast-open"
+# --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;host=example.com"
 # --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;mode=grpc;host=example.com"
 
 # sslocal
@@ -45,7 +46,8 @@ docker run -d \
     -U
 # --dns tcp://127.0.0.1:5300
 # --plugin "obfs-local" --plugin-opts "obfs=tls;obfs-host=www.bing.com;fast-open"
-# --plugin "xray-plugin" --plugin-opts "tls;fast-open;mode=grpc;host=example.com;loglevel=none;mux=5"
+# --plugin "xray-plugin" --plugin-opts "tls;fast-open;host=example.com;mux=5;loglevel=none"
+# --plugin "xray-plugin" --plugin-opts "tls;fast-open;mode=grpc;host=example.com;mux=5;loglevel=none"
 
 # ssmanager
 docker run -d \
