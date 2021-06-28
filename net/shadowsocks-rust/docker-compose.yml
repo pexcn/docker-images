@@ -84,7 +84,7 @@ services:
       --tcp-no-delay
       -U
       --plugin "xray-plugin"
-      --plugin-opts "server;tls;fast-open;host=example.com;path=/ws?ed=2048"
+      --plugin-opts "server;tls;fast-open;host=example.com;path=/ws"
 
   ssserver-grpc:
     image: pexcn/docker-images:shadowsocks-rust

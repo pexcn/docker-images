@@ -25,7 +25,7 @@ docker run -d \
     --fast-open \
     --no-delay
 # --plugin "obfs-server" --plugin-opts "obfs=tls;fast-open"
-# --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;host=example.com;path=/ws?ed=2048"
+# --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;host=example.com;path=/ws"
 # --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;mode=grpc;host=example.com"
 
 # ss-local
