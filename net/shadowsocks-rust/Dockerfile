@@ -63,7 +63,7 @@ FROM golang:alpine AS builder-ray
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git
 
-ARG V2RAY_VERSION=997ef6e19da10e689c1b9b724d36e9e869935523
+ARG V2RAY_VERSION=ddd7ab46b4aeee0ca8b272efed9d7da3e3a6e52c
 RUN git clone https://github.com/shadowsocks/v2ray-plugin.git \
   && cd v2ray-plugin \
   && git checkout $V2RAY_VERSION \
