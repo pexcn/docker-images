@@ -17,8 +17,8 @@ docker run -d \
   -e SSMTP_PORT=587 \
   -e SSMTP_USER=user \
   -e SSMTP_PASSWORD=pass \
-  -e SSMTP_TLS=yes \
-  -e SSMTP_STARTTLS=yes \
+  -e SSMTP_TLS=YES \
+  -e SSMTP_STARTTLS=YES \
   -v /root/docker/fail2ban/data:/data \
   -v /var/log:/var/log:ro \
   crazymax/fail2ban:0.11.2
