@@ -27,11 +27,6 @@ LABEL maintainer="pexcn <i@pexcn.me>"
 
 COPY --from=builder /usr/local/bin/mtg /usr/local/bin/
 COPY entrypoint.sh /usr/local/bin/
-COPY config.toml /etc/mtg/
-
-ENV BIND_TO=
-ENV SECRET=
-ENV TCP_BUFFER=
 
 # allow bind port less than 1024
 RUN apk update \
@@ -39,8 +34,8 @@ RUN apk update \
   && rm -rf /var/cache/apk/*
 RUN setcap cap_net_bind_service+ep /usr/local/bin/mtg
 
-RUN chmod o+w /etc/mtg
 USER nobody
 
 EXPOSE 3128
 ENTRYPOINT ["entrypoint.sh"]
+CMD ["--help"]
