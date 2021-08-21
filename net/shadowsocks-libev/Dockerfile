@@ -108,7 +108,9 @@ RUN apk del .build-deps linux-headers \
 #
 # Build stage [v2ray-plugin & xray-plugin]
 #
-FROM golang:alpine AS builder-ray
+# force 1.16 version
+# should be fix: panic: qtls.CertificateRequestInfo doesn't match
+FROM golang:1.16-alpine AS builder-ray
 
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git
