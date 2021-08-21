@@ -10,10 +10,9 @@ FROM rust:alpine AS builder-ss
 RUN apk update \
   && apk add --no-cache --virtual .build-deps musl-dev git
 
-ARG SS_VERSION=6490e34ec680138455e1e8441fdd3e1453c88d6d
-RUN git clone https://github.com/shadowsocks/shadowsocks-rust.git \
+ARG SS_VERSION=v1.11.2
+RUN git clone https://github.com/shadowsocks/shadowsocks-rust.git --branch $SS_VERSION \
   && cd shadowsocks-rust \
-  && git checkout $SS_VERSION \
   && RUSTFLAGS="-C link-arg=-s" cargo build --release --features "local-redir" \
   && mkdir /app \
   && cp /shadowsocks-rust/target/release/sslocal /app \
@@ -74,10 +73,9 @@ RUN git clone https://github.com/shadowsocks/v2ray-plugin.git \
   && cd .. \
   && rm -r v2ray-plugin
 
-ARG XRAY_VERSION=88459fe77da1828ea56022523fe219a5d8e4ceb1
-RUN git clone https://github.com/teddysun/xray-plugin.git \
+ARG XRAY_VERSION=v1.4.2
+RUN git clone https://github.com/teddysun/xray-plugin.git --branch $XRAY_VERSION \
   && cd xray-plugin \
-  && git checkout $XRAY_VERSION \
   && env CGO_ENABLED=0 go build -v -trimpath -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w" -o xray-plugin \
   && mkdir -p /app \
   && mv xray-plugin /app \
