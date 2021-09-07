@@ -10,7 +10,7 @@ docker run -it --rm \
   --name wgcf \
   --network host \
   -v $(pwd):/wgcf \
-  pexcn/docker-images:wgcf register --accept-tos -m $MODEL -n $NAME
+  pexcn/docker-images:wgcf register --accept-tos
 
 # generate
 docker run -it --rm \
