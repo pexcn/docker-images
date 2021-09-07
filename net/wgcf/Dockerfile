@@ -27,5 +27,5 @@ LABEL maintainer="pexcn <i@pexcn.me>"
 
 COPY --from=builder /usr/local/bin/wgcf /usr/local/bin/
 
-#USER nobody
+WORKDIR /wgcf
 ENTRYPOINT ["wgcf"]

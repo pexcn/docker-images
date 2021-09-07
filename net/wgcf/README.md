@@ -3,9 +3,27 @@
 ## Usage
 
 ```bash
-docker run -d \
+# register
+MODEL=SERVER
+NAME=HOSTNAME
+docker run -it --rm \
   --name wgcf \
-  --restart unless-stopped \
   --network host \
-  pexcn/docker-images:wgcf
+  -v $(pwd):/wgcf \
+  pexcn/docker-images:wgcf register --accept-tos -m $MODEL -n $NAME
+
+# generate
+docker run -it --rm \
+  --name wgcf \
+  --network host \
+  -v $(pwd):/wgcf \
+  pexcn/docker-images:wgcf generate
+
+# update
+# Edit wgcf-account.toml
+docker run -it --rm \
+  --name wgcf \
+  --network host \
+  -v $(pwd):/wgcf \
+  pexcn/docker-images:wgcf update
 ```
