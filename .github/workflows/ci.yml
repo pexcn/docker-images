@@ -9,6 +9,11 @@ on:
       - '**.md'
       - '**.yml'
   workflow_dispatch:
+    inputs:
+      deploy:
+        description: 'Whether to deploy DockerHub and GHCR'
+        required: true
+        default: '0'
 
 jobs:
   build-and-push:
@@ -134,7 +139,7 @@ jobs:
       # build & push
       - name: Build image and Push to Container Registries
         uses: docker/build-push-action@v2
-        if: github.event_name == 'push'
+        if: ${{ github.event_name == 'push' || github.event.inputs.deploy == '1' }}
         with:
           context: ${{ matrix.BUILD_CONTEXT }}
           tags: |
