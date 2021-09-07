@@ -88,9 +88,6 @@ jobs:
           # vlmcsd
           - BUILD_CONTEXT: utils/vlmcsd
             TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # wgcf
-          - BUILD_CONTEXT: utils/wgcf
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
           #
           # Deprecated
           #
@@ -102,6 +99,9 @@ jobs:
           #  TARGET_PLATFORMS: linux/amd64
           ## pptpd
           #- BUILD_CONTEXT: net/pptpd
+          #  TARGET_PLATFORMS: linux/amd64,linux/arm64
+          ## wgcf
+          #- BUILD_CONTEXT: utils/wgcf
           #  TARGET_PLATFORMS: linux/amd64,linux/arm64
     steps:
       # prepare
