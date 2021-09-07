@@ -65,6 +65,9 @@ jobs:
           # trojan
           - BUILD_CONTEXT: net/trojan
             TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # wgcf
+          - BUILD_CONTEXT: net/wgcf
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # iperf
           - BUILD_CONTEXT: utils/iperf
             TARGET_PLATFORMS: linux/amd64,linux/arm64
