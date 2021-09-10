@@ -27,6 +27,6 @@ RUN apk update \
 FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
-COPY --from=builder /usr/local/wireguard-go /usr/local/bin/
+COPY --from=builder /usr/bin/wireguard-go /usr/local/bin/
 
 ENTRYPOINT ["wireguard-go"]
