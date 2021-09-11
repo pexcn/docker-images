@@ -12,7 +12,7 @@ docker run -d \
   -e MYSQL_PASSWORD=password \
   -e MYSQL_DATABASE=db_name \
   -e MYSQL_ROOT_PASSWORD=root_password \
-  -v /root/docker/mysql-5:/var/lib/mysql \
+  -v /root/docker/mysql-5-data:/var/lib/mysql \
   mysql:5 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
 # mysql 8.x
