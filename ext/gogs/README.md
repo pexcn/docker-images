@@ -18,6 +18,12 @@ docker run -d \
   gogs/gogs:0.12.3
 ```
 
-如果需要自定义 logo, 只需要把 logo 放置到 `/data/gogs/public/img/favicon.png`
+## 配置
 
-最后还需要使用 caddy 进行反向代理，具体见：[@pexcn/docker-images/ext/caddy](https://github.com/pexcn/docker-images/tree/master/ext/caddy)
+### 自定义 Logo
+
+只需要把 logo 放到 `/data/gogs/public/img/favicon.png`
+
+### 反向代理
+
+具体见：[@pexcn/docker-images/ext/caddy](https://github.com/pexcn/docker-images/tree/master/ext/caddy)
