@@ -73,9 +73,6 @@ jobs:
           # rng-tools
           - BUILD_CONTEXT: utils/rng-tools
             TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # shadowsocks-manager
-          - BUILD_CONTEXT: utils/shadowsocks-manager
-            TARGET_PLATFORMS: linux/amd64
           # smartmontools
           - BUILD_CONTEXT: utils/smartmontools
             TARGET_PLATFORMS: linux/amd64,linux/arm64
@@ -103,6 +100,9 @@ jobs:
           ## pptpd
           #- BUILD_CONTEXT: net/pptpd
           #  TARGET_PLATFORMS: linux/amd64,linux/arm64
+          ## shadowsocks-manager
+          #- BUILD_CONTEXT: utils/shadowsocks-manager
+          #  TARGET_PLATFORMS: linux/amd64
           ## wgcf
           #- BUILD_CONTEXT: utils/wgcf
           #  TARGET_PLATFORMS: linux/amd64,linux/arm64
