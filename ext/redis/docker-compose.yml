@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+  redis:
+    image: redis:6.2.5-alpine
+    container_name: redis
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./redis-data:/data
+      - /etc/localtime:/etc/localtime:ro
+    command: --bind 127.0.0.1
