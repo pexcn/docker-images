@@ -70,12 +70,6 @@ jobs:
           # trojan
           - BUILD_CONTEXT: net/trojan
             TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # wireguard-go
-          - BUILD_CONTEXT: net/wireguard-go
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # iperf
-          - BUILD_CONTEXT: utils/iperf
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # rng-tools
           - BUILD_CONTEXT: utils/rng-tools
             TARGET_PLATFORMS: linux/amd64,linux/arm64
@@ -91,6 +85,9 @@ jobs:
           # vlmcsd
           - BUILD_CONTEXT: utils/vlmcsd
             TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # wireguard-go
+          - BUILD_CONTEXT: net/wireguard-go
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           #
           # Deprecated
           #
@@ -100,6 +97,9 @@ jobs:
           ## buster-kernel
           #- BUILD_CONTEXT: buildbot/buster-kernel
           #  TARGET_PLATFORMS: linux/amd64
+          ## iperf
+          #- BUILD_CONTEXT: utils/iperf
+          #  TARGET_PLATFORMS: linux/amd64,linux/arm64
           ## pptpd
           #- BUILD_CONTEXT: net/pptpd
           #  TARGET_PLATFORMS: linux/amd64,linux/arm64
