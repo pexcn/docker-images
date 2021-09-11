@@ -83,7 +83,7 @@ jobs:
           - BUILD_CONTEXT: utils/vlmcsd
             TARGET_PLATFORMS: linux/amd64,linux/arm64
           # wireguard-go
-          - BUILD_CONTEXT: net/wireguard-go
+          - BUILD_CONTEXT: utils/wireguard-go
             TARGET_PLATFORMS: linux/amd64,linux/arm64
           #
           # Deprecated
