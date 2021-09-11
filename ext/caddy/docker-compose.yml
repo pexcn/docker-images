@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+  caddy:
+    image: caddy:2.4.5
+    container_name: caddy
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./caddy-data/Caddyfile:/etc/caddy/Caddyfile
+      - ../acme.sh/acme.sh-data:/certs
+      - /etc/localtime:/etc/localtime:ro
