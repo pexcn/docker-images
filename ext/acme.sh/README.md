@@ -9,7 +9,7 @@ docker run -d \
   --network host \
   -e HE_Username=user \
   -e HE_Password=pass \
-  -v /root/docker/acme.sh-data:/acme.sh \
+  -v /root/docker/acme.sh:/acme.sh \
   -v /etc/localtime:/etc/localtime:ro \
   neilpang/acme.sh:2.9.0 daemon
 
