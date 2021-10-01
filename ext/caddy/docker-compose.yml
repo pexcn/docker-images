@@ -8,5 +8,5 @@ services:
     network_mode: host
     volumes:
       - ./caddy-data/Caddyfile:/etc/caddy/Caddyfile
-      - ../acme.sh/acme.sh-data:/certs
+      - ../acme.sh/acme.sh-data:/cert
       - /etc/localtime:/etc/localtime:ro
