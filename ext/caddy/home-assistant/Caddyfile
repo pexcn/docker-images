@@ -1,0 +1,42 @@
+#
+# Caddyfile for Home Assistant
+#
+
+# redirect http to https
+http://home.local.pexcn.me {
+	redir https://{host}{uri} permanent
+}
+
+# reverse proxy to home assistant endpoint
+https://home.local.pexcn.me {
+	encode zstd gzip
+	tls /cert/home.local.pexcn.me_ecc/fullchain.cer /cert/home.local.pexcn.me_ecc/home.local.pexcn.me.key
+
+	reverse_proxy 127.0.0.1:8124 {
+		header_up Host {host}
+		header_up X-Real-IP {remote}
+
+		# enabled by home assistant
+		#header_up X-Forwarded-For {remote}
+
+		# enabled by default
+		#header_up X-Forwarded-Proto {scheme}
+	}
+}
+
+# reverse proxy to home assistant endpoint (external)
+https://home.pexcn.me:8123 {
+	encode zstd gzip
+	tls /cert/home.pexcn.me_ecc/fullchain.cer /cert/home.pexcn.me_ecc/home.pexcn.me.key
+
+	reverse_proxy 127.0.0.1:8124 {
+		header_up Host {host}
+		header_up X-Real-IP {remote}
+
+		# enabled by home assistant
+		#header_up X-Forwarded-For {remote}
+
+		# enabled by default
+		#header_up X-Forwarded-Proto {scheme}
+	}
+}
