@@ -10,7 +10,7 @@ http://git.local.pexcn.me {
 # reverse proxy to gogs endpoint
 https://git.local.pexcn.me {
 	encode zstd gzip
-	tls /cert/local.pexcn.me_ecc/fullchain.cer /cert/local.pexcn.me_ecc/local.pexcn.me.key
+	tls /cert/git.local.pexcn.me_ecc/fullchain.cer /cert/git.local.pexcn.me_ecc/git.local.pexcn.me.key
 
 	header Strict-Transport-Security max-age=31536000;
 
