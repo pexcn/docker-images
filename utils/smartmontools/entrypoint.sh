@@ -42,4 +42,4 @@ create_msmtp_conf() {
 update_smartd_conf
 create_msmtp_conf
 
-exec smartd --no-fork
+exec smartd --no-fork --debug
