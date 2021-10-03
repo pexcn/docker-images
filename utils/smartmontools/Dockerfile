@@ -2,11 +2,11 @@
 # Dockerfile for smartmontools
 #
 
-FROM alpine:3.13
+FROM alpine:3.14
 LABEL maintainer="pexcn <i@pexcn.me>"
 
 ARG SMARTMONTOOLS_VERSION=7.2-r1
-ARG MSMTP_VERSION=1.8.14-r0
+ARG MSMTP_VERSION=1.8.15-r0
 ARG S_NAIL_VERSION=14.9.20-r0
 RUN apk update \
   && apk add --no-cache \
