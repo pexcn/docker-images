@@ -19,6 +19,7 @@ RUN apk update \
 RUN ln -sf /usr/bin/msmtp /usr/sbin/sendmail
 
 COPY entrypoint.sh /app/
+COPY smartd_warning_zh.sh /etc/
 
 ENV SMARTD_CONFIG="DEVICESCAN"
 ENV SMTP_CONFIG="mail@example.com#user:pass@smtp.example.com:587"
