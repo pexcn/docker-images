@@ -27,7 +27,7 @@ docker run -d \
   --restart unless-stopped \
   --network host \
   --privileged \
-  -e SMARTD_CONFIG="DEVICESCAN -a -s (S/../../7/19|L/../15/./20) -W 0,0,45 -m pexcn97@gmail.com -M once" \
+  -e SMARTD_CONFIG="DEVICESCAN -a -s (S/../../7/19|L/../15/./20) -W 0,0,45 -m pexcn97@gmail.com -M diminishing" \
   -e SMTP_CONFIG="mail@example.com#user:pass@smtp.example.com:587" \
   -v /etc/localtime:/etc/localtime:ro \
   pexcn/docker-images:smartmontools
