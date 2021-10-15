@@ -11,5 +11,5 @@ services:
       PGID: <git gid>
     volumes:
       - ./gogs-data:/data
-      - ../acme.sh/acme.sh-data:/certs
+      #- ../acme.sh/acme.sh-data:/cert
       - /etc/localtime:/etc/localtime:ro

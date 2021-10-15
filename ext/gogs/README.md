@@ -13,7 +13,7 @@ docker run -d \
   -e PUID="$(id -u git)" \
   -e PGID="$(id -g git)" \
   -v /root/docker/gogs-data:/data \
-  -v /root/docker/acme.sh-data:/certs \
+  #-v /root/docker/acme.sh-data:/cert \
   -v /etc/localtime:/etc/localtime:ro \
   gogs/gogs:0.12.3
 ```
