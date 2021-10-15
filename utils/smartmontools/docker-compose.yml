@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  smartmontools:
+    image: pexcn/docker-images:smartmontools
+    container_name: smartmontools
+    restart: unless-stopped
+    network_mode: host
+    privileged: true
+    environment:
+      SMARTD_CONFIG: "DEVICESCAN -a -s (S/../../7/19|L/../15/./20) -W 0,0,45 -m pexcn97@gmail.com -M diminishing"
+      SMTP_CONFIG: "mail@example.com#user:pass@smtp.example.com:587"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
