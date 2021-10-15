@@ -60,24 +60,21 @@ RUN apk del .build-deps \
 #
 # Build stage [v2ray-plugin & xray-plugin]
 #
-# force 1.16 version
-# should be fix: panic: qtls.CertificateRequestInfo doesn't match
-FROM golang:1.16-alpine AS builder-ray
+FROM golang:alpine AS builder-ray
 
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git
 
-ARG V2RAY_VERSION=ddd7ab46b4aeee0ca8b272efed9d7da3e3a6e52c
-RUN git clone https://github.com/shadowsocks/v2ray-plugin.git \
+ARG V2RAY_VERSION=v4.42.2
+RUN git clone https://github.com/teddysun/v2ray-plugin.git --branch $V2RAY_VERSION \
   && cd v2ray-plugin \
-  && git checkout $V2RAY_VERSION \
   && env CGO_ENABLED=0 go build -v -trimpath -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w" -o v2ray-plugin \
   && mkdir -p /app \
   && mv v2ray-plugin /app \
   && cd .. \
   && rm -r v2ray-plugin
 
-ARG XRAY_VERSION=v1.4.2
+ARG XRAY_VERSION=v1.4.5
 RUN git clone https://github.com/teddysun/xray-plugin.git --branch $XRAY_VERSION \
   && cd xray-plugin \
   && env CGO_ENABLED=0 go build -v -trimpath -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w" -o xray-plugin \
