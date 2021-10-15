@@ -40,9 +40,6 @@ jobs:
           # chinadns-ng
           - BUILD_CONTEXT: net/chinadns-ng
             TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # chisel
-          - BUILD_CONTEXT: net/chisel
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # dns2tcp
           - BUILD_CONTEXT: net/dns2tcp
             TARGET_PLATFORMS: linux/amd64,linux/arm64
@@ -82,12 +79,12 @@ jobs:
           # vlmcsd
           - BUILD_CONTEXT: utils/vlmcsd
             TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # wireguard-go
-          - BUILD_CONTEXT: utils/wireguard-go
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
           #
           # Deprecated
           #
+          ## chisel
+          #- BUILD_CONTEXT: net/chisel
+          #  TARGET_PLATFORMS: linux/amd64,linux/arm64
           ## dsm-open-vm-tools
           #- BUILD_CONTEXT: utils/dsm-open-vm-tools
           #  TARGET_PLATFORMS: linux/amd64,linux/arm64
@@ -105,6 +102,9 @@ jobs:
           #  TARGET_PLATFORMS: linux/amd64
           ## wgcf
           #- BUILD_CONTEXT: utils/wgcf
+          #  TARGET_PLATFORMS: linux/amd64,linux/arm64
+          ## wireguard-go
+          #- BUILD_CONTEXT: utils/wireguard-go
           #  TARGET_PLATFORMS: linux/amd64,linux/arm64
     steps:
       # prepare
