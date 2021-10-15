@@ -86,7 +86,7 @@ done
 test "$nisdomain" != "(none)" || nisdomain=
 
 # Format subject
-export SMARTD_SUBJECT="在主机 $hostname 上检测到 S.M.A.R.T. 错误 (${SMARTD_FAILTYPE-[SMARTD_FAILTYPE]})"
+export SMARTD_SUBJECT="主机 $hostname 检测到 S.M.A.R.T. 错误 (${SMARTD_FAILTYPE-[SMARTD_FAILTYPE]})"
 
 # Format message
 fullmessage=`
