@@ -10,15 +10,17 @@ FROM rust:alpine AS builder-ss
 RUN apk update \
   && apk add --no-cache --virtual .build-deps musl-dev git
 
-ARG SS_VERSION=v1.11.2
+ARG SS_VERSION=v1.12.0-alpha.9
 RUN git clone https://github.com/shadowsocks/shadowsocks-rust.git --branch $SS_VERSION \
   && cd shadowsocks-rust \
-  && RUSTFLAGS="-C link-arg=-s" cargo build --release --features "local-redir" \
+  && cargo build --release --features "local-redir local-tun" \
   && mkdir /app \
   && cp /shadowsocks-rust/target/release/sslocal /app \
   && cp /shadowsocks-rust/target/release/ssserver /app \
   && cp /shadowsocks-rust/target/release/ssmanager /app \
   && cp /shadowsocks-rust/target/release/ssurl /app \
+  # use strip instead set RUSTFLAGS
+  && strip /app/ss* \
   && rm -r /shadowsocks-rust
 
 RUN apk del .build-deps \
