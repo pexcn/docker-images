@@ -1,32 +1,38 @@
 #!/bin/sh
 
-clear_config() {
+#
+# TODO:
+# uniqueids: no or never?
+#
+
+_clear_config() {
   > /etc/ipsec.secrets
   > /etc/ipsec.conf
 }
 
-gen_ipsec_secrets() {
-  [ -n "$PSK" ] && echo "%any %any : PSK \"$PSK\"" >> /etc/ipsec.secrets
+_gen_ipsec_secrets() {
+  [ -n "$PRE_SHARED_KEY" ] && echo "%any %any : PSK \"$PRE_SHARED_KEY\"" >> /etc/ipsec.secrets
 }
 
-gen_ipsec_conf() {
+_gen_ipsec_conf() {
+  # common
   cat <<- EOF >> /etc/ipsec.conf
 	config setup
-	    uniqueids=no
+	  uniqueids=no
 EOF
 
-  # l2tp-psk
+  # ipsec-xauth-psk
   cat <<- EOF >> /etc/ipsec.conf
-	conn l2tp-psk
-	    left=%defaultroute
-	    right=%any
-	    leftprotoport=17/1701
-	    rightprotoport=17/1701
-	    authby=secret
-	    type=transport
-	    dpdaction=clear
-	    rekey=no
-	    auto=add
+	conn ipsec-xauth-psk
+	  left=%defaultroute
+	  right=%any
+	  leftprotoport=17/1701
+	  rightprotoport=17/1701
+	  authby=secret
+	  type=transport
+	  dpdaction=clear
+	  rekey=no
+	  auto=add
 EOF
 }
 
@@ -36,14 +42,14 @@ apply_sysctl() {
   sysctl -w net.ipv4.conf.all.send_redirects=0
 }
 
-build_config() {
-  clear_config
-  gen_ipsec_secrets
-  gen_ipsec_conf
+create_config() {
+  _clear_config
+  _gen_ipsec_secrets
+  _gen_ipsec_conf
 }
 
 apply_sysctl
-build_config
+create_config
 
 ipsec start
 sleep 65535
