@@ -10,29 +10,44 @@ _clear_config() {
   > /etc/ipsec.conf
 }
 
-_gen_ipsec_secrets() {
-  [ -n "$PRE_SHARED_KEY" ] && echo "%any %any : PSK \"$PRE_SHARED_KEY\"" >> /etc/ipsec.secrets
+_gen_secrets() {
+  # psk
+  [ -n "$PSK" ] && echo "%any %any : PSK $PSK" >> /etc/ipsec.secrets
+
+  # users
+  if [ -n "$USERS" ]; then
+    for account in "${USERS//,/ }"; do
+      local username=$(echo $account | cut -d ':' -f 1)
+      local password=$(echo $account | cut -d ':' -f 2)
+      echo "$username : XAUTH $password" >> /etc/ipsec.secrets
+    done
+  fi
 }
 
-_gen_ipsec_conf() {
+_gen_conf() {
   # common
   cat <<- EOF >> /etc/ipsec.conf
 	config setup
 	  uniqueids=no
+
 EOF
 
   # ipsec-xauth-psk
   cat <<- EOF >> /etc/ipsec.conf
 	conn ipsec-xauth-psk
 	  left=%defaultroute
+	  leftauth=psk
+	  leftauth2=xauth
+	  leftsubnet=0.0.0.0/0
 	  right=%any
-	  leftprotoport=17/1701
-	  rightprotoport=17/1701
+	  rightauth=psk
+	  rightauth2=xauth
+	  rightsourceip=192.168.100.0/24
+	  keyexchange=ikev1
+	  ike=aes256-sha256-prfsha256-modp2048,aes256-sha256-prfsha256-modp1024,aes256-sha1-prfsha1-modp2048,aes256-sha1-prfsha1-modp1024,aes256-sha384-prfsha384-modp1024,aes256-sha512-prfsha512-modp1024,aes256-sha512-prfsha512-modp2048
 	  authby=secret
-	  type=transport
-	  dpdaction=clear
-	  rekey=no
 	  auto=add
+
 EOF
 }
 
@@ -44,12 +59,11 @@ apply_sysctl() {
 
 create_config() {
   _clear_config
-  _gen_ipsec_secrets
-  _gen_ipsec_conf
+  _gen_secrets
+  _gen_conf
 }
 
-apply_sysctl
+#apply_sysctl
 create_config
 
-ipsec start
-sleep 65535
+ipsec start --nofork
