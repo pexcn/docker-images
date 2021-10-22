@@ -16,7 +16,7 @@ _gen_secrets() {
 
   # users
   if [ -n "$USERS" ]; then
-    for account in "${USERS//,/ }"; do
+    for account in ${USERS//,/ }; do
       local username=$(echo $account | cut -d ':' -f 1)
       local password=$(echo $account | cut -d ':' -f 2)
       echo "$username : XAUTH $password" >> /etc/ipsec.secrets
@@ -29,10 +29,10 @@ _gen_conf() {
   cat <<- EOF >> /etc/ipsec.conf
 	config setup
 	  uniqueids=no
-
 EOF
 
   # ipsec-xauth-psk
+  echo >> /etc/ipsec.conf
   cat <<- EOF >> /etc/ipsec.conf
 	conn ipsec-xauth-psk
 	  left=%defaultroute
@@ -47,7 +47,6 @@ EOF
 	  ike=aes256-sha256-prfsha256-modp2048,aes256-sha256-prfsha256-modp1024,aes256-sha1-prfsha1-modp2048,aes256-sha1-prfsha1-modp1024,aes256-sha384-prfsha384-modp1024,aes256-sha512-prfsha512-modp1024,aes256-sha512-prfsha512-modp2048
 	  authby=secret
 	  auto=add
-
 EOF
 }
 
@@ -66,4 +65,4 @@ create_config() {
 #apply_sysctl
 create_config
 
-ipsec start --nofork
+exec ipsec start --nofork

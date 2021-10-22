@@ -9,8 +9,8 @@ ARG STRONGSWAN_VER=5.9.1-r2
 RUN apk update \
   && apk add --no-cache strongswan=$STRONGSWAN_VER
 
-ENV PRE_SHARED_KEY="PSK"
-ENV USERS="user:pass,username:password"
+ENV PSK=PreSharedKey
+ENV USERS=user:pass,username:password
 
 COPY entrypoint.sh /app/entrypoint.sh
 
