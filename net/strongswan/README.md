@@ -11,5 +11,6 @@ docker run -d \
   -p 4500:4500/udp \
   -e PSK="PreSharedKey" \
   -e USERS="user1:password1,user2:password2" \
+  -e DEBUG=0 \
   pexcn/docker-images:strongswan
 ```

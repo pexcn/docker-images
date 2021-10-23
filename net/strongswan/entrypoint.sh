@@ -49,8 +49,10 @@ gen_ipsec_conf() {
   cat <<- EOF >> /etc/ipsec.conf
 	config setup
 	  uniqueids=no
-	  #charondebug="cfg 2"
 EOF
+
+  # debug
+  [ "$DEBUG" = 1 ] && echo "  charondebug=\"ike 2, cfg 2, enc 2, net 2\"" >> /etc/ipsec.conf
 
   # ipsec-xauth-psk
   echo >> /etc/ipsec.conf
@@ -70,6 +72,34 @@ EOF
 	  authby=secret
 	  auto=add
 EOF
+}
+
+output_debug_log() {
+  local interface=$(_get_ipv4_default_iface)
+  local address=$(_get_ipv4_by_iface $interface)
+  local dns=$(_get_dns_address)
+
+  echo
+  echo "============================== DEBUG LOG START =============================="
+  echo
+  echo "Interface: $interface"
+  echo "IP Address: $address"
+  echo "DNS Server: $dns"
+  echo
+  echo
+  echo
+  echo "/etc/ipsec.secrets"
+  echo
+  cat /etc/ipsec.secrets
+  echo
+  echo
+  echo
+  echo "/etc/ipsec.conf"
+  echo
+  cat /etc/ipsec.conf
+  echo
+  echo "============================== DEBUG LOG END =============================="
+  echo
 }
 
 apply_sysctl() {
@@ -92,6 +122,7 @@ create_config() {
 }
 
 start_ipsec() {
+  [ "$DEBUG" = 1 ] && output_debug_log
   apply_sysctl
   setup_firewall
   exec ipsec start --nofork

@@ -7,9 +7,10 @@ services:
     restart: unless-stopped
     network_mode: bridge
     privileged: true
-    environment:
-      PSK: "PreSharedKey"
-      USERS: "user1:password1,user2:password2"
     ports:
       - "500:500/udp"
       - "4500:4500/udp"
+    environment:
+      PSK: "PreSharedKey"
+      USERS: "user1:password1,user2:password2"
+      DEBUG: 0
