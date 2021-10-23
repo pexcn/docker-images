@@ -44,6 +44,9 @@ jobs:
           # shadowsocks-libev
           - BUILD_CONTEXT: net/shadowsocks-libev
             TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # strongswan
+          - BUILD_CONTEXT: net/strongswan
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # smartmontools
           - BUILD_CONTEXT: utils/smartmontools
             TARGET_PLATFORMS: linux/amd64,linux/arm64
