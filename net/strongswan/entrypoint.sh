@@ -49,6 +49,7 @@ gen_ipsec_conf() {
   cat <<- EOF >> /etc/ipsec.conf
 	config setup
 	  uniqueids=no
+	  #charondebug="cfg 2"
 EOF
 
   # ipsec-xauth-psk
@@ -65,7 +66,7 @@ EOF
 	  rightsourceip=$client_ip
 	  rightdns=$dns_server
 	  keyexchange=ikev1
-	  ike=aes256-sha256-prfsha256-modp2048,aes256-sha256-prfsha256-modp1024,aes256-sha1-prfsha1-modp2048,aes256-sha1-prfsha1-modp1024,aes256-sha384-prfsha384-modp1024,aes256-sha512-prfsha512-modp1024,aes256-sha512-prfsha512-modp2048
+	  ike=aes256-sha256-prfsha256-modp2048,aes256-sha256-prfsha256-modp1024,aes256-sha1-prfsha1-modp2048,aes256-sha1-prfsha1-modp1024,aes256-sha384-prfsha384-modp1024,aes256-sha512-prfsha512-modp1024,aes256-sha512-prfsha512-modp2048!
 	  authby=secret
 	  auto=add
 EOF
