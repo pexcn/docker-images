@@ -1,28 +1,21 @@
-# netspeeder for docker
+# netspeeder
 
 ## Usage
 
 ```bash
-docker run -d \
-  --name netspeeder \
-  --restart always \
-  --network host \
-  --privileged \
-  pexcn/docker-images:netspeeder
-
 # speed up all ip packets
 docker run -d \
   --name netspeeder \
-  --restart always \
+  --restart unless-stopped \
   --network host \
   --privileged \
   pexcn/docker-images:netspeeder eth0 "ip"
 
-# speed up port 53 outbound packets and tcp port 80 outbound packets
+# speed up port 993 and 2222 outbound packets
 docker run -d \
   --name netspeeder \
-  --restart always \
+  --restart unless-stopped \
   --network host \
   --privileged \
-  pexcn/docker-images:netspeeder eth0 "src port 53 || tcp src port 80"
+  pexcn/docker-images:netspeeder eth0 "src port 993 || src port 2222"
 ```

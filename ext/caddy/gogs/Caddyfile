@@ -1,0 +1,25 @@
+#
+# Caddyfile for gogs
+#
+
+# redirect http to https
+http://git.local.pexcn.me {
+	redir https://{host}{uri} permanent
+}
+
+# reverse proxy to gogs endpoint
+https://git.local.pexcn.me {
+	encode zstd gzip
+	tls /cert/git.local.pexcn.me_ecc/fullchain.cer /cert/git.local.pexcn.me_ecc/git.local.pexcn.me.key
+
+	header Strict-Transport-Security max-age=31536000;
+
+	reverse_proxy 127.0.0.1:3000 {
+		header_up Host {host}
+		header_up X-Real-IP {remote}
+		header_up X-Forwarded-For {remote}
+
+		# enabled by default
+		#header_up X-Forwarded-Proto {scheme}
+	}
+}

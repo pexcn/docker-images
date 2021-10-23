@@ -30,17 +30,18 @@ RUN apk del .build-deps \
 FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
-# set timezone
-ENV TZ=Asia/Taipei
-RUN apk update \
-  && apk add --no-cache tzdata \
-  && rm -rf /var/cache/apk/*
-
 # copy files
 COPY --from=builder /app/ /app/
 RUN chown nobody:nobody /app/etc
 COPY hev-socks5-server.yml /app/etc/hev-socks5-server.yml
 COPY entrypoint.sh /app/entrypoint.sh
 
+# allow bind port less than 1024
+RUN apk update \
+  && apk add --no-cache libcap \
+  && rm -rf /var/cache/apk/*
+RUN setcap cap_net_bind_service+ep /app/bin/hev-socks5-server
+
+EXPOSE 1080
 USER nobody
 ENTRYPOINT ["/app/entrypoint.sh"]

@@ -1,0 +1,49 @@
+type: m
+
+db: 'db.sqlite'
+
+redis:
+  host: '127.0.0.1'
+  port: 6379
+  password: 'password'
+  db: 0
+
+plugins:
+  flowSaver:
+    use: true
+  user:
+    use: true
+  account:
+    use: true
+  group:
+    use: true
+  giftcard:
+    use: true
+  email:
+    use: true
+    type: 'smtp'
+    host: 'smtp.example.com'
+    username: 'no-reply@example.com'
+    password: 'password'
+  webgui:
+    use: true
+    host: '127.0.0.1'
+    port: '8080'
+    site: 'https://example.com'
+    #admin_username: 'admin@example.com'
+    #admin_password: 'password'
+    #icon: 'icon.png'
+    #skin: 'default'
+    #googleAnalytics: 'UA-xxxxxxxx-x'
+    #gcmSenderId: '476902381496'
+    #gcmAPIKey: 'AAAAGzddLRc:XXXXXXXXXXXXXX'
+  #webgui_telegram:
+    #use: true
+    #token: '191374681:AAw6RaVHR4nnP7T4Ct4a8QX-XyFQ5W53wmZ'
+  #alipay:
+    #use: true
+    #appid: 2015012104922471
+    #notifyUrl: 'https://example.com/api/user/alipay/callback'
+    #merchantPrivateKey: 'xxxxxxxxxxxx'
+    #alipayPublicKey: 'xxxxxxxxxxx'
+    #gatewayUrl: 'https://openapi.alipay.com/gateway.do'

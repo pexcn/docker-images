@@ -1,0 +1,110 @@
+version: '3.9'
+
+services:
+  ss-server-aes:
+    image: pexcn/docker-images:shadowsocks-libev
+    container_name: ss-server-aes
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    command: >
+      ss-server
+        -s 0.0.0.0
+        -p 1776
+        -k password
+        -m aes-256-gcm
+        -t 3600
+        -n 1048576
+        -u
+        --reuse-port
+        --fast-open
+        --no-delay
+
+  ss-server-chacha20:
+    image: pexcn/docker-images:shadowsocks-libev
+    container_name: ss-server-chacha20
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    command: >
+      ss-server
+        -s 0.0.0.0
+        -p 1984
+        -k password
+        -m chacha20-ietf-poly1305
+        -t 3600
+        -n 1048576
+        -u
+        --reuse-port
+        --fast-open
+        --no-delay
+
+  ss-server-obfs:
+    image: pexcn/docker-images:shadowsocks-libev
+    container_name: ss-server-obfs
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    command: >
+      ss-server
+        -s 0.0.0.0
+        -p 80
+        -k password
+        -m chacha20-ietf-poly1305
+        -t 3600
+        -n 1048576
+        -u
+        --reuse-port
+        --fast-open
+        --no-delay
+        --plugin "obfs-server"
+        --plugin-opts "obfs=tls;fast-open"
+
+  ss-server-websocket:
+    image: pexcn/docker-images:shadowsocks-libev
+    container_name: ss-server-websocket
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ../acme.sh/acme.sh/example.com_ecc/:/root/.acme.sh/example.com/
+      - /etc/localtime:/etc/localtime:ro
+    command: >
+      ss-server
+        -s 0.0.0.0
+        -p 443
+        -k password
+        -m chacha20-ietf-poly1305
+        -t 3600
+        -n 1048576
+        -u
+        --reuse-port
+        --fast-open
+        --no-delay
+        --plugin "xray-plugin"
+        --plugin-opts "server;tls;fast-open;host=example.com;path=/ws"
+
+  ss-server-grpc:
+    image: pexcn/docker-images:shadowsocks-libev
+    container_name: ss-server-grpc
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ../acme.sh/acme.sh/example.com_ecc/:/root/.acme.sh/example.com/
+      - /etc/localtime:/etc/localtime:ro
+    command: >
+      ss-server
+        -s 0.0.0.0
+        -p 993
+        -k password
+        -m chacha20-ietf-poly1305
+        -t 3600
+        -n 1048576
+        -u
+        --reuse-port
+        --fast-open
+        --no-delay
+        --plugin "xray-plugin"
+        --plugin-opts "server;tls;fast-open;mode=grpc;host=example.com"

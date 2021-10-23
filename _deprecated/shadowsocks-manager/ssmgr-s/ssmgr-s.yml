@@ -1,0 +1,10 @@
+type: s
+
+shadowsocks:
+  address: 127.0.0.1:6000
+
+manager:
+  address: 127.0.0.1:6001
+  password: 'password'
+
+db: 'db.sqlite'

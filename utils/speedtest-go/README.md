@@ -1,30 +1,20 @@
-# speedtest-go for docker
+# speedtest-go
 
 ## Usage
 
-Available environment variables:
-```bash
-TITLE
-ADDR
-PORT
-PASSWORD
-```
+Environment variable | Default value | Description
+---------------------|---------------|------------
+`TITLE` | `LibreSpeed` | Web UI title
+`ADDR` | all interfaces | Backend bind address
+`PORT` | `8989` | Backend bind port
 
 ```bash
 docker run -d \
   --name speedtest-go \
-  --restart always \
+  --restart unless-stopped \
   --network host \
   -e TITLE="FREE 2501 Speedtest" \
-  -e PASSWORD="FREE2501" \
-  pexcn/docker-images:speedtest-go
-
-docker run -d \
-  --name speedtest-go \
-  --restart always \
-  --network host \
-  -e TITLE="NAS Speedtest" \
-  -e PORT="8989" \
-  -e PASSWORD="FREE2501" \
+  -e PORT=80 \
+  -v /etc/localtime:/etc/localtime:ro \
   pexcn/docker-images:speedtest-go
 ```

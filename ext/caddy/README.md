@@ -5,10 +5,10 @@
 ```bash
 docker run -d \
   --name caddy \
-  --restart always \
+  --restart unless-stopped \
   --network host \
-  -v /mnt/storage/docker/caddy/Caddyfile:/etc/caddy/Caddyfile \
-  -v /mnt/storage/docker/acme.sh:/certs \
+  -v /root/docker/caddy-data/Caddyfile:/etc/caddy/Caddyfile \
+  -v /root/docker/acme.sh-data:/cert \
   -v /etc/localtime:/etc/localtime:ro \
-  caddy:2.3.0
+  caddy:2.4.5
 ```

@@ -1,0 +1,10 @@
+version: '3.9'
+
+services:
+  vlmcsd:
+    image: pexcn/docker-images:vlmcsd
+    container_name: vlmcsd
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /etc/localtime:/etc/localtime:ro

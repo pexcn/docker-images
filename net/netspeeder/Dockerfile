@@ -7,21 +7,19 @@
 #
 FROM alpine AS builder
 
-# add depends
 RUN apk update \
   && apk add --no-cache --virtual .build-deps \
-      build-base libnet-dev libpcap-dev
+      build-base git libnet-dev libnet-static libpcap-dev
 
-# build
-ARG VERSION=b439a39c783f2bc11ec73ea7721c0d9373ff2815
-RUN wget -O - -o /dev/null --no-check-certificate https://github.com/pexcn/netspeeder/archive/$VERSION.tar.gz | tar -zxf - \
-  && cd netspeeder-$VERSION \
-  && make \
+ARG VERSION=ca7a81387dfe3e7a0985e3efc8895ece46228e34
+RUN git clone https://github.com/pexcn/netspeeder.git \
+  && cd netspeeder \
+  && git checkout $VERSION \
+  && make static \
   && make install DESTDIR="/app" \
   && cd .. \
-  && rm -r netspeeder-$VERSION
+  && rm -r netspeeder
 
-# clean up
 RUN apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
@@ -31,12 +29,8 @@ RUN apk del .build-deps \
 FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
-# add depends
-RUN apk update \
-  && apk add --no-cache libnet libpcap \
-  && rm -rf /var/cache/apk/*
-
 COPY --from=builder /app/bin/netspeeder /app/netspeeder
+COPY entrypoint.sh /app/entrypoint.sh
 
 USER root
-ENTRYPOINT ["/app/netspeeder"]
+ENTRYPOINT ["/app/entrypoint.sh"]

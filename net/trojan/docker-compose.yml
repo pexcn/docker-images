@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  trojan-server:
+    image: pexcn/docker-images:trojan
+    container_name: trojan-server
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./server.json:/app/etc/trojan/config.json
+      - ../acme.sh/acme.sh/example.com_ecc/fullchain.cer:/app/etc/fullchain.cer
+      - ../acme.sh/acme.sh/example.com_ecc/example.com.key:/app/etc/private.key
+      - /etc/localtime:/etc/localtime:ro

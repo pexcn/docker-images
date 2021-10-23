@@ -14,18 +14,18 @@ sysctl --system
 # run redis bind localhost
 docker run -d \
   --name redis \
-  --restart always \
+  --restart unless-stopped \
   --network host \
-  -v /mnt/storage/docker/redis:/data \
+  -v /root/docker/redis-data:/data \
   -v /etc/localtime:/etc/localtime:ro \
-  redis:6.2.0-alpine --bind 127.0.0.1
+  redis:6.2.6-alpine --bind 127.0.0.1
 
 # run redis with password
 docker run -d \
   --name redis \
-  --restart always \
+  --restart unless-stopped \
   --network host \
-  -v /mnt/storage/docker/redis:/data \
+  -v /root/docker/redis-data:/data \
   -v /etc/localtime:/etc/localtime:ro \
-  redis:6.2.0-alpine --requirepass freehk
+  redis:6.2.6-alpine --requirepass password
 ```

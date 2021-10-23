@@ -2,11 +2,22 @@ name: CI
 
 on:
   push:
-    branches: master
+    branches:
+      - master
+    paths-ignore:
+      - 'ext/**'
+      - '**.md'
+      - '**.yml'
   workflow_dispatch:
+    inputs:
+      deploy:
+        description: 'Whether to deploy DockerHub and GHCR'
+        required: true
+        default: '0'
 
 jobs:
   build-and-push:
+    #if: "!startsWith(github.event.head_commit.message, 'ext:')"
     runs-on: ubuntu-20.04
     env:
       TZ: Asia/Taipei
@@ -26,11 +37,17 @@ jobs:
           # buster-padavan
           - BUILD_CONTEXT: buildbot/buster-padavan
             TARGET_PLATFORMS: linux/amd64
-          # chisel
-          - BUILD_CONTEXT: net/chisel
+          # chinadns-ng
+          - BUILD_CONTEXT: net/chinadns-ng
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # dns2tcp
+          - BUILD_CONTEXT: net/dns2tcp
             TARGET_PLATFORMS: linux/amd64,linux/arm64
           # hev-socks5-server
           - BUILD_CONTEXT: net/hev-socks5-server
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # ipt2socks
+          - BUILD_CONTEXT: net/ipt2socks
             TARGET_PLATFORMS: linux/amd64,linux/arm64
           # mtg
           - BUILD_CONTEXT: net/mtg
@@ -38,14 +55,23 @@ jobs:
           # netspeeder
           - BUILD_CONTEXT: net/netspeeder
             TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # pptpd
-          - BUILD_CONTEXT: net/pptpd
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # shadowsocks-libev
           - BUILD_CONTEXT: net/shadowsocks-libev
             TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # shadowsocks-rust
+          - BUILD_CONTEXT: net/shadowsocks-rust
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # strongswan
           - BUILD_CONTEXT: net/strongswan
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # tor
+          - BUILD_CONTEXT: net/tor
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # trojan
+          - BUILD_CONTEXT: net/trojan
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # rng-tools
+          - BUILD_CONTEXT: utils/rng-tools
             TARGET_PLATFORMS: linux/amd64,linux/arm64
           # smartmontools
           - BUILD_CONTEXT: utils/smartmontools
@@ -59,12 +85,30 @@ jobs:
           #
           # Deprecated
           #
+          ## chisel
+          #- BUILD_CONTEXT: net/chisel
+          #  TARGET_PLATFORMS: linux/amd64,linux/arm64
           ## dsm-open-vm-tools
           #- BUILD_CONTEXT: utils/dsm-open-vm-tools
           #  TARGET_PLATFORMS: linux/amd64,linux/arm64
           ## buster-kernel
           #- BUILD_CONTEXT: buildbot/buster-kernel
           #  TARGET_PLATFORMS: linux/amd64
+          ## iperf
+          #- BUILD_CONTEXT: utils/iperf
+          #  TARGET_PLATFORMS: linux/amd64,linux/arm64
+          ## pptpd
+          #- BUILD_CONTEXT: net/pptpd
+          #  TARGET_PLATFORMS: linux/amd64,linux/arm64
+          ## shadowsocks-manager
+          #- BUILD_CONTEXT: utils/shadowsocks-manager
+          #  TARGET_PLATFORMS: linux/amd64
+          ## wgcf
+          #- BUILD_CONTEXT: utils/wgcf
+          #  TARGET_PLATFORMS: linux/amd64,linux/arm64
+          ## wireguard-go
+          #- BUILD_CONTEXT: utils/wireguard-go
+          #  TARGET_PLATFORMS: linux/amd64,linux/arm64
     steps:
       # prepare
       - name: Checkout
@@ -101,7 +145,7 @@ jobs:
       # build & push
       - name: Build image and Push to Container Registries
         uses: docker/build-push-action@v2
-        if: github.event_name == 'push'
+        if: ${{ github.event_name == 'push' || github.event.inputs.deploy == '1' }}
         with:
           context: ${{ matrix.BUILD_CONTEXT }}
           tags: |

@@ -1,0 +1,30 @@
+#
+# Caddyfile for Proxmox VE
+#
+
+# redirect http to https
+http://pve.local.pexcn.me {
+	redir https://{host}{uri} permanent
+}
+
+# reverse proxy to Proxmox VE endpoint
+https://pve.local.pexcn.me {
+	encode zstd gzip
+	tls /cert/pve.local.pexcn.me_ecc/fullchain.cer /cert/pve.local.pexcn.me_ecc/pve.local.pexcn.me.key
+
+	header Strict-Transport-Security max-age=31536000;
+
+	reverse_proxy https://127.0.0.1:8006 {
+		transport http {
+			tls_insecure_skip_verify
+		}
+
+		header_up Host {host}
+		header_up X-Real-IP {remote}
+		header_up X-Forwarded-For {remote}
+		header_up X-Forwarded-Host {host}
+
+		# enabled by default
+		#header_up X-Forwarded-Proto {scheme}
+	}
+}

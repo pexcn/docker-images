@@ -1,0 +1,14 @@
+SocksPort 0.0.0.0:9050 IPv6Traffic PreferSOCKSNoAuth
+#Socks5Proxy 127.0.0.1:1080
+
+GeoIPFile /app/share/tor/geoip
+GeoIPv6File /app/share/tor/geoip6
+
+StrictNodes 1
+ExcludeNodes {cn},{hk},{mo},{kp},{ir},{sy},{pk},{cu},{vn},{ru},{th},{by},{ph},{my}
+ExcludeExitNodes {cn},{hk},{mo},{kp},{ir},{sy},{pk},{cu},{vn},{ru},{th},{by},{ph},{my}
+
+ExitNodes {us},{ca}
+#ExitNodes {us},{ca},{jp}
+
+AvoidDiskWrites 1

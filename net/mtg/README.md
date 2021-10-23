@@ -1,14 +1,16 @@
-# mtg for docker
+# mtg
 
 ## Usage
 
 ```bash
 docker run -d \
   --name mtg \
-  --restart always \
+  --restart unless-stopped \
   --network host \
-  -e "BIND_ADDRESS=0.0.0.0:995" \
-  -e "SECRET_KEY=ee3471158e7a53644c047d6b6b8743f8ba62696e672e636f6d" \
-  -e "ARGS=-w 128KB -r 128KB --prefer-ip=ipv4" \
-  pexcn/docker-images:mtg
+  pexcn/docker-images:mtg \
+    simple-run 0.0.0.0:990 7kgi5pN2PoUloLUu4FPEVDJ3d3cuYmluZy5jb20 \
+    --tcp-buffer=512KB \
+    --timeout=30s \
+    --prefer-ip=prefer-ipv4 \
+    --doh-ip=8.8.8.8
 ```

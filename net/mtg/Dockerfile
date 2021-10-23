@@ -5,19 +5,17 @@
 #
 # Build stage
 #
-FROM golang:alpine AS builder
+FROM golang:1.17-alpine AS builder
 
-# build
-ARG VERSION=v1.0.7
+ARG VERSION=v2.1.2
 RUN apk update \
-  && apk add --no-cache --virtual .build-deps bash ca-certificates curl git make \
-  && git clone https://github.com/9seconds/mtg.git --branch $VERSION /tmp/mtg-src \
-  && cd /tmp/mtg-src \
+  && apk add --no-cache --virtual .build-deps bash git make \
+  && git clone https://github.com/9seconds/mtg.git --branch $VERSION \
+  && cd mtg \
   && make -j$(nproc) static \
-  && mv mtg /mtg \
-  && make clean \
-  && cd / \
-  && rm -r /tmp/mtg-src \
+  && cp mtg /usr/local/bin/mtg \
+  && cd .. \
+  && rm -r mtg \
   && apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
@@ -27,17 +25,17 @@ RUN apk update \
 FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
-ENV BIND_ADDRESS=0.0.0.0:995
-ENV ARGS=
-ENV SECRET_KEY=ee3471158e7a53644c047d6b6b8743f8ba62696e672e636f6d
+COPY --from=builder /usr/local/bin/mtg /usr/local/bin/
+COPY entrypoint.sh /usr/local/bin/
 
-# set timezone
-ENV TZ=Asia/Taipei
+# allow bind port less than 1024
 RUN apk update \
-  && apk add --no-cache tzdata \
+  && apk add --no-cache libcap \
   && rm -rf /var/cache/apk/*
-
-COPY --from=builder /mtg /app/mtg
+RUN setcap cap_net_bind_service+ep /usr/local/bin/mtg
 
 USER nobody
-ENTRYPOINT /app/mtg run -b $BIND_ADDRESS $ARGS $SECRET_KEY
+
+EXPOSE 3128
+ENTRYPOINT ["entrypoint.sh"]
+CMD ["--help"]

@@ -1,0 +1,115 @@
+version: '3.9'
+
+services:
+  ssserver-aes:
+    image: pexcn/docker-images:shadowsocks-rust
+    container_name: ssserver-aes
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    command: >
+      ssserver
+        --server-addr 0.0.0.0:1776
+        --password password
+        --encrypt-method aes-128-gcm
+        --timeout 3600
+        --udp-timeout 300
+        --udp-max-associations 1024
+        --nofile 1048576
+        --tcp-keep-alive 300
+        --tcp-fast-open
+        --tcp-no-delay
+        -U
+
+  ssserver-chacha20:
+    image: pexcn/docker-images:shadowsocks-rust
+    container_name: ssserver-chacha20
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    command: >
+      ssserver
+        --server-addr 0.0.0.0:1984
+        --password password
+        --encrypt-method chacha20-ietf-poly1305
+        --timeout 3600
+        --udp-timeout 300
+        --udp-max-associations 1024
+        --nofile 1048576
+        --tcp-keep-alive 300
+        --tcp-fast-open
+        --tcp-no-delay
+        -U
+
+  ssserver-obfs:
+    image: pexcn/docker-images:shadowsocks-rust
+    container_name: ssserver-obfs
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    command: >
+      ssserver
+        --server-addr 0.0.0.0:80
+        --password password
+        --encrypt-method chacha20-ietf-poly1305
+        --timeout 3600
+        --udp-timeout 300
+        --udp-max-associations 1024
+        --nofile 1048576
+        --tcp-keep-alive 300
+        --tcp-fast-open
+        --tcp-no-delay
+        -U
+        --plugin "obfs-server"
+        --plugin-opts "obfs=tls;fast-open"
+
+  ssserver-websocket:
+    image: pexcn/docker-images:shadowsocks-rust
+    container_name: ssserver-websocket
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ../acme.sh/acme.sh/example.com_ecc/:/root/.acme.sh/example.com/
+      - /etc/localtime:/etc/localtime:ro
+    command: >
+      ssserver
+        --server-addr 0.0.0.0:443
+        --password password
+        --encrypt-method chacha20-ietf-poly1305
+        --timeout 3600
+        --udp-timeout 300
+        --udp-max-associations 1024
+        --nofile 1048576
+        --tcp-keep-alive 300
+        --tcp-fast-open
+        --tcp-no-delay
+        -U
+        --plugin "xray-plugin"
+        --plugin-opts "server;tls;fast-open;host=example.com;path=/ws"
+
+  ssserver-grpc:
+    image: pexcn/docker-images:shadowsocks-rust
+    container_name: ssserver-grpc
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ../acme.sh/acme.sh/example.com_ecc/:/root/.acme.sh/example.com/
+      - /etc/localtime:/etc/localtime:ro
+    command: >
+      ssserver
+        --server-addr 0.0.0.0:993
+        --password password
+        --encrypt-method chacha20-ietf-poly1305
+        --timeout 3600
+        --udp-timeout 300
+        --udp-max-associations 1024
+        --nofile 1048576
+        --tcp-keep-alive 300
+        --tcp-fast-open
+        --tcp-no-delay
+        -U
+        --plugin "xray-plugin"
+        --plugin-opts "server;tls;fast-open;mode=grpc;host=example.com"

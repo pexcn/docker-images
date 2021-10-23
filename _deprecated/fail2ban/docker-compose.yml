@@ -1,0 +1,25 @@
+version: '3.9'
+
+services:
+  fail2ban:
+    image: crazymax/fail2ban:0.11.2
+    container_name: fail2ban
+    restart: unless-stopped
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    environment:
+      TZ: Asia/Taipei
+      F2B_LOG_TARGET: /data/fail2ban.log
+      F2B_LOG_LEVEL: INFO
+      F2B_DB_PURGE_AGE: 7d
+      SSMTP_HOST: smtp.example.com
+      SSMTP_PORT: 587
+      SSMTP_USER: user
+      SSMTP_PASSWORD: pass
+      SSMTP_TLS: "YES"
+      SSMTP_STARTTLS: "YES"
+    volumes:
+      - ./data:/data
+      - /var/log:/var/log:ro
