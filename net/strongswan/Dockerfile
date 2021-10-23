@@ -14,7 +14,6 @@ COPY entrypoint.sh /app/entrypoint.sh
 ENV PSK=PreSharedKey
 ENV USERS=user:pass,username:password
 
-EXPOSE 500/udp
-EXPOSE 4500/udp
+EXPOSE 500/udp 4500/udp
 
 ENTRYPOINT ["/app/entrypoint.sh"]
