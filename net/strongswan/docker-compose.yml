@@ -1,0 +1,19 @@
+version: '3.9'
+
+services:
+  strongswan:
+    image: pexcn/docker-images:strongswan
+    container_name: strongswan
+    restart: unless-stopped
+    network_mode: bridge
+    privileged: true
+    ports:
+      - "500:500/udp"
+      - "4500:4500/udp"
+
+
+  -p 500:500/udp \
+  -p 4500:4500/udp \
+  -e PSK="PreSharedKey" \
+  -e USERS="user1:password1,user2:password2" \
+  pexcn/docker-images:strongswan

@@ -1,6 +1,7 @@
 #!/bin/sh
 
 set -e
+set -o pipefail
 
 #
 # TODO: add ipv6 support
@@ -13,6 +14,12 @@ _get_ipv4_by_iface() {
 _get_ipv4_default_iface() {
   #ip -4 route show default | awk '{for (I=1;I<NF;I++) if ($I == "dev") print $(I+1)}'
   ip -4 route show default | awk -F 'dev' '{print $2}' | awk '{print $1}'
+}
+
+_get_dns_address() {
+  local local_dns=$(cat /etc/resolv.conf | grep "^nameserver" | awk '{print $2}' | tr '\n' ',' | sed 's/.$//')
+  local fallback_dns="8.8.8.8,8.8.4.4"
+  [ -n "$local_dns" ] && echo $local_dns || echo $fallback_dns
 }
 
 empty_ipsec_config() {
@@ -35,6 +42,9 @@ gen_ipsec_secrets() {
 }
 
 gen_ipsec_conf() {
+  local client_ip="10.0.0.0/24"
+  local dns_server=$(_get_dns_address)
+
   # common
   cat <<- EOF >> /etc/ipsec.conf
 	config setup
@@ -52,7 +62,8 @@ EOF
 	  right=%any
 	  rightauth=psk
 	  rightauth2=xauth
-	  rightsourceip=10.0.0.0/24
+	  rightsourceip=$client_ip
+	  rightdns=$dns_server
 	  keyexchange=ikev1
 	  ike=aes256-sha256-prfsha256-modp2048,aes256-sha256-prfsha256-modp1024,aes256-sha1-prfsha1-modp2048,aes256-sha1-prfsha1-modp1024,aes256-sha384-prfsha384-modp1024,aes256-sha512-prfsha512-modp1024,aes256-sha512-prfsha512-modp2048
 	  authby=secret
@@ -68,7 +79,8 @@ setup_firewall() {
   local interface=$(_get_ipv4_default_iface)
   local address=$(_get_ipv4_by_iface $interface)
 
-  # SNAT has better performance, also: iptables -t nat -A POSTROUTING -s 10.0.0.0/24 -o $interface -j MASQUERADE
+  # SNAT has better performance
+  # aka: iptables -t nat -A POSTROUTING -s 10.0.0.0/24 -o $interface -j MASQUERADE
   iptables -t nat -A POSTROUTING -s 10.0.0.0/24 -o $interface -j SNAT --to-source $address
 }
 
