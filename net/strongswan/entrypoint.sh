@@ -52,7 +52,7 @@ gen_ipsec_conf() {
 EOF
 
   # debug
-  [ "$DEBUG" = 1 ] && echo "  charondebug=\"ike 2, cfg 2, enc 2, net 2\"" >> /etc/ipsec.conf
+  [ "$DEBUG" = 1 ] && echo "  charondebug=\"ike 2, cfg 2, net 2\"" >> /etc/ipsec.conf
 
   # ipsec-xauth-psk
   echo >> /etc/ipsec.conf
