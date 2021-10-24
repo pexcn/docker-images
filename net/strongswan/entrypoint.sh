@@ -73,6 +73,9 @@ EOF
 	  ikelifetime=12h
 	  lifetime=4h
 	  authby=secret
+	  dpdaction=clear
+	  dpddelay=60s
+	  dpdtimeout=180s
 	  auto=add
 EOF
 }
