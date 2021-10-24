@@ -70,6 +70,8 @@ EOF
 	  keyexchange=ikev1
 	  ike=aes256-sha256-prfsha256-modp2048,aes256-sha256-prfsha256-modp1024,aes256-sha1-prfsha1-modp2048,aes256-sha1-prfsha1-modp1024,aes256-sha384-prfsha384-modp1024,aes256-sha512-prfsha512-modp1024,aes256-sha512-prfsha512-modp2048!
 	  esp=aes256-sha256,aes256-sha384,aes256-sha512,aes256-sha1,aes128-sha256,aes128-sha384,aes128-sha512,aes128-sha1!
+	  ikelifetime=12h
+	  lifetime=4h
 	  authby=secret
 	  auto=add
 EOF
