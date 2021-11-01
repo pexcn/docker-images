@@ -1,0 +1,123 @@
+
+
+
+mongo    | {"t":{"$date":"2021-08-30T08:06:29.348+00:00"},"s":"I",  "c":"CONTROL",  "id":21951,   "ctx":"initandlisten","msg":"Options set by command line","attr":{"options":{"net":{"bindIp":"127.0.0.1","port":27017,"tls":{"mode":"disabled"}},"processManagement":{"fork":true,"pidFilePath":"/tmp/docker-entrypoint-temp-mongod.pid"},"systemLog":{"destination":"file","logAppend":true,"path":"/proc/1/fd/1"}}}}
+
+
+
+
+
+https://github.com/tinode/chat/blob/master/docker/README.md
+
+https://hub.docker.com/_/mongo
+
+
+
+
+
+mongo    | Error saving history file: FileOpenFailed Unable to open() file /home/mongodb/.dbshell: No such file or directory
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.316+00:00"},"s":"I",  "c":"NETWORK",  "id":22944,   "ctx":"conn2","msg":"Connection ended","attr":{"remote":"127.0.0.1:32301","uuid":"25fad0e8-6374-445e-b916-0a241abf4ff1","connectionId":2,"connectionCount":0}}
+mongo    |
+mongo    | /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+mongo    |
+mongo    |
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.335+00:00"},"s":"I",  "c":"CONTROL",  "id":20698,   "ctx":"-","msg":"***** SERVER RESTARTED *****"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.337+00:00"},"s":"I",  "c":"NETWORK",  "id":4915701, "ctx":"-","msg":"Initialized wire specification","attr":{"spec":{"incomingExternalClient":{"minWireVersion":0,"maxWireVersion":13},"incomingInternalClient":{"minWireVersion":0,"maxWireVersion":13},"outgoing":{"minWireVersion":0,"maxWireVersion":13},"isInternalClient":true}}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.339+00:00"},"s":"I",  "c":"CONTROL",  "id":23285,   "ctx":"-","msg":"Automatically disabling TLS 1.0, to force-enable TLS 1.0 specify --sslDisabledProtocols 'none'"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.339+00:00"},"s":"W",  "c":"ASIO",     "id":22601,   "ctx":"main","msg":"No TransportLayer configured during NetworkInterface startup"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.340+00:00"},"s":"I",  "c":"NETWORK",  "id":4648602, "ctx":"main","msg":"Implicit TCP FastOpen in use."}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.341+00:00"},"s":"W",  "c":"ASIO",     "id":22601,   "ctx":"main","msg":"No TransportLayer configured during NetworkInterface startup"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.342+00:00"},"s":"I",  "c":"REPL",     "id":5123008, "ctx":"main","msg":"Successfully registered PrimaryOnlyService","attr":{"service":"TenantMigrationDonorService","ns":"config.tenantMigrationDonors"}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.342+00:00"},"s":"I",  "c":"REPL",     "id":5123008, "ctx":"main","msg":"Successfully registered PrimaryOnlyService","attr":{"service":"TenantMigrationRecipientService","ns":"config.tenantMigrationRecipients"}}
+mongo    | killing process with pid: 29
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.342+00:00"},"s":"I",  "c":"CONTROL",  "id":23377,   "ctx":"SignalHandler","msg":"Received signal","attr":{"signal":15,"error":"Terminated"}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.343+00:00"},"s":"I",  "c":"CONTROL",  "id":23378,   "ctx":"SignalHandler","msg":"Signal was sent by kill(2)","attr":{"pid":85,"uid":999}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.343+00:00"},"s":"I",  "c":"CONTROL",  "id":23381,   "ctx":"SignalHandler","msg":"will terminate after current cmd ends"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.343+00:00"},"s":"I",  "c":"REPL",     "id":4784900, "ctx":"SignalHandler","msg":"Stepping down the ReplicationCoordinator for shutdown","attr":{"waitTimeMillis":15000}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.344+00:00"},"s":"I",  "c":"REPL",     "id":4794602, "ctx":"SignalHandler","msg":"Attempting to enter quiesce mode"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.344+00:00"},"s":"I",  "c":"COMMAND",  "id":4784901, "ctx":"SignalHandler","msg":"Shutting down the MirrorMaestro"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.344+00:00"},"s":"I",  "c":"SHARDING", "id":4784902, "ctx":"SignalHandler","msg":"Shutting down the WaitForMajorityService"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.345+00:00"},"s":"I",  "c":"CONTROL",  "id":4784903, "ctx":"SignalHandler","msg":"Shutting down the LogicalSessionCache"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.345+00:00"},"s":"I",  "c":"NETWORK",  "id":20562,   "ctx":"SignalHandler","msg":"Shutdown: going to close listening sockets"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.345+00:00"},"s":"I",  "c":"NETWORK",  "id":23017,   "ctx":"listener","msg":"removing socket file","attr":{"path":"/tmp/mongodb-27017.sock"}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.346+00:00"},"s":"I",  "c":"NETWORK",  "id":4784905, "ctx":"SignalHandler","msg":"Shutting down the global connection pool"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.346+00:00"},"s":"I",  "c":"CONTROL",  "id":4784906, "ctx":"SignalHandler","msg":"Shutting down the FlowControlTicketholder"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.346+00:00"},"s":"I",  "c":"-",        "id":20520,   "ctx":"SignalHandler","msg":"Stopping further Flow Control ticket acquisitions."}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.347+00:00"},"s":"I",  "c":"CONTROL",  "id":4784908, "ctx":"SignalHandler","msg":"Shutting down the PeriodicThreadToAbortExpiredTransactions"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.347+00:00"},"s":"I",  "c":"REPL",     "id":4784909, "ctx":"SignalHandler","msg":"Shutting down the ReplicationCoordinator"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.347+00:00"},"s":"I",  "c":"SHARDING", "id":4784910, "ctx":"SignalHandler","msg":"Shutting down the ShardingInitializationMongoD"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.347+00:00"},"s":"I",  "c":"REPL",     "id":4784911, "ctx":"SignalHandler","msg":"Enqueuing the ReplicationStateTransitionLock for shutdown"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.348+00:00"},"s":"I",  "c":"-",        "id":4784912, "ctx":"SignalHandler","msg":"Killing all operations for shutdown"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.348+00:00"},"s":"I",  "c":"-",        "id":4695300, "ctx":"SignalHandler","msg":"Interrupted all currently running operations","attr":{"opsKilled":3}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.348+00:00"},"s":"I",  "c":"TENANT_M", "id":5093807, "ctx":"SignalHandler","msg":"Shutting down all TenantMigrationAccessBlockers on global shutdown"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.349+00:00"},"s":"I",  "c":"COMMAND",  "id":4784913, "ctx":"SignalHandler","msg":"Shutting down all open transactions"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.349+00:00"},"s":"I",  "c":"REPL",     "id":4784914, "ctx":"SignalHandler","msg":"Acquiring the ReplicationStateTransitionLock for shutdown"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.349+00:00"},"s":"I",  "c":"INDEX",    "id":4784915, "ctx":"SignalHandler","msg":"Shutting down the IndexBuildsCoordinator"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.349+00:00"},"s":"I",  "c":"REPL",     "id":4784916, "ctx":"SignalHandler","msg":"Reacquiring the ReplicationStateTransitionLock for shutdown"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.350+00:00"},"s":"I",  "c":"REPL",     "id":4784917, "ctx":"SignalHandler","msg":"Attempting to mark clean shutdown"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.350+00:00"},"s":"I",  "c":"NETWORK",  "id":4784918, "ctx":"SignalHandler","msg":"Shutting down the ReplicaSetMonitor"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.350+00:00"},"s":"I",  "c":"SHARDING", "id":4784921, "ctx":"SignalHandler","msg":"Shutting down the MigrationUtilExecutor"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.351+00:00"},"s":"I",  "c":"ASIO",     "id":22582,   "ctx":"MigrationUtil-TaskExecutor","msg":"Killing all outstanding egress activity."}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.351+00:00"},"s":"I",  "c":"COMMAND",  "id":4784923, "ctx":"SignalHandler","msg":"Shutting down the ServiceEntryPoint"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.351+00:00"},"s":"I",  "c":"CONTROL",  "id":4784925, "ctx":"SignalHandler","msg":"Shutting down free monitoring"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.351+00:00"},"s":"I",  "c":"CONTROL",  "id":20609,   "ctx":"SignalHandler","msg":"Shutting down free monitoring"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.352+00:00"},"s":"I",  "c":"CONTROL",  "id":4784927, "ctx":"SignalHandler","msg":"Shutting down the HealthLog"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.352+00:00"},"s":"I",  "c":"CONTROL",  "id":4784928, "ctx":"SignalHandler","msg":"Shutting down the TTL monitor"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.352+00:00"},"s":"I",  "c":"INDEX",    "id":3684100, "ctx":"SignalHandler","msg":"Shutting down TTL collection monitor thread"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.353+00:00"},"s":"I",  "c":"INDEX",    "id":3684101, "ctx":"SignalHandler","msg":"Finished shutting down TTL collection monitor thread"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.353+00:00"},"s":"I",  "c":"CONTROL",  "id":4784929, "ctx":"SignalHandler","msg":"Acquiring the global lock for shutdown"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.353+00:00"},"s":"I",  "c":"CONTROL",  "id":4784930, "ctx":"SignalHandler","msg":"Shutting down the storage engine"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.354+00:00"},"s":"I",  "c":"STORAGE",  "id":22320,   "ctx":"SignalHandler","msg":"Shutting down journal flusher thread"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.354+00:00"},"s":"I",  "c":"STORAGE",  "id":22321,   "ctx":"SignalHandler","msg":"Finished shutting down journal flusher thread"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.354+00:00"},"s":"I",  "c":"STORAGE",  "id":22322,   "ctx":"SignalHandler","msg":"Shutting down checkpoint thread"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.355+00:00"},"s":"I",  "c":"STORAGE",  "id":22323,   "ctx":"SignalHandler","msg":"Finished shutting down checkpoint thread"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.355+00:00"},"s":"I",  "c":"STORAGE",  "id":20282,   "ctx":"SignalHandler","msg":"Deregistering all the collections"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.355+00:00"},"s":"I",  "c":"STORAGE",  "id":22261,   "ctx":"SignalHandler","msg":"Timestamp monitor shutting down"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.356+00:00"},"s":"I",  "c":"STORAGE",  "id":22317,   "ctx":"SignalHandler","msg":"WiredTigerKVEngine shutting down"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.357+00:00"},"s":"I",  "c":"STORAGE",  "id":22318,   "ctx":"SignalHandler","msg":"Shutting down session sweeper thread"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.357+00:00"},"s":"I",  "c":"STORAGE",  "id":22319,   "ctx":"SignalHandler","msg":"Finished shutting down session sweeper thread"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.358+00:00"},"s":"I",  "c":"STORAGE",  "id":4795902, "ctx":"SignalHandler","msg":"Closing WiredTiger","attr":{"closeConfig":"leak_memory=true,"}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.359+00:00"},"s":"I",  "c":"STORAGE",  "id":22430,   "ctx":"SignalHandler","msg":"WiredTiger message","attr":{"message":"[1630310790:359820][29:0x7f34d82db700], close_ckpt: [WT_VERB_CHECKPOINT_PROGRESS] saving checkpoint snapshot min: 47, snapshot max: 47 snapshot count: 0, oldest timestamp: (0, 0) , meta checkpoint timestamp: (0, 0) base write gen: 1"}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.439+00:00"},"s":"I",  "c":"STORAGE",  "id":4795901, "ctx":"SignalHandler","msg":"WiredTiger closed","attr":{"durationMillis":81}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.440+00:00"},"s":"I",  "c":"STORAGE",  "id":22279,   "ctx":"SignalHandler","msg":"shutdown: removing fs lock..."}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.440+00:00"},"s":"I",  "c":"-",        "id":4784931, "ctx":"SignalHandler","msg":"Dropping the scope cache for shutdown"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.440+00:00"},"s":"I",  "c":"FTDC",     "id":4784926, "ctx":"SignalHandler","msg":"Shutting down full-time data capture"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.441+00:00"},"s":"I",  "c":"FTDC",     "id":20626,   "ctx":"SignalHandler","msg":"Shutting down full-time diagnostic data capture"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.443+00:00"},"s":"I",  "c":"CONTROL",  "id":20565,   "ctx":"SignalHandler","msg":"Now exiting"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:30.443+00:00"},"s":"I",  "c":"CONTROL",  "id":23138,   "ctx":"SignalHandler","msg":"Shutting down","attr":{"exitCode":0}}
+mongo    |
+mongo    | MongoDB init process complete; ready for start up.
+mongo    |
+mongo    | {"t":{"$date":"2021-08-30T08:06:31.369+00:00"},"s":"I",  "c":"CONTROL",  "id":23285,   "ctx":"-","msg":"Automatically disabling TLS 1.0, to force-enable TLS 1.0 specify --sslDisabledProtocols 'none'"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:31.370+00:00"},"s":"I",  "c":"NETWORK",  "id":4915701, "ctx":"main","msg":"Initialized wire specification","attr":{"spec":{"incomingExternalClient":{"minWireVersion":0,"maxWireVersion":13},"incomingInternalClient":{"minWireVersion":0,"maxWireVersion":13},"outgoing":{"minWireVersion":0,"maxWireVersion":13},"isInternalClient":true}}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:31.371+00:00"},"s":"W",  "c":"ASIO",     "id":22601,   "ctx":"main","msg":"No TransportLayer configured during NetworkInterface startup"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:31.371+00:00"},"s":"I",  "c":"NETWORK",  "id":4648602, "ctx":"main","msg":"Implicit TCP FastOpen in use."}
+mongo    | {"t":{"$date":"2021-08-30T08:06:31.373+00:00"},"s":"W",  "c":"ASIO",     "id":22601,   "ctx":"main","msg":"No TransportLayer configured during NetworkInterface startup"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:31.373+00:00"},"s":"I",  "c":"REPL",     "id":5123008, "ctx":"main","msg":"Successfully registered PrimaryOnlyService","attr":{"service":"TenantMigrationDonorService","ns":"config.tenantMigrationDonors"}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:31.373+00:00"},"s":"I",  "c":"REPL",     "id":5123008, "ctx":"main","msg":"Successfully registered PrimaryOnlyService","attr":{"service":"TenantMigrationRecipientService","ns":"config.tenantMigrationRecipients"}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:31.374+00:00"},"s":"I",  "c":"CONTROL",  "id":4615611, "ctx":"initandlisten","msg":"MongoDB starting","attr":{"pid":1,"port":27017,"dbPath":"/data/db","architecture":"64-bit","host":"CAN"}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:31.374+00:00"},"s":"I",  "c":"CONTROL",  "id":23403,   "ctx":"initandlisten","msg":"Build Info","attr":{"buildInfo":{"version":"5.0.2","gitVersion":"6d9ec525e78465dcecadcff99cce953d380fedc8","openSSLVersion":"OpenSSL 1.1.1f  31 Mar 2020","modules":[],"allocator":"tcmalloc","environment":{"distmod":"ubuntu2004","distarch":"x86_64","target_arch":"x86_64"}}}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:31.375+00:00"},"s":"I",  "c":"CONTROL",  "id":51765,   "ctx":"initandlisten","msg":"Operating System","attr":{"os":{"name":"Ubuntu","version":"20.04"}}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:31.375+00:00"},"s":"I",  "c":"CONTROL",  "id":21951,   "ctx":"initandlisten","msg":"Options set by command line","attr":{"options":{"net":{"bindIp":"127.0.0.1"},"security":{"authorization":"enabled"}}}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:31.376+00:00"},"s":"I",  "c":"STORAGE",  "id":22270,   "ctx":"initandlisten","msg":"Storage engine to use detected by data files","attr":{"dbpath":"/data/db","storageEngine":"wiredTiger"}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:31.376+00:00"},"s":"I",  "c":"STORAGE",  "id":22297,   "ctx":"initandlisten","msg":"Using the XFS filesystem is strongly recommended with the WiredTiger storage engine. See http://dochub.mongodb.org/core/prodnotes-filesystem","tags":["startupWarnings"]}
+mongo    | {"t":{"$date":"2021-08-30T08:06:31.377+00:00"},"s":"I",  "c":"STORAGE",  "id":22315,   "ctx":"initandlisten","msg":"Opening WiredTiger","attr":{"config":"create,cache_size=477M,session_max=33000,eviction=(threads_min=4,threads_max=4),config_base=false,statistics=(fast),log=(enabled=true,archive=true,path=journal,compressor=snappy),builtin_extension_config=(zstd=(compression_level=6)),file_manager=(close_idle_time=600,close_scan_interval=10,close_handle_minimum=250),statistics_log=(wait=0),verbose=[recovery_progress,checkpoint_progress,compact_progress],"}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:31.958+00:00"},"s":"I",  "c":"STORAGE",  "id":22430,   "ctx":"initandlisten","msg":"WiredTiger message","attr":{"message":"[1630310791:958101][1:0x7f266d758c80], txn-recover: [WT_VERB_RECOVERY_PROGRESS] Recovering log 1 through 2"}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:32.044+00:00"},"s":"I",  "c":"STORAGE",  "id":22430,   "ctx":"initandlisten","msg":"WiredTiger message","attr":{"message":"[1630310792:44727][1:0x7f266d758c80], txn-recover: [WT_VERB_RECOVERY_PROGRESS] Recovering log 2 through 2"}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:32.155+00:00"},"s":"I",  "c":"STORAGE",  "id":22430,   "ctx":"initandlisten","msg":"WiredTiger message","attr":{"message":"[1630310792:155020][1:0x7f266d758c80], txn-recover: [WT_VERB_RECOVERY | WT_VERB_RECOVERY_PROGRESS] Main recovery loop: starting at 1/31744 to 2/256"}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:32.259+00:00"},"s":"I",  "c":"STORAGE",  "id":22430,   "ctx":"initandlisten","msg":"WiredTiger message","attr":{"message":"[1630310792:259928][1:0x7f266d758c80], txn-recover: [WT_VERB_RECOVERY_PROGRESS] Recovering log 1 through 2"}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:32.322+00:00"},"s":"I",  "c":"STORAGE",  "id":22430,   "ctx":"initandlisten","msg":"WiredTiger message","attr":{"message":"[1630310792:322740][1:0x7f266d758c80], txn-recover: [WT_VERB_RECOVERY_PROGRESS] Recovering log 2 through 2"}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:32.370+00:00"},"s":"I",  "c":"STORAGE",  "id":22430,   "ctx":"initandlisten","msg":"WiredTiger message","attr":{"message":"[1630310792:370709][1:0x7f266d758c80], txn-recover: [WT_VERB_RECOVERY | WT_VERB_RECOVERY_PROGRESS] Set global recovery timestamp: (0, 0)"}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:32.371+00:00"},"s":"I",  "c":"STORAGE",  "id":22430,   "ctx":"initandlisten","msg":"WiredTiger message","attr":{"message":"[1630310792:371306][1:0x7f266d758c80], txn-recover: [WT_VERB_RECOVERY | WT_VERB_RECOVERY_PROGRESS] Set global oldest timestamp: (0, 0)"}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:32.390+00:00"},"s":"I",  "c":"STORAGE",  "id":22430,   "ctx":"initandlisten","msg":"WiredTiger message","attr":{"message":"[1630310792:390509][1:0x7f266d758c80], WT_SESSION.checkpoint: [WT_VERB_CHECKPOINT_PROGRESS] saving checkpoint snapshot min: 1, snapshot max: 1 snapshot count: 0, oldest timestamp: (0, 0) , meta checkpoint timestamp: (0, 0) base write gen: 6"}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:32.426+00:00"},"s":"I",  "c":"STORAGE",  "id":4795906, "ctx":"initandlisten","msg":"WiredTiger opened","attr":{"durationMillis":1049}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:32.428+00:00"},"s":"I",  "c":"RECOVERY", "id":23987,   "ctx":"initandlisten","msg":"WiredTiger recoveryTimestamp","attr":{"recoveryTimestamp":{"$timestamp":{"t":0,"i":0}}}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:32.432+00:00"},"s":"I",  "c":"STORAGE",  "id":4366408, "ctx":"initandlisten","msg":"No table logging settings modifications are required for existing WiredTiger tables","attr":{"loggingEnabled":true}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:32.438+00:00"},"s":"I",  "c":"STORAGE",  "id":22262,   "ctx":"initandlisten","msg":"Timestamp monitor starting"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:32.448+00:00"},"s":"I",  "c":"NETWORK",  "id":4915702, "ctx":"initandlisten","msg":"Updated wire specification","attr":{"oldSpec":{"incomingExternalClient":{"minWireVersion":0,"maxWireVersion":13},"incomingInternalClient":{"minWireVersion":0,"maxWireVersion":13},"outgoing":{"minWireVersion":0,"maxWireVersion":13},"isInternalClient":true},"newSpec":{"incomingExternalClient":{"minWireVersion":0,"maxWireVersion":13},"incomingInternalClient":{"minWireVersion":13,"maxWireVersion":13},"outgoing":{"minWireVersion":13,"maxWireVersion":13},"isInternalClient":true}}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:32.449+00:00"},"s":"I",  "c":"STORAGE",  "id":5071100, "ctx":"initandlisten","msg":"Clearing temp directory"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:32.449+00:00"},"s":"I",  "c":"CONTROL",  "id":20536,   "ctx":"initandlisten","msg":"Flow Control is enabled on this deployment"}
+mongo    | {"t":{"$date":"2021-08-30T08:06:32.450+00:00"},"s":"I",  "c":"FTDC",     "id":20625,   "ctx":"initandlisten","msg":"Initializing full-time diagnostic data capture","attr":{"dataDirectory":"/data/db/diagnostic.data"}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:32.456+00:00"},"s":"I",  "c":"NETWORK",  "id":23015,   "ctx":"listener","msg":"Listening on","attr":{"address":"/tmp/mongodb-27017.sock"}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:32.456+00:00"},"s":"I",  "c":"NETWORK",  "id":23015,   "ctx":"listener","msg":"Listening on","attr":{"address":"127.0.0.1"}}
+mongo    | {"t":{"$date":"2021-08-30T08:06:32.456+00:00"},"s":"I",  "c":"NETWORK",  "id":23016,   "ctx":"listener","msg":"Waiting for connections","attr":{"port":27017,"ssl":"off"}}
