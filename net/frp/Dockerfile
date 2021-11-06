@@ -11,7 +11,7 @@ ARG VERSION=v0.38.0
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git make \
   && git clone https://github.com/fatedier/frp.git --branch $VERSION \
-  && cd frp
+  && cd frp \
   && make -j$(nproc) \
   && cp bin/frps bin/frpc /usr/local/bin/ \
   && cd .. \
