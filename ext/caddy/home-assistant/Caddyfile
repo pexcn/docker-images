@@ -10,7 +10,9 @@ http://ha.local.pexcn.me {
 # reverse proxy to home assistant endpoint
 https://ha.local.pexcn.me {
 	encode zstd gzip
-	tls /cert/ha.local.pexcn.me_ecc/fullchain.cer /cert/ha.local.pexcn.me_ecc/ha.local.pexcn.me.key
+	tls /cert/ha.local.pexcn.me_ecc/fullchain.cer /cert/ha.local.pexcn.me_ecc/ha.local.pexcn.me.key {
+		protocols tls1.3
+	}
 
 	reverse_proxy 127.0.0.1:8124 {
 		header_up Host {host}
@@ -27,7 +29,9 @@ https://ha.local.pexcn.me {
 # reverse proxy to home assistant endpoint (external)
 https://ha.pexcn.me:8123 {
 	encode zstd gzip
-	tls /cert/ha.pexcn.me_ecc/fullchain.cer /cert/ha.pexcn.me_ecc/ha.pexcn.me.key
+	tls /cert/ha.pexcn.me_ecc/fullchain.cer /cert/ha.pexcn.me_ecc/ha.pexcn.me.key {
+		protocols tls1.3
+	}
 
 	reverse_proxy 127.0.0.1:8124 {
 		header_up Host {host}
