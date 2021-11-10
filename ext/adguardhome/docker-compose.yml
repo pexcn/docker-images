@@ -1,0 +1,11 @@
+version: '3.9'
+
+services:
+  adguardhome:
+    image: adguard/adguardhome:v0.106.3
+    container_name: adguardhome
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./adguardhome-data/conf:/opt/adguardhome/conf
+      - ./adguardhome-data/work:/opt/adguardhome/work
