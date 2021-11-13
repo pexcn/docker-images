@@ -1,0 +1,23 @@
+#
+# Caddyfile for AdGuardHome
+#
+
+# redirect http to https
+http://adg.local.pexcn.me {
+	redir https://{host}{uri} permanent
+}
+
+# reverse proxy to adguardhome endpoint
+https://adg.local.pexcn.me {
+	encode zstd gzip
+	tls /cert/adg.local.pexcn.me_ecc/fullchain.cer /cert/adg.local.pexcn.me_ecc/adg.local.pexcn.me.key
+
+	reverse_proxy 127.0.0.1:3001 {
+		header_up Host {host}
+		header_up X-Real-IP {remote}
+		header_up X-Forwarded-For {remote}
+
+		# enabled by default
+		#header_up X-Forwarded-Proto {scheme}
+	}
+}
