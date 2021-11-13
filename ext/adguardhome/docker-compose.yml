@@ -7,5 +7,6 @@ services:
     restart: unless-stopped
     network_mode: host
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - ./adguardhome-data/conf:/opt/adguardhome/conf
       - ./adguardhome-data/work:/opt/adguardhome/work
