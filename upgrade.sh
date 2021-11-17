@@ -10,3 +10,5 @@ for dir in $(find . -name "docker-compose.yml" | xargs dirname); do
 done
 
 docker image prune -af
+docker container prune -f
+docker volume prune -f
