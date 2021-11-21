@@ -43,7 +43,7 @@ dns:
   blocked_hosts:
   - hostname.bind
   cache_size: 16777216
-  cache_ttl_min: 300
+  cache_ttl_min: 600
   cache_ttl_max: 86400
   bogus_nxdomain: []
   aaaa_disabled: false
