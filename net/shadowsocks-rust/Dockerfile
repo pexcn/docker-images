@@ -10,7 +10,7 @@ FROM rust:alpine AS builder-ss
 RUN apk update \
   && apk add --no-cache --virtual .build-deps musl-dev git
 
-ARG SS_VERSION=v1.12.0-alpha.9
+ARG SS_VERSION=v1.12.4
 RUN git clone https://github.com/shadowsocks/shadowsocks-rust.git --branch $SS_VERSION \
   && cd shadowsocks-rust \
   && cargo build --release --features "local-redir local-tun" \
@@ -19,6 +19,7 @@ RUN git clone https://github.com/shadowsocks/shadowsocks-rust.git --branch $SS_V
   && cp /shadowsocks-rust/target/release/ssserver /app \
   && cp /shadowsocks-rust/target/release/ssmanager /app \
   && cp /shadowsocks-rust/target/release/ssurl /app \
+  && cp /shadowsocks-rust/target/release/ssservice /app \
   # use strip instead set RUSTFLAGS
   && strip /app/ss* \
   && rm -r /shadowsocks-rust
@@ -65,7 +66,7 @@ FROM golang:alpine AS builder-ray
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git
 
-ARG V2RAY_VERSION=v4.42.2
+ARG V2RAY_VERSION=v4.44.0
 RUN git clone https://github.com/teddysun/v2ray-plugin.git --branch $V2RAY_VERSION \
   && cd v2ray-plugin \
   && env CGO_ENABLED=0 go build -v -trimpath -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w" -o v2ray-plugin \
@@ -74,7 +75,7 @@ RUN git clone https://github.com/teddysun/v2ray-plugin.git --branch $V2RAY_VERSI
   && cd .. \
   && rm -r v2ray-plugin
 
-ARG XRAY_VERSION=v1.4.5
+ARG XRAY_VERSION=v1.5.0
 RUN git clone https://github.com/teddysun/xray-plugin.git --branch $XRAY_VERSION \
   && cd xray-plugin \
   && env CGO_ENABLED=0 go build -v -trimpath -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w" -o xray-plugin \
