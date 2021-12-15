@@ -44,7 +44,7 @@ COPY --from=builder /app/etc/ /etc/
 # allow bind port less than 1024
 RUN apk add --no-cache libcap \
   && rm -rf /var/cache/apk/*
-RUN setcap cap_net_bind_service+ep /app/bin/trojan
+RUN setcap cap_net_bind_service+ep /usr/local/bin/trojan
 
 USER nobody
-ENTRYPOINT ["/usr/local/bin/trojan", "-c", "/etc/trojan/config.json"]
+ENTRYPOINT ["trojan", "-c", "/etc/trojan/config.json"]
