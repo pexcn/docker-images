@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
     network_mode: host
     volumes:
-      - ./server.json:/app/etc/trojan/config.json
-      - ../acme.sh/acme.sh/example.com_ecc/fullchain.cer:/app/etc/fullchain.cer
-      - ../acme.sh/acme.sh/example.com_ecc/example.com.key:/app/etc/private.key
+      - ./server.json:/etc/trojan/config.json
+      - ../acme.sh/acme.sh/example.com_ecc/fullchain.cer:/etc/trojan/fullchain.cer
+      - ../acme.sh/acme.sh/example.com_ecc/example.com.key:/etc/trojan/private.key
       - /etc/localtime:/etc/localtime:ro

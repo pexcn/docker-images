@@ -38,14 +38,13 @@ RUN apk del .build-deps \
 FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
-COPY --from=builder /app/bin/ /app/bin/
-COPY --from=builder /app/etc/ /app/etc/
+COPY --from=builder /app/bin/ /usr/local/bin/
+COPY --from=builder /app/etc/ /etc/
 
 # allow bind port less than 1024
 RUN apk add --no-cache libcap \
   && rm -rf /var/cache/apk/*
 RUN setcap cap_net_bind_service+ep /app/bin/trojan
 
-EXPOSE 443
 USER nobody
-ENTRYPOINT ["/app/bin/trojan", "-c", "/app/etc/trojan/config.json"]
+ENTRYPOINT ["/usr/local/bin/trojan", "-c", "/etc/trojan/config.json"]
