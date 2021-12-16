@@ -29,8 +29,8 @@ RUN apk del .build-deps \
 FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
-COPY --from=builder /app/bin/netspeeder /app/netspeeder
-COPY entrypoint.sh /app/entrypoint.sh
+COPY --from=builder /app/bin/netspeeder /usr/local/bin/
+COPY entrypoint.sh /usr/local/bin/
 
 USER root
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["entrypoint.sh"]

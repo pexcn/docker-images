@@ -1,3 +1,3 @@
 #!/bin/sh
 
-exec /app/netspeeder "$@" &>/dev/null
+exec netspeeder "$@" &>/dev/null
