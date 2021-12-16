@@ -69,7 +69,7 @@ services:
     restart: unless-stopped
     network_mode: host
     volumes:
-      - ../acme.sh/acme.sh/example.com_ecc/:/root/.acme.sh/example.com/
+      - ../acme.sh/acme.sh-data/example.com_ecc/:/root/.acme.sh/example.com/
       - /etc/localtime:/etc/localtime:ro
     command: >
       ss-server
@@ -92,7 +92,7 @@ services:
     restart: unless-stopped
     network_mode: host
     volumes:
-      - ../acme.sh/acme.sh/example.com_ecc/:/root/.acme.sh/example.com/
+      - ../acme.sh/acme.sh-data/example.com_ecc/:/root/.acme.sh/example.com/
       - /etc/localtime:/etc/localtime:ro
     command: >
       ss-server
