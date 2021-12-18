@@ -1,0 +1,45 @@
+#
+# Caddyfile for Vaultwarden
+#
+
+# redirect http to https
+http://vault.local.pexcn.me {
+	redir https://{host}{uri} permanent
+}
+
+# reverse proxy to vaultwarden endpoint
+https://vault.local.pexcn.me {
+	encode zstd gzip
+	tls /cert/vault.local.pexcn.me_ecc/fullchain.cer /cert/vault.local.pexcn.me_ecc/vault.local.pexcn.me.key
+
+	reverse_proxy 127.0.0.1:8000 {
+		header_up Host {host}
+		header_up X-Real-IP {remote_host}
+		header_up X-Forwarded-For {remote_host}
+
+		# enabled by default
+		#header_up X-Forwarded-Proto {scheme}
+	}
+
+	@websockets {
+		header Connection *Upgrade*
+		header Upgrade websocket
+	}
+	reverse_proxy @websockets /notifications/hub 127.0.0.1:3012 {
+		header_up Host {host}
+		header_up X-Real-IP {remote_host}
+		header_up X-Forwarded-For {remote_host}
+
+		# enabled by default
+		#header_up X-Forwarded-Proto {scheme}
+	}
+
+	reverse_proxy /notifications/hub/negotiate 127.0.0.1:8000 {
+		header_up Host {host}
+		header_up X-Real-IP {remote_host}
+		header_up X-Forwarded-For {remote_host}
+
+		# enabled by default
+		#header_up X-Forwarded-Proto {scheme}
+	}
+}
