@@ -8,4 +8,5 @@ services:
     network_mode: host
     env_file: ./config.env
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - ./vaultwarden-data:/data
