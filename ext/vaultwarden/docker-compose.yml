@@ -6,6 +6,8 @@ services:
     container_name: vaultwarden
     restart: unless-stopped
     network_mode: host
+    environment:
+      ROCKET_ENV: production
     env_file: ./config.env
     volumes:
       - /etc/localtime:/etc/localtime:ro

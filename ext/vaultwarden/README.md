@@ -8,6 +8,7 @@ docker run -d \
   --restart unless-stopped \
   --network host \
   --env-file /root/docker/vaultwarden/config.env \
+  -e ROCKET_ENV=production \
   -v /etc/localtime:/etc/localtime:ro \
   -v /root/docker/vaultwarden/data:/data \
   vaultwarden/server:1.23.1-alpine
