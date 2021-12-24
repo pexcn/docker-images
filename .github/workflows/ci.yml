@@ -76,6 +76,9 @@ jobs:
           # rng-tools
           - BUILD_CONTEXT: utils/rng-tools
             TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # samba
+          - BUILD_CONTEXT: utils/samba
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # smartmontools
           - BUILD_CONTEXT: utils/smartmontools
             TARGET_PLATFORMS: linux/amd64,linux/arm64
