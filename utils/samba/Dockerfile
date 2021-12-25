@@ -12,4 +12,5 @@ RUN apk update \
 
 COPY samba.sh /usr/local/bin/
 
+EXPOSE 445/tcp
 ENTRYPOINT ["samba.sh"]
