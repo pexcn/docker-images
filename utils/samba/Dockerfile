@@ -10,4 +10,6 @@ RUN apk update \
   && apk add --no-cache samba=$SAMBA_VER \
   && rm -rf /var/cache/apk/*
 
-ENTRYPOINT ["smbd", "--foreground", "--no-process-group"]
+COPY samba.sh /usr/local/bin/
+
+ENTRYPOINT ["samba.sh"]
