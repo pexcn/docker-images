@@ -3,7 +3,7 @@ set -e
 set -o pipefail
 
 _is_exist_group() {
-  id -g $1 &>/dev/null
+  getent group $1 &>/dev/null
 }
 
 _is_exist_user() {
