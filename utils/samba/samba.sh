@@ -2,13 +2,24 @@
 set -e
 set -o pipefail
 
+_is_exist_user() {
+  id -u $1 &>/dev/null
+}
+
+_is_exist_group() {
+  id -g $1 &>/dev/null
+}
+
 create_user() {
   if [ -n "$USERS" ]; then
+    _is_exist_group samba || addgroup -g 2000 samba
     for account in ${USERS//,/ }; do
       local username=$(echo $account | cut -d ':' -f 1)
       local password=$(echo $account | cut -d ':' -f 2)
-      adduser -D -H -s /sbin/nologin $username
-      echo -e "$password\n$password" | pdbedit -a $username -f "Samba User" -t
+      if ! _is_exist_user $username; then
+        adduser -D -H -G samba -s /sbin/nologin $username
+        echo -e "$password\n$password" | pdbedit -a $username -f "Samba User" -t
+      fi
     done
   fi
 }
