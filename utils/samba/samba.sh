@@ -34,16 +34,16 @@ create_accounts() {
   # system user
   cat $SAMBA_USERS | _trim_lines | while read line
   do
-    local uid=$(_get_uid <<< $line)
-    local username=$(_get_username <<< $line)
+    local uid=$(echo $line | _get_uid)
+    local username=$(echo $line | _get_username)
     _is_exist_user $username || adduser -D -H -G samba -s /sbin/nologin -u $uid $username
   done
 
   # samba users
   cat $SAMBA_USERS | _trim_lines | while read line
   do
-    local username=$(_get_username <<< $line)
-    local password=$(_get_password <<< $line)
+    local username=$(echo $line | _get_username)
+    local password=$(echo $line | _get_password)
     echo -e "$password\n$password" | pdbedit -a $username -f "Samba User" -t
   done
 }
