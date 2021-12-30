@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  samba:
+    image: pexcn/docker-images:samba
+    container_name: samba
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./samba-data/smb.conf:/etc/samba/smb.conf
+      - ./samba-data/users:/etc/samba/users
+      - /mnt:/mnt
+      - /etc/localtime:/etc/localtime:ro
