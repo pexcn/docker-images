@@ -10,7 +10,8 @@ RUN apk update \
   && apk add --no-cache samba=$SAMBA_VER \
   && rm -rf /var/cache/apk/*
 
+COPY users /etc/samba/
 COPY samba.sh /usr/local/bin/
 
-EXPOSE 445/tcp
+EXPOSE 445/tcp 445/udp
 ENTRYPOINT ["samba.sh"]

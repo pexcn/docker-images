@@ -2,6 +2,8 @@
 set -e
 set -o pipefail
 
+SAMBA_USERS=/etc/samba/users
+
 _is_exist_group() {
   getent group $1 &>/dev/null
 }
@@ -10,27 +12,45 @@ _is_exist_user() {
   id -u $1 &>/dev/null
 }
 
-create_group() {
-  _is_exist_group samba || addgroup -g 1000 samba
+_trim_lines() {
+  sed '/^[[:space:]]*$/d' | sed '/^#/ d'
 }
 
-create_user() {
-  if [ -n "$USERS" ]; then
-    for account in ${USERS//,/ }; do
-      local username=$(echo $account | cut -d ':' -f 1)
-      local password=$(echo $account | cut -d ':' -f 2)
-      if ! _is_exist_user $username; then
-        adduser -D -H -G samba -s /sbin/nologin $username
-        echo -e "$password\n$password" | pdbedit -a $username -f "Samba User" -t
-      fi
-    done
-  fi
+_get_uid() {
+  awk -F ':' '{print $1}'
+}
+
+_get_username() {
+  awk -F ':' '{print $2}'
+}
+
+_get_password() {
+  awk -F ':' '{print $3}'
+}
+
+create_accounts() {
+  # system group
+  _is_exist_group samba || addgroup -g 1000 samba
+  # system user
+  cat $SAMBA_USERS | _trim_lines | while read line
+  do
+    local uid=$(_get_uid <<< $line)
+    local username=$(_get_username <<< $line)
+    _is_exist_user $username || adduser -D -H -G samba -s /sbin/nologin -u $uid $username
+  done
+
+  # samba users
+  cat $SAMBA_USERS | _trim_lines | while read line
+  do
+    local username=$(_get_username <<< $line)
+    local password=$(_get_password <<< $line)
+    echo -e "$password\n$password" | pdbedit -a $username -f "Samba User" -t
+  done
 }
 
 start_samba() {
   exec smbd --foreground --no-process-group
 }
 
-create_group
-create_user
+create_accounts
 start_samba
