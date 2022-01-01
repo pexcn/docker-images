@@ -36,4 +36,7 @@ pdbedit -v <username>
 # 显示 Samba 用户列表
 pdbedit -L
 pdbedit -Lv
+
+# 测试 Samba 配置文件
+testparm /etc/samba/smb.conf
 ```
