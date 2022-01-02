@@ -49,6 +49,7 @@ create_accounts() {
 }
 
 start_samba() {
+  nmbd --daemon
   exec smbd --foreground --no-process-group
 }
 
