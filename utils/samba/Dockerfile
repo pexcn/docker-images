@@ -10,6 +10,7 @@ RUN apk update \
   && apk add --no-cache samba=$SAMBA_VER \
   && rm -rf /var/cache/apk/*
 
+COPY smb.conf /etc/samba/
 COPY users /etc/samba/
 COPY samba.sh /usr/local/bin/
 
