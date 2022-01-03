@@ -14,6 +14,6 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 COPY rsyncd.conf /etc/
-COPY rsyncd.secrets /etc/
+COPY --chmod=600 rsyncd.secrets /etc/
 
 ENTRYPOINT ["rsync", "--daemon", "--no-detach"]
