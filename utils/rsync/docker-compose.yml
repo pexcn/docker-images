@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  rsync:
+    image: pexcn/docker-images:rsync
+    container_name: rsync
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TZ: Asia/Taipei
+    volumes:
+      - ./rsync-data/rsyncd.conf:/etc/rsyncd.conf
+      - ./rsync-data/rsyncd.secrets:/etc/rsyncd.secrets
+      - /mnt/disk/backup:/mnt/disk/backup
