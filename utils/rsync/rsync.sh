@@ -9,6 +9,7 @@ fi
 
 if [ "$ENABLE_DAEMON" = 1 ]; then
   cron -L 2
+  chmod 0600 /etc/rsyncd.secrets
   exec rsync --daemon --no-detach
 else
   exec cron -f -L 2

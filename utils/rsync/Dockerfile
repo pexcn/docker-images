@@ -16,9 +16,9 @@ RUN apt-get update \
 
 RUN rm -f /etc/cron.*/*
 
-COPY rsync.sh /usr/local/bin/
 COPY rsyncd.conf /etc/
-COPY --chmod=600 rsyncd.secrets /etc/
+COPY rsyncd.secrets /etc/
+COPY rsync.sh /usr/local/bin/
 
 ENV ENABLE_DAEMON=0
 ENV CRONTAB=
