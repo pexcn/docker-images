@@ -3,6 +3,7 @@ set -e
 #set -o pipefail
 
 if [ -n "$CRONTAB" ]; then
+  printenv > /etc/environment
   echo "$CRONTAB" | crontab
 fi
 
