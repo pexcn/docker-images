@@ -13,6 +13,7 @@ docker run -d \
   -v $(pwd)/rsync-data/rsyncd.conf:/etc/rsyncd.conf \
   -v $(pwd)/rsync-data/rsyncd.secrets:/etc/rsyncd.secrets \
   -v $(pwd)/rsync-data/backup.sh:/srv/backup.sh \
+  -v /root/docker-compose:/root/docker-compose \
   -v /mnt/disk/backup:/mnt/disk/backup \
   pexcn/docker-images:rsync
 ```

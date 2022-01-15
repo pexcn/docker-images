@@ -14,4 +14,5 @@ services:
       - ./rsync-data/rsyncd.conf:/etc/rsyncd.conf
       - ./rsync-data/rsyncd.secrets:/etc/rsyncd.secrets
       - ./rsync-data/backup.sh:/srv/backup.sh
+      - /root/docker-compose:/root/docker-compose
       - /mnt/disk/backup:/mnt/disk/backup
