@@ -7,8 +7,11 @@ services:
     restart: unless-stopped
     network_mode: host
     environment:
+      ENABLE_DAEMON: 1
+      CRONTAB: "0 */12 * * * /srv/backup.sh >/proc/1/fd/1"
       TZ: Asia/Taipei
     volumes:
       - ./rsync-data/rsyncd.conf:/etc/rsyncd.conf
       - ./rsync-data/rsyncd.secrets:/etc/rsyncd.secrets
+      - ./rsync-data/backup.sh:/srv/backup.sh
       - /mnt/disk/backup:/mnt/disk/backup
