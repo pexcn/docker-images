@@ -1,0 +1,20 @@
+version: '3.9'
+
+services:
+  nezha-dashboard:
+    image: pexcn/docker-images:nezha
+    container_name: nezha-dashboard
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./nezha-data:/srv/data
+
+  nezha-agent:
+    image: pexcn/docker-images:nezha
+    container_name: nezha-agent
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      AGENT_MODE: 1
+    command: >
+      nezha-agent -s 127.0.0.1:8008 -p password --disable-auto-update --disable-force-update --disable-command-execute
