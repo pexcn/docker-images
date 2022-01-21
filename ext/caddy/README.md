@@ -10,5 +10,5 @@ docker run -d \
   -v /root/docker/caddy-data/Caddyfile:/etc/caddy/Caddyfile \
   -v /root/docker/acme.sh-data:/cert \
   -v /etc/localtime:/etc/localtime:ro \
-  caddy:2.4.5
+  caddy:2.4.6
 ```
