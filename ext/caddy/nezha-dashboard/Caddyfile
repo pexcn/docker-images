@@ -1,0 +1,36 @@
+#
+# Caddyfile for nezha
+#
+
+# redirect http to https
+http://status.local.pexcn.me {
+	redir https://{host}{uri} permanent
+}
+
+# reverse proxy to nezha dashboard endpoint
+https://status.local.pexcn.me {
+	encode zstd gzip
+	tls /cert/status.local.pexcn.me_ecc/fullchain.cer /cert/status.local.pexcn.me_ecc/status.local.pexcn.me.key
+
+	reverse_proxy 127.0.0.1:8008 {
+		header_up Host {host}
+		header_up X-Real-IP {remote_host}
+		header_up X-Forwarded-For {remote_host}
+
+		# enabled by default
+		#header_up X-Forwarded-Proto {scheme}
+	}
+
+	@websockets {
+		header Connection *Upgrade*
+		header Upgrade websocket
+	}
+	reverse_proxy @websockets /ws 127.0.0.1:8008 {
+		header_up Host {host}
+		header_up X-Real-IP {remote_host}
+		header_up X-Forwarded-For {remote_host}
+
+		# enabled by default
+		#header_up X-Forwarded-Proto {scheme}
+	}
+}
