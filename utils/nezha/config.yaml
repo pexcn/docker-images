@@ -1,0 +1,14 @@
+debug: false
+httpport: 8008
+grpcport: 5555
+
+site:
+  brand: "NEZHA Monitor"
+  cookiename: "nezha-dashboard"
+  theme: "default"
+
+#oauth2:
+#  type: "github"
+#  admin: "username"
+#  clientid: "oauth_client_id"
+#  clientsecret: "oauth_client_secret"

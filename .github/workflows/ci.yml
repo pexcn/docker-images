@@ -73,6 +73,9 @@ jobs:
           # trojan
           - BUILD_CONTEXT: net/trojan
             TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # nezha
+          - BUILD_CONTEXT: utils/nezha
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # rng-tools
           - BUILD_CONTEXT: utils/rng-tools
             TARGET_PLATFORMS: linux/amd64,linux/arm64
