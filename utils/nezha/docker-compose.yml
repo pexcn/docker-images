@@ -20,4 +20,4 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
     command: >
-      nezha-agent -s 127.0.0.1:8008 -p password --disable-auto-update --disable-force-update --disable-command-execute
+      nezha-agent -s 127.0.0.1:5555 -p <secret> --report-delay 3 --disable-auto-update --disable-force-update --disable-command-execute --skip-procs
