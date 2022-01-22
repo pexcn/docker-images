@@ -25,18 +25,11 @@ https://status.local.pexcn.me {
 		header Connection *Upgrade*
 		header Upgrade websocket
 	}
-	reverse_proxy @websockets /ws 127.0.0.1:8008 {
-		header_up Host {host}
-		header_up X-Real-IP {remote_host}
-		header_up X-Forwarded-For {remote_host}
-
-		# enabled by default
-		#header_up X-Forwarded-Proto {scheme}
-	}
+	reverse_proxy @websockets 127.0.0.1:8008
 }
 
 # reverse proxy to nezha dashboard endpoint (external)
-https://status.pexcn.me:8123 {
+https://status.pexcn.me:2501 {
 	encode zstd gzip
 	tls /cert/status.pexcn.me_ecc/fullchain.cer /cert/status.pexcn.me_ecc/status.pexcn.me.key {
 		protocols tls1.3
@@ -55,12 +48,5 @@ https://status.pexcn.me:8123 {
 		header Connection *Upgrade*
 		header Upgrade websocket
 	}
-	reverse_proxy @websockets /ws 127.0.0.1:8008 {
-		header_up Host {host}
-		header_up X-Real-IP {remote_host}
-		header_up X-Forwarded-For {remote_host}
-
-		# enabled by default
-		#header_up X-Forwarded-Proto {scheme}
-	}
+	reverse_proxy @websockets 127.0.0.1:8008
 }
