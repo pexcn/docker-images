@@ -50,3 +50,24 @@ https://status.pexcn.me:2501 {
 	}
 	reverse_proxy @websockets 127.0.0.1:8008
 }
+
+# reverse proxy to nezha dashboard grpc endpoint (external)
+https://status-grpc.pexcn.me:2501 {
+	encode zstd gzip
+	tls /cert/status-grpc.pexcn.me_ecc/fullchain.cer /cert/status-grpc.pexcn.me_ecc/status-grpc.pexcn.me.key {
+		protocols tls1.3
+	}
+
+	reverse_proxy 127.0.0.1:5555 {
+		header_up Host {host}
+		header_up X-Real-IP {remote_host}
+		header_up X-Forwarded-For {remote_host}
+
+		# enabled by default
+		#header_up X-Forwarded-Proto {scheme}
+
+		transport http {
+			versions h2c 2
+		}
+	}
+}
