@@ -18,7 +18,7 @@ dns:
   statistics_interval: 1
   querylog_enabled: true
   querylog_file_enabled: true
-  querylog_interval: 90
+  querylog_interval: 30
   querylog_size_memory: 1000
   anonymize_client_ip: false
   protection_enabled: true
@@ -60,7 +60,11 @@ dns:
   safesearch_cache_size: 1048576
   parental_cache_size: 1048576
   cache_time: 30
-  rewrites: []
+  rewrites:
+  - domain: aircat.phicomm.com
+    answer: 192.168.1.10
+  - domain: phiclouds.phicomm.com
+    answer: 192.168.1.10
   blocked_services: []
   local_domain_name: lan
   resolve_clients: true
@@ -90,10 +94,6 @@ filters:
   name: AdAway Default Blocklist
   id: 1636824661
 - enabled: true
-  url: https://raw.githubusercontent.com/privacy-protection-tools/anti-AD/master/anti-ad-adguard.txt
-  name: Anti-AD
-  id: 1636824662
-- enabled: true
   url: https://easylist-downloads.adblockplus.org/easylistchina+easylist.txt
   name: EasyList+EasyListChina
   id: 1636824663
@@ -101,6 +101,10 @@ filters:
   url: https://pgl.yoyo.org/adservers/serverlist.php?hostformat=adblockplus&showintro=0&mimetype=plaintext
   name: Yoyo Ad Servers
   id: 1636824666
+- enabled: false
+  url: https://raw.githubusercontent.com/privacy-protection-tools/anti-AD/master/anti-ad-adguard.txt
+  name: Anti-AD
+  id: 1642839328
 whitelist_filters: []
 user_rules: []
 dhcp:
