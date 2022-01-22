@@ -19,6 +19,7 @@ RUN apk update \
   && cd .. \
   && rm -r nezha \
   && git clone https://github.com/naiba/nezha.git --branch $VERSION /srv \
+  && rm -r /srv/.git \
   && apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
