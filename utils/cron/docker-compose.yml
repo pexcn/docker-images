@@ -1,0 +1,22 @@
+version: '3.9'
+
+services:
+  cron:
+    image: pexcn/docker-images:cron
+    container_name: cron
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TZ: Asia/Taipei
+      CRONTAB: "* * * * * echo test"
+
+  cron-multi-line:
+    image: pexcn/docker-images:cron
+    container_name: cron-multi-line
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TZ: Asia/Taipei
+      CRONTAB: |-
+        * * * * * echo test1
+        * * * * * echo test2

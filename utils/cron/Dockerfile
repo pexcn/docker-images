@@ -1,0 +1,16 @@
+#
+# Dockerfile for cron
+#
+
+FROM alpine
+LABEL maintainer="pexcn <i@pexcn.me>"
+
+RUN apk update \
+  && apk add tzdata curl \
+  && rm -rf /var/cache/apk/*
+
+COPY cron.sh /usr/local/bin/
+
+ENV CRONTAB=
+
+ENTRYPOINT ["cron.sh"]
