@@ -8,6 +8,7 @@ docker run -d \
   --restart unless-stopped \
   --network host \
   -e TZ=Asia/Taipei \
-  -e CRONTAB="* * * * * echo test" \
+  -e CRONTAB="10 10 * * * /srv/hifini.sh" \
+  -v $(pwd)/cron-data:/srv \
   pexcn/docker-images:cron
 ```
