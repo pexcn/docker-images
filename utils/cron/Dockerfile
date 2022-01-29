@@ -11,6 +11,6 @@ RUN apk update \
 
 COPY cron.sh /usr/local/bin/
 
-ENV CRONTAB=
+ENV CRONTAB="* * * * * echo test"
 
 ENTRYPOINT ["cron.sh"]
