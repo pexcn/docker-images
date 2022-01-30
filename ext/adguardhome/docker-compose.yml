@@ -6,7 +6,8 @@ services:
     container_name: adguardhome
     restart: unless-stopped
     network_mode: host
+    environment:
+      TZ: Asia/Taipei
     volumes:
-      - /etc/localtime:/etc/localtime:ro
       - ./adguardhome-data/conf:/opt/adguardhome/conf
       - ./adguardhome-data/work:/opt/adguardhome/work
