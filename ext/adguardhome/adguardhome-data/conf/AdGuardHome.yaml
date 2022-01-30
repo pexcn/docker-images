@@ -8,17 +8,16 @@ auth_attempts: 5
 block_auth_min: 15
 http_proxy: ""
 language: zh-cn
-rlimit_nofile: 1048576
 debug_pprof: false
 web_session_ttl: 720
 dns:
   bind_hosts:
-  - 0.0.0.0
+  - 192.168.1.1
   port: 5354
   statistics_interval: 1
   querylog_enabled: true
   querylog_file_enabled: true
-  querylog_interval: 30
+  querylog_interval: 720h
   querylog_size_memory: 1000
   anonymize_client_ip: false
   protection_enabled: true
@@ -38,13 +37,19 @@ dns:
   - 192.168.1.1:5353
   all_servers: false
   fastest_addr: false
-  allowed_clients: []
+  fastest_timeout: 1s
+  allowed_clients:
+  - 192.168.1.0/24
+  - 127.0.0.1/32
   disallowed_clients: []
-  blocked_hosts:
-  - hostname.bind
+  blocked_hosts: []
+  trusted_proxies:
+  - 127.0.0.0/8
+  - ::1/128
   cache_size: 16777216
   cache_ttl_min: 600
   cache_ttl_max: 86400
+  cache_optimistic: true
   bogus_nxdomain: []
   aaaa_disabled: false
   enable_dnssec: false
@@ -55,7 +60,7 @@ dns:
   filters_update_interval: 24
   parental_enabled: false
   safesearch_enabled: false
-  safebrowsing_enabled: true
+  safebrowsing_enabled: false
   safebrowsing_cache_size: 1048576
   safesearch_cache_size: 1048576
   parental_cache_size: 1048576
@@ -66,8 +71,10 @@ dns:
   - domain: phiclouds.phicomm.com
     answer: 192.168.1.10
   blocked_services: []
+  upstream_timeout: 10s
   local_domain_name: lan
   resolve_clients: true
+  use_private_ptr_resolvers: true
   local_ptr_upstreams: []
 tls:
   enabled: false
@@ -131,4 +138,8 @@ log_max_size: 100
 log_max_age: 3
 log_file: ""
 verbose: false
-schema_version: 10
+os:
+  group: nogroup
+  user: nobody
+  rlimit_nofile: 1048576
+schema_version: 12
