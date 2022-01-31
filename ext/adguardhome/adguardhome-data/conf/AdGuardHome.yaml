@@ -31,10 +31,10 @@ dns:
   ratelimit_whitelist: []
   refuse_any: false
   upstream_dns:
-  - 192.168.1.1:5353
+  - 192.168.1.1
   upstream_dns_file: ""
   bootstrap_dns:
-  - 192.168.1.1:5353
+  - 192.168.1.1
   all_servers: false
   fastest_addr: false
   fastest_timeout: 1s
@@ -42,7 +42,8 @@ dns:
   - 192.168.1.0/24
   - 127.0.0.1/32
   disallowed_clients: []
-  blocked_hosts: []
+  blocked_hosts:
+  - hostname.bind
   trusted_proxies:
   - 127.0.0.0/8
   - ::1/128
@@ -139,7 +140,7 @@ log_max_age: 3
 log_file: ""
 verbose: false
 os:
-  group: nogroup
-  user: nobody
+  group: ""
+  user: ""
   rlimit_nofile: 1048576
 schema_version: 12
