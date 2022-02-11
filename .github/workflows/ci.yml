@@ -88,6 +88,9 @@ jobs:
           # samba
           - BUILD_CONTEXT: utils/samba
             TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # shairport-sync
+          - BUILD_CONTEXT: utils/shairport-sync
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # smartmontools
           - BUILD_CONTEXT: utils/smartmontools
             TARGET_PLATFORMS: linux/amd64,linux/arm64

@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  shairport-sync:
+    image: pexcn/docker-images:shairport-sync
+    container_name: shairport-sync
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      AUDIO_GID: 996
+    devices:
+      - /dev/snd
+    volumes:
+      - ./shairport-sync-data/shairport-sync.conf:/etc/shairport-sync.conf
