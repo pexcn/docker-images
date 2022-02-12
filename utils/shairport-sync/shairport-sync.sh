@@ -9,9 +9,10 @@ _is_exist_group() {
 _set_volume() {
   local mixer="$1"
   local volume="$2"
-  if amixer -c $CARD_NUM -M sget $mixer &>/dev/null; then
-    amixer -c $CARD_NUM -M sset $mixer unmute
-    amixer -c $CARD_NUM -M sset $mixer ${volume}%
+  if amixer -c $CARD_NUM -M sget "$mixer" &>/dev/null; then
+    echo "Mixer: $mixer -> ${volume}%"
+    amixer -c $CARD_NUM -M sset "$mixer" unmute >/dev/null
+    amixer -c $CARD_NUM -M sset "$mixer" ${volume}% >/dev/null
   fi
 }
 
