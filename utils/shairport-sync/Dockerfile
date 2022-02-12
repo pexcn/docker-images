@@ -7,7 +7,7 @@ LABEL maintainer="pexcn <i@pexcn.me>"
 
 ARG VERSION=3.3.9-r0
 RUN apk update \
-  && apk add --no-cache dbus avahi \
+  && apk add --no-cache dbus avahi alsa-utils \
   && apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/edge/testing shairport-sync=$VERSION
 
 # run as an unprivileged user
