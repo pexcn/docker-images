@@ -16,5 +16,6 @@ RUN adduser -S -s /bin/ash airplay
 COPY shairport-sync.sh /usr/local/bin/
 
 ENV AUDIO_GID=29
+ENV CARD_NUM=0
 
 ENTRYPOINT ["shairport-sync.sh"]

@@ -8,6 +8,7 @@ services:
     network_mode: host
     environment:
       AUDIO_GID: 996
+      CARD_NUM: 1
     devices:
       - /dev/snd
     volumes:
