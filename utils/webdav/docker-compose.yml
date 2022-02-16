@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+  webdav:
+    image: pexcn/docker-images:webdav
+    container_name: webdav
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./webdav-data/config.yml:/etc/webdav/config.yml
+      - ./webdav-data/data:/data
+      - /etc/localtime:/etc/localtime:ro
