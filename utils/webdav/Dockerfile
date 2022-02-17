@@ -34,7 +34,5 @@ COPY webdav.sh /usr/local/bin/
 
 VOLUME /data
 
-#RUN chown -R nobody:nobody /srv
-#USER nobody
-
+USER nobody
 ENTRYPOINT ["webdav.sh"]

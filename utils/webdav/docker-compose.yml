@@ -8,5 +8,5 @@ services:
     network_mode: host
     volumes:
       - ./webdav-data/config.yml:/etc/webdav/config.yml
-      - ./webdav-data/data:/data
+      - /mnt/data:/data
       - /etc/localtime:/etc/localtime:ro
