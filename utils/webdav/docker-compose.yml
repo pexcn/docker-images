@@ -6,6 +6,9 @@ services:
     container_name: webdav
     restart: unless-stopped
     network_mode: host
+    environment:
+      UID: 1000
+      GID: 1000
     volumes:
       - ./webdav-data/config.yml:/etc/webdav/config.yml
       - /mnt/data:/data
