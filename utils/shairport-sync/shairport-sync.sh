@@ -6,6 +6,10 @@ _is_exist_group() {
   getent group $1 &>/dev/null
 }
 
+_is_exist_user() {
+  id -u $1 &>/dev/null
+}
+
 _set_volume() {
   local mixer="$1"
   local volume="$2"
@@ -16,10 +20,9 @@ _set_volume() {
   fi
 }
 
-add_audio_group() {
-  if ! _is_exist_group docker-audio; then
-    addgroup -S -g $AUDIO_GID docker-audio && adduser airplay docker-audio
-  fi
+set_audio_group() {
+  _is_exist_group airplay || addgroup -S -g $AUDIO_GID airplay
+  _is_exist_user airplay || adduser -S -G airplay -s /bin/ash airplay
 }
 
 enable_sound() {
@@ -40,7 +43,7 @@ start_process() {
   exec su airplay -c shairport-sync "$@"
 }
 
-add_audio_group
+set_audio_group
 enable_sound
 start_depends
 start_process

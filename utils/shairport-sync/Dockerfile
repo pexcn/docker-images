@@ -34,9 +34,6 @@ RUN apk update \
   && apk add --no-cache dbus avahi alsa-utils alsa-lib \
   && apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/edge/testing shairport-sync=$VERSION
 
-# run as an unprivileged user
-RUN adduser -S -s /bin/ash airplay
-
 COPY --from=builder /usr/local/bin/sps-alsa-explore /usr/local/bin/
 COPY shairport-sync.sh /usr/local/bin/
 
