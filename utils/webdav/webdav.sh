@@ -10,5 +10,5 @@ _is_exist_user() {
 }
 
 _is_exist_group webdav || addgroup -S -g $GID webdav
-_is_exist_user webdav || adduser -S -s /bin/ash -u $UID webdav
+_is_exist_user webdav || adduser -S -G webdav -s /bin/ash -u $UID webdav
 exec su webdav -c webdav "$@"
