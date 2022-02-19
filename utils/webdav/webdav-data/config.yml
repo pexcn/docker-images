@@ -23,13 +23,13 @@ prefix: /
 
 # Default user settings
 scope: /data
-modify: true
-#rules: []
+modify: false
+rules: []
 
 users:
   - username: admin
     password: admin
-  - username: public
-    password: public
-    scope: /data/public
-    modify: false
+  #- username: public
+  #  password: public
+  #  scope: /data/public
+  #  modify: true
