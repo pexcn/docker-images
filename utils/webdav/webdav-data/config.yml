@@ -1,5 +1,5 @@
 # Server related settings
-address: 127.0.0.1
+address: 0.0.0.0
 port: 8080
 auth: true
 tls: false
@@ -31,5 +31,5 @@ users:
     password: admin
   - username: public
     password: public
-    scope: /data/pub
+    scope: /data/public
     modify: false
