@@ -2,7 +2,7 @@
 
 BASE_DIR=$(pwd)
 
-for dir in $(find . -name "docker-compose.yml" | xargs dirname); do
+for dir in $(find . -name "docker-compose.yml" -exec dirname {} + | sort); do
   cd $dir
   docker-compose pull --include-deps
   docker-compose up -d --remove-orphans
