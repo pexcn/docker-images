@@ -13,7 +13,7 @@ RUN apt-get update \
   && apt-get install --no-install-recommends -y \
       apt-utils dialog \
   && apt-get install --no-install-recommends -y \
-      ca-certificates curl wget git locales sudo tzdata \
+      ca-certificates curl wget git locales sudo tzdata procps \
       bzip2 gzip tar xz-utils zip unzip
 
 # upgrade all packages
