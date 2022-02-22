@@ -32,6 +32,9 @@ ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US.UTF-8
 ENV LC_COLLATE=C
 
+# preferred use ipv4
+RUN sed -i "s|#precedence ::ffff:0:0/96  100|precedence ::ffff:0:0/96  100|" /etc/gai.conf
+
 # create user
 RUN groupadd builder --system --gid 1001 \
   && useradd builder --system --uid 1001 --no-log-init --create-home --gid builder --shell /bin/bash
