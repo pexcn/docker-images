@@ -13,9 +13,9 @@ docker run -d \
   -e PUID="$(id -u git)" \
   -e PGID="$(id -g git)" \
   -v /root/docker/gogs-data:/data \
-  #-v /root/docker/acme.sh-data:/cert \
+  -v /path/to/git-repos:/data/git/repos \
   -v /etc/localtime:/etc/localtime:ro \
-  gogs/gogs:0.12.3
+  gogs/gogs:0.12.4
 ```
 
 ## 配置
