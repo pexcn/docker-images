@@ -9,3 +9,4 @@ services:
     volumes:
       - ./nginx-data/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx-data/conf.d:/etc/nginx/conf.d
+      - ../acme.sh/acme.sh-data:/cert
