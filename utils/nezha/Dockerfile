@@ -7,7 +7,7 @@
 #
 FROM golang:1.17-alpine AS builder
 
-ARG VERSION=v0.12.2
+ARG VERSION=v0.12.3
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git gcc musl-dev \
   && git clone https://github.com/naiba/nezha.git --branch $VERSION \
