@@ -12,8 +12,8 @@ RUN apk update \
   && apk add --no-cache --virtual .build-deps git gcc musl-dev \
   && git clone https://github.com/naiba/nezha.git --branch $VERSION \
   && cd nezha \
-  && sed -i 's/agentConf.ReportDelay > 4/agentConf.ReportDelay > 60/' cmd/agent/main.go \
-  && sed -i 's/report-delay 的区间为 1-4/report-delay 的区间为 1-60/' cmd/agent/main.go \
+  && sed -i 's/agentConf.ReportDelay > 4/agentConf.ReportDelay > 10/' cmd/agent/main.go \
+  && sed -i 's/report-delay 的区间为 1-4/report-delay 的区间为 1-10/' cmd/agent/main.go \
   && cd cmd/agent && go build -ldflags "-w -s" -trimpath -o nezha-agent && cd ../.. \
   && cd cmd/dashboard && go build -ldflags "-w -s" -trimpath -o nezha-dashboard && cd ../.. \
   && cp cmd/agent/nezha-agent /usr/local/bin/ \

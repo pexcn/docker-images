@@ -20,10 +20,10 @@ docker run -d \
   -e AGENT_MODE=1 \
   -v /etc/localtime:/etc/localtime:ro \
   pexcn/docker-images:nezha \
-    nezha-agent -s 127.0.0.1:5555 -p <secret> --report-delay 30 --disable-auto-update --disable-force-update --disable-command-execute --skip-procs
+    nezha-agent -s 127.0.0.1:5555 -p <secret> --report-delay 10 --disable-auto-update --disable-force-update --disable-command-execute --skip-procs
 ```
 
 ```sh
 # nezha-agent connect with tls
-nezha-agent -s status-grpc.example.com:443 -p <secret> --report-delay 30 --disable-auto-update --disable-force-update --disable-command-execute --skip-procs --tls
+nezha-agent -s status-grpc.example.com:443 -p <secret> --report-delay 10 --disable-auto-update --disable-force-update --disable-command-execute --skip-procs --tls
 ```
