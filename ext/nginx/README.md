@@ -9,7 +9,7 @@ docker run -d \
   --network host \
   -v $(pwd)/nginx-data/nginx.conf:/etc/nginx/nginx.conf \
   -v $(pwd)/nginx-data/conf.d:/etc/nginx/conf.d \
-  -v $(pwd)/nginx-data/root:/usr/share/nginx/html \
+  #-v $(pwd)/nginx-data/root:/usr/share/nginx/html \
   -v $(pwd)/../acme.sh/acme.sh-data:/cert \
   -v /etc/localtime:/etc/localtime:ro \
   nginx:1.21.6-alpine
