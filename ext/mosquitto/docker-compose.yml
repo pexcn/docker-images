@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2.0.14-openssl
+    container_name: mosquitto
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./mosquitto-data/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./mosquitto-data/data:/mosquitto/data
+      - ./mosquitto-data/log:/mosquitto/log
