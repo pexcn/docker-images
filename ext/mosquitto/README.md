@@ -19,6 +19,12 @@ docker run -d \
 ```sh
 # mosquitto.conf 配置项
 listener
+
+certfile
+keyfile
+ciphers
+ciphers_tls1.3
+cafile ?
 ```
 
 ```sh
