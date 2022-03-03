@@ -10,3 +10,4 @@ services:
       - ./mosquitto-data/config:/mosquitto/config
       - ./mosquitto-data/data:/mosquitto/data
       - ./mosquitto-data/log:/mosquitto/log
+      - /etc/localtime:/etc/localtime:ro

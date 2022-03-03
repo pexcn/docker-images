@@ -10,6 +10,7 @@ docker run -d \
   -v $(pwd)/mosquitto-data/config:/mosquitto/config \
   -v $(pwd)/mosquitto-data/data:/mosquitto/data \
   -v $(pwd)/mosquitto-data/log:/mosquitto/log \
+  -v /etc/localtime:/etc/localtime:ro \
   eclipse-mosquitto:2.0.14-openssl
 ```
 
