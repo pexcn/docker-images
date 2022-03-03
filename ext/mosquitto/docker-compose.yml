@@ -7,6 +7,6 @@ services:
     restart: unless-stopped
     network_mode: host
     volumes:
-      - ./mosquitto-data/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./mosquitto-data/config:/mosquitto/config
       - ./mosquitto-data/data:/mosquitto/data
       - ./mosquitto-data/log:/mosquitto/log
