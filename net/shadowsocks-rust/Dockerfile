@@ -13,7 +13,8 @@ RUN apk update \
 ARG SS_VERSION=v1.14.2
 RUN git clone https://github.com/shadowsocks/shadowsocks-rust.git --branch $SS_VERSION \
   && cd shadowsocks-rust \
-  && cargo build --release --features "local-redir local-tun armv8 neon" \
+  #&& cargo build --release --features "local-redir local-tun armv8 neon" \
+  && cargo build --release --features "local-redir local-tun" \
   && mkdir /app \
   && cp /shadowsocks-rust/target/release/sslocal /app \
   && cp /shadowsocks-rust/target/release/ssserver /app \
