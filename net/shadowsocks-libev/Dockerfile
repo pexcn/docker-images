@@ -13,7 +13,7 @@ RUN apk update \
       c-ares-dev mbedtls-dev pcre-dev libev-dev libsodium-dev \
       c-ares-static mbedtls-static libsodium-static
 
-ARG SS_VERSION=365465811113ed5018ee4c8d5b078b41095387fc
+ARG SS_VERSION=46382c23fac8fbabb62130ef49d3f0bf4c807b43
 RUN git clone https://github.com/shadowsocks/shadowsocks-libev.git --recurse-submodules -j2 \
   && cd shadowsocks-libev \
   && git checkout $SS_VERSION \
@@ -66,7 +66,7 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.8/main" >> /etc/apk/repositor
   && apk update \
   && apk add --no-cache linux-headers=4.4.6-r2
 
-ARG SS_VERSION=365465811113ed5018ee4c8d5b078b41095387fc
+ARG SS_VERSION=46382c23fac8fbabb62130ef49d3f0bf4c807b43
 RUN git clone https://github.com/shadowsocks/shadowsocks-libev.git --recurse-submodules -j2 \
   && cd shadowsocks-libev \
   && git checkout $SS_VERSION \
@@ -113,7 +113,7 @@ FROM golang:alpine AS builder-ray
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git
 
-ARG V2RAY_VERSION=v4.44.0
+ARG V2RAY_VERSION=v5.0.2
 RUN git clone https://github.com/teddysun/v2ray-plugin.git --branch $V2RAY_VERSION \
   && cd v2ray-plugin \
   && env CGO_ENABLED=0 go build -v -trimpath -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w" -o v2ray-plugin \
@@ -122,7 +122,7 @@ RUN git clone https://github.com/teddysun/v2ray-plugin.git --branch $V2RAY_VERSI
   && cd .. \
   && rm -r v2ray-plugin
 
-ARG XRAY_VERSION=v1.5.0
+ARG XRAY_VERSION=v1.5.4
 RUN git clone https://github.com/teddysun/xray-plugin.git --branch $XRAY_VERSION \
   && cd xray-plugin \
   && env CGO_ENABLED=0 go build -v -trimpath -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w" -o xray-plugin \
