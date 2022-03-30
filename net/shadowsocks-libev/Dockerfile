@@ -108,7 +108,8 @@ RUN apk del .build-deps linux-headers \
 #
 # Build stage [v2ray-plugin & xray-plugin]
 #
-FROM golang:alpine AS builder-ray
+# workaround for fix: cannot use "quic-go doesn't build on Go 1.18 yet." (untyped string constant) as int value in variable declaration
+FROM golang:1.17-alpine AS builder-ray
 
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git
