@@ -10,7 +10,7 @@ FROM rust:alpine AS builder-ss
 RUN apk update \
   && apk add --no-cache --virtual .build-deps musl-dev git
 
-ARG SS_VERSION=v1.14.2
+ARG SS_VERSION=v1.14.3
 RUN git clone https://github.com/shadowsocks/shadowsocks-rust.git --branch $SS_VERSION \
   && cd shadowsocks-rust \
   #&& cargo build --release --features "local-redir local-tun armv8 neon" \
