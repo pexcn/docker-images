@@ -5,9 +5,9 @@
 #
 # Build stage
 #
-FROM golang:1.17-alpine AS builder
+FROM golang:1.18-alpine AS builder
 
-ARG VERSION=v2.1.4
+ARG VERSION=v2.1.6
 RUN apk update \
   && apk add --no-cache --virtual .build-deps bash git make \
   && git clone https://github.com/9seconds/mtg.git --branch $VERSION \
