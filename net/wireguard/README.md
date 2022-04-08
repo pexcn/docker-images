@@ -31,7 +31,7 @@ docker run -it --rm --name wireguard-keygen -v $(pwd)/wg-key:/root/wg-key pexcn/
 [Interface]
 PrivateKey = <SERVER_PRIVATE_KEY>
 Address = 10.10.10.1/32
-ListenPort = 1820
+ListenPort = <SERVER_PORT>
 
 [Peer]
 PublicKey = <CLIENT_PUBLIC_KEY>
