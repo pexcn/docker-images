@@ -12,7 +12,8 @@ RUN apk update \
   && apk add --no-cache \
       strongswan=$STRONGSWAN_VER \
       iptables=$IPTABLES_VER \
-      iproute2-minimal=$IPROUTE2_VER
+      iproute2-minimal=$IPROUTE2_VER \
+  && rm -rf /var/cache/apk/*
 
 COPY entrypoint.sh /app/entrypoint.sh
 
