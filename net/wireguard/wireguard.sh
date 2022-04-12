@@ -10,7 +10,7 @@ _graceful_stop() {
 }
 
 _get_wireguard_interfaces() {
-  basename -s .conf /etc/wireguard/*
+  basename -s .conf /etc/wireguard/*.conf
 }
 
 # TODO: restore sysctl state function
