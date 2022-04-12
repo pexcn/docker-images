@@ -21,6 +21,7 @@ docker run -d \
     --tcp-fast-open \
     --tcp-no-delay \
     -U
+# --worker-threads $(nproc)
 # --plugin "obfs-server" --plugin-opts "obfs=tls;fast-open"
 # --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;host=example.com;path=/ws"
 # --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;mode=grpc;host=example.com"
@@ -44,6 +45,7 @@ docker run -d \
     --tcp-fast-open \
     --tcp-no-delay \
     -U
+# --worker-threads $(nproc)
 # --dns tcp://127.0.0.1:5300
 # --plugin "obfs-local" --plugin-opts "obfs=tls;obfs-host=www.bing.com;fast-open"
 # --plugin "xray-plugin" --plugin-opts "tls;fast-open;host=example.com;path=/ws?ed=2048;mux=5;loglevel=none"
@@ -70,6 +72,7 @@ docker run -d \
     --tcp-fast-open \
     --tcp-no-delay \
     -U
+# --worker-threads $(nproc)
 # --plugin "obfs-local" --plugin-opts "obfs=tls;obfs-host=www.bing.com;fast-open"
 # --plugin "xray-plugin" --plugin-opts "tls;fast-open;host=example.com;path=/ws?ed=2048;mux=5;loglevel=none"
 # --plugin "xray-plugin" --plugin-opts "tls;fast-open;mode=grpc;host=example.com;loglevel=none"
@@ -91,10 +94,4 @@ docker run -d \
     --tcp-fast-open \
     --tcp-no-delay \
     -U
-```
-
-```bash
-# TODO
---outbound-fwmark
---worker-threads
 ```
