@@ -24,8 +24,6 @@ docker run -it --rm --name wireguard-keygen -v $(pwd)/wg-key:/root/wg-key pexcn/
 
 ```conf
 #
-# Server side
-#
 # /etc/wireguard/wg-server.conf
 #
 [Interface]
@@ -38,9 +36,7 @@ PublicKey = <CLIENT_PUBLIC_KEY>
 AllowedIPs = 10.10.10.2/32
 
 #
-# Client side
-#
-# /etc/wireguard/wg-peer.conf
+# /etc/wireguard/wg-client.conf
 #
 [Interface]
 PrivateKey = <CLIENT_PRIVATE_KEY>
