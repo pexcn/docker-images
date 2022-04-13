@@ -12,15 +12,7 @@ docker run -d \
   pexcn/docker-images:wireguard
 ```
 
-### Commands
-
-```sh
-# Generate private/public keys
-docker run -it --rm --name wireguard-keygen -v $(pwd)/wg-key:/root/wg-key pexcn/docker-images:wireguard \
-  sh -c 'wg genkey | tee /root/wg-key/private.key | wg pubkey > /root/wg-key/public.key'
-```
-
-### Templates
+### Configs
 
 ```conf
 #
@@ -30,10 +22,14 @@ docker run -it --rm --name wireguard-keygen -v $(pwd)/wg-key:/root/wg-key pexcn/
 PrivateKey = <SERVER_PRIVATE_KEY>
 Address = 10.10.10.1/32
 ListenPort = <SERVER_PORT>
+#MTU =
+#DNS =
+PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o <INTERFACE> -j SNAT --to-source <INTERFACE_ADDRESS>
+PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o <INTERFACE> -j SNAT --to-source <INTERFACE_ADDRESS>
 
 [Peer]
 PublicKey = <CLIENT_PUBLIC_KEY>
-AllowedIPs = 10.10.10.2/32
+AllowedIPs = 10.10.10.0/24
 
 #
 # /etc/wireguard/wg-client.conf
@@ -44,7 +40,7 @@ Address = 10.10.10.2/32
 
 [Peer]
 PublicKey = <SERVER_PUBLIC_KEY>
-AllowedIPs = 192.168.1.0/24
+AllowedIPs = 10.10.10.0/24, 192.168.1.0/24
 Endpoint = <SERVER_ADDR:SERVER_PORT>
 PersistentKeepalive = 30
 ```
