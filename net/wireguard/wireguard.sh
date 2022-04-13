@@ -2,31 +2,51 @@
 set -e
 set -o pipefail
 
-_graceful_stop() {
-  echo "Caught SIGTERM signal, graceful stop!"
-  for interface in $(_get_wireguard_interfaces); do
+_get_wg_interfaces() {
+  ls -A1 /etc/wireguard/*.conf | xargs -n 1 -I {} basename {} .conf
+}
+
+_up_wg_interface() {
+  for interface in $(_get_wg_interfaces); do
+    wg-quick up "$interface"
+  done
+}
+
+_down_wg_interface() {
+  for interface in $(_get_wg_interfaces); do
     wg-quick down "$interface"
   done
 }
 
-_get_wireguard_interfaces() {
-  ls -A1 /etc/wireguard/*.conf | xargs -n 1 -I {} basename {} .conf
+_graceful_stop() {
+  echo "Caught SIGTERM signal, graceful stopping..."
+  _down_wg_interface
+  _restore_sysctl
 }
 
-# TODO: restore sysctl state function
-apply_sysctl() {
-  sysctl -w net.ipv4.ip_forward=1
+_apply_sysctl() {
+  sysctl "$1" >> /srv/origin.conf
+  sysctl -w "$1=$2"
+}
+
+_restore_sysctl() {
+  sysctl -p /srv/origin.conf
+  rm /srv/origin.conf
+}
+
+setup_sysctl() {
+  [ -f /srv/origin.conf ] && rm /srv/origin.conf
+
+  _apply_sysctl net.ipv4.ip_forward 1
 }
 
 start_wireguard() {
-  for interface in $(_get_wireguard_interfaces); do
-    wg-quick up "$interface"
-  done
+  _up_wg_interface
 
   trap _graceful_stop SIGTERM
   sleep infinity &
   wait
 }
 
-apply_sysctl
+setup_sysctl
 start_wireguard

@@ -12,7 +12,7 @@ docker run -d \
   pexcn/docker-images:wireguard
 ```
 
-### Configs
+## Configs
 
 ```conf
 #
@@ -22,8 +22,8 @@ docker run -d \
 PrivateKey = <SERVER_PRIVATE_KEY>
 Address = 10.10.10.1/32
 ListenPort = <SERVER_PORT>
-#MTU =
 #DNS =
+#MTU =
 PostUp = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o <INTERFACE> -j SNAT --to-source <INTERFACE_ADDRESS>
 PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o <INTERFACE> -j SNAT --to-source <INTERFACE_ADDRESS>
 
@@ -37,6 +37,8 @@ AllowedIPs = 10.10.10.0/24
 [Interface]
 PrivateKey = <CLIENT_PRIVATE_KEY>
 Address = 10.10.10.2/32
+#DNS =
+#MTU =
 
 [Peer]
 PublicKey = <SERVER_PUBLIC_KEY>
