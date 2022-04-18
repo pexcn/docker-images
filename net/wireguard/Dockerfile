@@ -36,4 +36,6 @@ RUN apk update \
 COPY --from=builder /usr/bin/wireguard-go /srv/wireguard-go/
 COPY wireguard.sh /usr/local/bin/
 
+ENV USE_USERSPACE_MODE=0
+
 ENTRYPOINT ["wireguard.sh"]
