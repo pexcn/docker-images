@@ -7,5 +7,7 @@ services:
     restart: unless-stopped
     network_mode: host
     privileged: true
+    environment:
+      USE_USERSPACE_MODE: 0
     volumes:
       - ./wireguard-data:/etc/wireguard
