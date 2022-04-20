@@ -97,6 +97,9 @@ jobs:
           # speedtest-go
           - BUILD_CONTEXT: utils/speedtest-go
             TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # unixbench
+          - BUILD_CONTEXT: utils/unixbench
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # vlmcsd
           - BUILD_CONTEXT: utils/vlmcsd
             TARGET_PLATFORMS: linux/amd64,linux/arm64
