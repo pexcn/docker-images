@@ -5,6 +5,9 @@
 ```sh
 docker run -it --rm \
   --name unixbench \
-  --network host \
+  pexcn/docker-images:unixbench
+
+docker run -d \
+  --name unixbench \
   pexcn/docker-images:unixbench
 ```
