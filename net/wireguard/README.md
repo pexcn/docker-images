@@ -70,11 +70,17 @@ MTU = 1412
 ```
 See more: https://lists.zx2c4.com/pipermail/wireguard/2017-December/002201.html
 
-### DNS
-
-**Unconfirmed**
+### DNS (Unconfirmed)
 
 DNS setting be only when as a client, and should be set to the DNS of remote peer, e.g.:
 ```sh
 DNS = 192.168.1.1
+```
+
+### As Gateway
+
+As a gateway, there may be MTU related issues, you can try appending the following iptables rules to `PostUp` and `PostDown`:
+```sh
+PostUp = ...; iptables -t mangle -A POSTROUTING -o %i -p tcp -m tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
+PostDown = ...; iptables -t mangle -D POSTROUTING -o %i -p tcp -m tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
 ```
