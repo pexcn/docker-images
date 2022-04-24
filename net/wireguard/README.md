@@ -30,7 +30,7 @@ PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACC
 
 [Peer]
 PublicKey = <CLIENT_PUBLIC_KEY>
-AllowedIPs = 10.10.10.0/24
+AllowedIPs = 10.10.10.2/32
 #Endpoint = <CLIENT_ADDR:CLIENT_PORT>
 #PersistentKeepalive = 30
 
@@ -48,7 +48,7 @@ PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACC
 
 [Peer]
 PublicKey = <SERVER_PUBLIC_KEY>
-AllowedIPs = 10.10.10.0/24, 192.168.1.0/24
+AllowedIPs = 10.10.10.1/32, 192.168.1.0/24
 Endpoint = <SERVER_ADDR:SERVER_PORT>
 PersistentKeepalive = 30
 ```
