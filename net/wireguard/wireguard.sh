@@ -4,6 +4,10 @@ set -o pipefail
 
 [ "$USE_USERSPACE_MODE" == 1 ] && PATH=/srv/wireguard-go:$PATH
 
+_make_config_secure() {
+  chmod 600 /etc/wireguard/*.conf
+}
+
 _get_wg_interfaces() {
   ls -A1 /etc/wireguard/*.conf | xargs -n 1 -I {} basename {} .conf
 }
@@ -43,6 +47,7 @@ setup_sysctl() {
 }
 
 start_wireguard() {
+  _make_config_secure
   _up_wg_interface
 
   trap _graceful_stop SIGTERM
