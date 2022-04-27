@@ -9,7 +9,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
     command: >
-      ssserver
+      ssservice server
         --server-addr 0.0.0.0:1776
         --password password
         --encrypt-method aes-128-gcm
@@ -30,7 +30,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
     command: >
-      ssserver
+      ssservice server
         --server-addr 0.0.0.0:1984
         --password password
         --encrypt-method chacha20-ietf-poly1305
@@ -51,7 +51,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
     command: >
-      ssserver
+      ssservice server
         --server-addr 0.0.0.0:80
         --password password
         --encrypt-method chacha20-ietf-poly1305
@@ -75,7 +75,7 @@ services:
       - ../acme.sh/acme.sh/example.com_ecc/:/root/.acme.sh/example.com/
       - /etc/localtime:/etc/localtime:ro
     command: >
-      ssserver
+      ssservice server
         --server-addr 0.0.0.0:443
         --password password
         --encrypt-method chacha20-ietf-poly1305
@@ -99,7 +99,7 @@ services:
       - ../acme.sh/acme.sh/example.com_ecc/:/root/.acme.sh/example.com/
       - /etc/localtime:/etc/localtime:ro
     command: >
-      ssserver
+      ssservice server
         --server-addr 0.0.0.0:993
         --password password
         --encrypt-method chacha20-ietf-poly1305
