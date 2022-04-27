@@ -96,6 +96,19 @@ LABEL maintainer="pexcn <i@pexcn.me>"
 COPY --from=builder-ss /app/ /app/
 COPY --from=builder-obfs /app/bin/ /app/
 COPY --from=builder-ray /app/ /app/
+COPY entrypoint.sh /app/
+
+RUN ln -s /app/ssservice /app/service \
+  && ln -s /app/ssserver /app/server \
+  && ln -s /app/sslocal /app/local \
+  && ln -s /app/ssmanager /app/manager \
+  && ln -s /app/ssurl /app/url \
+  && ln -s /app/v2ray-plugin /app/pv-plugin \
+  && ln -s /app/xray-plugin /app/px-plugin \
+  && ln -s /app/obfs-server /app/mix-server \
+  && ln -s /app/obfs-local /app/mix-local
 
 ENV PATH=/app:$PATH
+ENV CHILLING_EFFECT=0
+ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["ssserver", "--version"]
