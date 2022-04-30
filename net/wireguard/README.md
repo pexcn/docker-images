@@ -9,6 +9,7 @@ docker run -d \
   --network host \
   --privileged \
   -e USE_USERSPACE_MODE=0 \
+  -e PEER_RESOLVE_INTERVAL=0 \
   -v $(pwd)/wireguard-data:/etc/wireguard \
   pexcn/docker-images:wireguard
 ```

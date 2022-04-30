@@ -9,5 +9,6 @@ services:
     privileged: true
     environment:
       USE_USERSPACE_MODE: 0
+      PEER_RESOLVE_INTERVAL: 0
     volumes:
       - ./wireguard-data:/etc/wireguard

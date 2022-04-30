@@ -51,8 +51,18 @@ start_wireguard() {
   _up_wg_interface
 
   trap _graceful_stop SIGTERM
-  sleep infinity &
-  wait
+
+  if [[ -z "$PEER_RESOLVE_INTERVAL" || "$PEER_RESOLVE_INTERVAL" = 0 ]]; then
+    sleep infinity &
+    wait
+  else
+    while true
+    do
+      sleep "$PEER_RESOLVE_INTERVAL" &
+      wait
+      for cfg in /etc/wireguard/*.conf; do reresolve-dns.sh "$cfg"; done
+    done
+  fi
 }
 
 setup_sysctl
