@@ -19,7 +19,6 @@ RUN git clone https://github.com/shadowsocks/shadowsocks-libev.git --recurse-sub
   && git checkout $SS_VERSION \
   && ./autogen.sh \
   && ./configure \
-      --prefix="/app" \
       --disable-documentation \
       --disable-assert \
       --enable-static \
@@ -37,7 +36,6 @@ RUN git clone https://github.com/shadowsocks/simple-obfs.git --recurse-submodule
   && git checkout $OBFS_VERSION \
   && ./autogen.sh \
   && ./configure \
-      --prefix="/app" \
       --disable-documentation \
       --disable-assert \
       --enable-static \
@@ -72,7 +70,6 @@ RUN git clone https://github.com/shadowsocks/shadowsocks-libev.git --recurse-sub
   && git checkout $SS_VERSION \
   && ./autogen.sh \
   && ./configure \
-      --prefix="/app" \
       --disable-documentation \
       --disable-assert \
       --enable-static \
@@ -90,7 +87,6 @@ RUN git clone https://github.com/shadowsocks/simple-obfs.git --recurse-submodule
   && git checkout $OBFS_VERSION \
   && ./autogen.sh \
   && ./configure \
-      --prefix="/app" \
       --disable-documentation \
       --disable-assert \
       --enable-static \
@@ -116,18 +112,16 @@ RUN apk update \
 ARG V2RAY_VERSION=v5.0.4
 RUN git clone https://github.com/teddysun/v2ray-plugin.git --branch $V2RAY_VERSION \
   && cd v2ray-plugin \
-  && env CGO_ENABLED=0 go build -v -trimpath -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w" -o v2ray-plugin \
-  && mkdir -p /app \
-  && mv v2ray-plugin /app \
+  && env CGO_ENABLED=0 go build -v -trimpath -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w -buildid=" -o v2ray-plugin \
+  && install v2ray-plugin /usr/local/bin/ \
   && cd .. \
   && rm -r v2ray-plugin
 
 ARG XRAY_VERSION=v1.5.5
 RUN git clone https://github.com/teddysun/xray-plugin.git --branch $XRAY_VERSION \
   && cd xray-plugin \
-  && env CGO_ENABLED=0 go build -v -trimpath -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w" -o xray-plugin \
-  && mkdir -p /app \
-  && mv xray-plugin /app \
+  && env CGO_ENABLED=0 go build -v -trimpath -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w -buildid=" -o xray-plugin \
+  && install xray-plugin /usr/local/bin/ \
   && cd .. \
   && rm -r xray-plugin
 
@@ -144,11 +138,10 @@ RUN apk update \
   && apk add --no-cache ca-certificates \
   && rm -rf /var/cache/apk/*
 
-COPY --from=builder-ss /app/bin/ /app/
-COPY --from=builder-ray /app/ /app/
-COPY --from=builder-ss-tfo-cpt /app/bin/ /app-compat/
-COPY entrypoint.sh /app/
+COPY --from=builder-ss /usr/local/bin/ /usr/local/bin/
+COPY --from=builder-ray /usr/local/bin/ /usr/local/bin/
+COPY --from=builder-ss-tfo-cpt /usr/local/bin/ /srv/bin/
+COPY entrypoint.sh /usr/local/bin/
 
-ENV PATH=/app:$PATH
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["shadowsocks-libev.sh"]
 CMD ["ss-server", "--help"]
