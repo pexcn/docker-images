@@ -13,7 +13,8 @@ RUN apk update \
 ARG SS_VERSION=v1.14.3
 RUN git clone https://github.com/shadowsocks/shadowsocks-rust.git --branch $SS_VERSION \
   && cd shadowsocks-rust \
-  && cargo build --release --features "local-redir local-tun" \ # FIXME: "armv8 neon" for arm64
+  # FIXME: "armv8 neon" for arm64
+  && cargo build --release --features "local-redir local-tun" \
   && install target/release/ss* /usr/local/bin/ \
   && rm -r /shadowsocks-rust
 
