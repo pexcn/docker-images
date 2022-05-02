@@ -60,13 +60,12 @@ RUN apk del .build-deps \
 #
 # Build stage [v2ray-plugin & xray-plugin]
 #
-# workaround for fix: cannot use "quic-go doesn't build on Go 1.18 yet." (untyped string constant) as int value in variable declaration
-FROM golang:1.17-alpine AS builder-ray
+FROM golang:1.18-alpine AS builder-ray
 
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git
 
-ARG V2RAY_VERSION=v5.0.2
+ARG V2RAY_VERSION=v5.0.4
 RUN git clone https://github.com/teddysun/v2ray-plugin.git --branch $V2RAY_VERSION \
   && cd v2ray-plugin \
   && env CGO_ENABLED=0 go build -v -trimpath -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w" -o v2ray-plugin \
@@ -75,7 +74,7 @@ RUN git clone https://github.com/teddysun/v2ray-plugin.git --branch $V2RAY_VERSI
   && cd .. \
   && rm -r v2ray-plugin
 
-ARG XRAY_VERSION=v1.5.4
+ARG XRAY_VERSION=v1.5.5
 RUN git clone https://github.com/teddysun/xray-plugin.git --branch $XRAY_VERSION \
   && cd xray-plugin \
   && env CGO_ENABLED=0 go build -v -trimpath -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w" -o xray-plugin \
