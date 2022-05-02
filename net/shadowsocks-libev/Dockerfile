@@ -141,7 +141,7 @@ RUN apk update \
 COPY --from=builder-ss /usr/local/bin/ /usr/local/bin/
 COPY --from=builder-ray /usr/local/bin/ /usr/local/bin/
 COPY --from=builder-ss-tfo-cpt /usr/local/bin/ /srv/bin/
-COPY entrypoint.sh /usr/local/bin/
+COPY shadowsocks-libev.sh /usr/local/bin/
 
 ENTRYPOINT ["shadowsocks-libev.sh"]
 CMD ["ss-server", "--help"]

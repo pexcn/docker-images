@@ -13,14 +13,8 @@ RUN apk update \
 ARG SS_VERSION=v1.14.3
 RUN git clone https://github.com/shadowsocks/shadowsocks-rust.git --branch $SS_VERSION \
   && cd shadowsocks-rust \
-  #&& cargo build --release --features "local-redir local-tun armv8 neon" \
-  && cargo build --release --features "local-redir local-tun" \
-  && mkdir /app \
-  && cp /shadowsocks-rust/target/release/sslocal /app \
-  && cp /shadowsocks-rust/target/release/ssserver /app \
-  && cp /shadowsocks-rust/target/release/ssmanager /app \
-  && cp /shadowsocks-rust/target/release/ssurl /app \
-  && cp /shadowsocks-rust/target/release/ssservice /app \
+  && cargo build --release --features "local-redir local-tun" \ # FIXME: "armv8 neon" for arm64
+  && install target/release/ss* /usr/local/bin/ \
   && rm -r /shadowsocks-rust
 
 RUN apk del .build-deps \
@@ -42,7 +36,6 @@ RUN git clone https://github.com/shadowsocks/simple-obfs.git --recurse-submodule
   && git checkout $OBFS_VERSION \
   && ./autogen.sh \
   && ./configure \
-      --prefix="/app" \
       --disable-documentation \
       --disable-assert \
       --enable-static \
@@ -68,18 +61,16 @@ RUN apk update \
 ARG V2RAY_VERSION=v5.0.4
 RUN git clone https://github.com/teddysun/v2ray-plugin.git --branch $V2RAY_VERSION \
   && cd v2ray-plugin \
-  && env CGO_ENABLED=0 go build -v -trimpath -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w" -o v2ray-plugin \
-  && mkdir -p /app \
-  && mv v2ray-plugin /app \
+  && env CGO_ENABLED=0 go build -v -trimpath -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w -buildid=" -o v2ray-plugin \
+  && install v2ray-plugin /usr/local/bin/ \
   && cd .. \
   && rm -r v2ray-plugin
 
 ARG XRAY_VERSION=v1.5.5
 RUN git clone https://github.com/teddysun/xray-plugin.git --branch $XRAY_VERSION \
   && cd xray-plugin \
-  && env CGO_ENABLED=0 go build -v -trimpath -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w" -o xray-plugin \
-  && mkdir -p /app \
-  && mv xray-plugin /app \
+  && env CGO_ENABLED=0 go build -v -trimpath -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w -buildid=" -o xray-plugin \
+  && install xray-plugin /usr/local/bin/ \
   && cd .. \
   && rm -r xray-plugin
 
@@ -92,22 +83,22 @@ RUN apk del .build-deps \
 FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
-COPY --from=builder-ss /app/ /app/
-COPY --from=builder-obfs /app/bin/ /app/
-COPY --from=builder-ray /app/ /app/
-COPY entrypoint.sh /app/
+COPY --from=builder-ss /usr/local/bin/ /usr/local/bin/
+COPY --from=builder-obfs /usr/local/bin/ /usr/local/bin/
+COPY --from=builder-ray /usr/local/bin/ /usr/local/bin/
+COPY shadowsocks-rust.sh /usr/local/bin/
 
-RUN ln -s /app/ssservice /app/service \
-  && ln -s /app/ssserver /app/server \
-  && ln -s /app/sslocal /app/local \
-  && ln -s /app/ssmanager /app/manager \
-  && ln -s /app/ssurl /app/url \
-  && ln -s /app/v2ray-plugin /app/pv-plugin \
-  && ln -s /app/xray-plugin /app/px-plugin \
-  && ln -s /app/obfs-server /app/mix-server \
-  && ln -s /app/obfs-local /app/mix-local
+RUN cd /usr/local/bin/ \
+  && ln -s ssservice service \
+  && ln -s ssserver server \
+  && ln -s sslocal local \
+  && ln -s ssmanager manager \
+  && ln -s ssurl url \
+  && ln -s v2ray-plugin pv-plugin \
+  && ln -s xray-plugin px-plugin \
+  && ln -s obfs-server mix-server \
+  && ln -s obfs-local mix-local
 
-ENV PATH=/app:$PATH
 ENV CHILLING_EFFECT=0
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["shadowsocks-rust.sh"]
 CMD ["ssserver", "--version"]

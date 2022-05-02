@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-if [ "$CHILLING_EFFECT" == 1 ]; then
+if [ "$CHILLING_EFFECT" = 1 ]; then
   exec $(echo "$@" | sed '
     s/ssservice/service/;
     s/ssserver/server/;
