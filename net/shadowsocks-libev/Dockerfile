@@ -13,7 +13,7 @@ RUN apk update \
       c-ares-dev mbedtls-dev pcre-dev libev-dev libsodium-dev \
       c-ares-static mbedtls-static libsodium-static
 
-ARG SS_VERSION=46382c23fac8fbabb62130ef49d3f0bf4c807b43
+ARG SS_VERSION=e21f8248b64528b9a30a87331074a0eae6676225
 RUN git clone https://github.com/shadowsocks/shadowsocks-libev.git --recurse-submodules -j2 \
   && cd shadowsocks-libev \
   && git checkout $SS_VERSION \
@@ -66,7 +66,7 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.8/main" >> /etc/apk/repositor
   && apk update \
   && apk add --no-cache linux-headers=4.4.6-r2
 
-ARG SS_VERSION=46382c23fac8fbabb62130ef49d3f0bf4c807b43
+ARG SS_VERSION=e21f8248b64528b9a30a87331074a0eae6676225
 RUN git clone https://github.com/shadowsocks/shadowsocks-libev.git --recurse-submodules -j2 \
   && cd shadowsocks-libev \
   && git checkout $SS_VERSION \
