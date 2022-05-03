@@ -15,7 +15,7 @@ RUN git clone https://github.com/shadowsocks/shadowsocks-rust.git --branch $SS_V
   && cd shadowsocks-rust \
   # FIXME: "armv8 neon" for arm64
   && cargo build --release --features "local-redir local-tun" \
-  && install target/release/ss* /usr/local/bin/ \
+  && install target/release/ssservice target/release/ssserver target/release/sslocal target/release/ssmanager target/release/ssurl /usr/local/bin/ \
   && rm -r /shadowsocks-rust
 
 RUN apk del .build-deps \
