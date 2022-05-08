@@ -25,8 +25,9 @@ docker run -d \
     --fast-open \
     --no-delay
 # --plugin "obfs-server" --plugin-opts "obfs=tls;fast-open"
-# --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;host=example.com;path=/ws"
-# --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;mode=grpc;host=example.com"
+# --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;host=example.com;path=/ws;loglevel=none"
+# --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;mode=grpc;host=example.com;loglevel=none"
+# --plugin "xray-plugin" --plugin-opts "server;fast-open;mode=quic;host=example.com;loglevel=none"
 
 # ss-local
 docker run -d \
@@ -50,6 +51,7 @@ docker run -d \
 # --plugin "obfs-local" --plugin-opts "obfs=tls;obfs-host=www.bing.com;fast-open"
 # --plugin "xray-plugin" --plugin-opts "tls;fast-open;host=example.com;path=/ws?ed=2048;mux=5;loglevel=none"
 # --plugin "xray-plugin" --plugin-opts "tls;fast-open;mode=grpc;host=example.com;loglevel=none"
+# --plugin "xray-plugin" --plugin-opts "fast-open;mode=quic;host=example.com;loglevel=none"
 
 # ss-manager
 docker run -d \
