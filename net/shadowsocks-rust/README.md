@@ -2,6 +2,10 @@
 
 ## Usage
 
+Environment variable | Default value | Optional value | Description
+:-------------------:|:-------------:|:--------------:|------------
+`CHILLING_EFFECT` | `0` | `0`, `1` | [Chilling effect](https://en.wikipedia.org/wiki/Chilling_effect)
+
 ```bash
 # ssserver
 docker run -d \
@@ -22,8 +26,9 @@ docker run -d \
     --tcp-no-delay \
     -U
 # --plugin "obfs-server" --plugin-opts "obfs=tls;fast-open"
-# --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;host=example.com;path=/ws"
-# --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;mode=grpc;host=example.com"
+# --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;host=example.com;path=/ws;loglevel=none"
+# --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;mode=grpc;host=example.com;loglevel=none"
+# --plugin "xray-plugin" --plugin-opts "server;fast-open;mode=quic;host=example.com;loglevel=none"
 
 # sslocal
 docker run -d \
@@ -48,6 +53,7 @@ docker run -d \
 # --plugin "obfs-local" --plugin-opts "obfs=tls;obfs-host=www.bing.com;fast-open"
 # --plugin "xray-plugin" --plugin-opts "tls;fast-open;host=example.com;path=/ws?ed=2048;mux=5;loglevel=none"
 # --plugin "xray-plugin" --plugin-opts "tls;fast-open;mode=grpc;host=example.com;loglevel=none"
+# --plugin "xray-plugin" --plugin-opts "fast-open;mode=quic;host=example.com;loglevel=none"
 
 # sstunnel
 docker run -d \
@@ -70,9 +76,6 @@ docker run -d \
     --tcp-fast-open \
     --tcp-no-delay \
     -U
-# --plugin "obfs-local" --plugin-opts "obfs=tls;obfs-host=www.bing.com;fast-open"
-# --plugin "xray-plugin" --plugin-opts "tls;fast-open;host=example.com;path=/ws?ed=2048;mux=5;loglevel=none"
-# --plugin "xray-plugin" --plugin-opts "tls;fast-open;mode=grpc;host=example.com;loglevel=none"
 
 # ssmanager
 docker run -d \
