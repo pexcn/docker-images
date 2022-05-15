@@ -27,6 +27,7 @@ set_audio_group() {
 
 enable_sound() {
   _set_volume 'Master' 80
+  _set_volume 'PCM' 80
   _set_volume 'Headphone' 100
   _set_volume 'Speaker' 100
   _set_volume 'Line Out' 100
