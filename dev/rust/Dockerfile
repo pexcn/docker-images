@@ -9,7 +9,7 @@ LABEL maintainer="pexcn <i@pexcn.me>"
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
       apt-utils dialog \
-     apt-get install --no-install-recommends -y \
+  && apt-get install --no-install-recommends -y \
       bash-completion curl wget net-tools git locales procps nano tree \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
