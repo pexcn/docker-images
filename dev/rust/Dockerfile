@@ -35,7 +35,7 @@ RUN sed -i '/^# en_US.UTF-8 UTF-8/s/^# //' /etc/locale.gen \
 # dotfiles
 RUN git clone https://github.com/pexcn/dotfiles.git -b debian \
   && cd dotfiles \
-  && ./install.sh \
+  && ./install.sh root \
   && ./install.sh $USER_NAME \
   && cd .. \
   && rm -rf dotfiles
