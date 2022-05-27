@@ -14,6 +14,7 @@ start_container() {
   trap _graceful_stop 15
 
   #exec "$@"
+
   sleep infinity &
   wait
 }
