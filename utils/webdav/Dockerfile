@@ -7,7 +7,7 @@
 #
 FROM golang:alpine AS builder
 
-ARG VERSION=v4.1.1
+ARG VERSION=v4.2.0
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git gcc musl-dev \
   && git clone https://github.com/hacdias/webdav.git --branch $VERSION \

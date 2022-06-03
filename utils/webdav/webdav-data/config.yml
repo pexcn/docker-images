@@ -6,6 +6,7 @@ tls: false
 cert: cert.pem
 key: key.pem
 prefix: /
+debug: false
 
 # CORS configuration
 #cors:
