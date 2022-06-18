@@ -36,8 +36,12 @@ RUN sed -i '/^# en_US.UTF-8 UTF-8/s/^# //' /etc/locale.gen \
 RUN git clone https://github.com/pexcn/dotfiles.git -b debian \
   && cd dotfiles \
   && ./install.sh root \
+  && git config --global --unset user.name \
+  && git config --global --unset user.email \
   && ./install.sh $USER_NAME \
-  && cd .. \
+  && su $USER_NAME -c "git config --global --unset user.name" \
+  && su $USER_NAME -c "git config --global --unset user.email" \
+  && cd - \
   && rm -rf dotfiles
 
 COPY rust.sh /usr/local/bin/
