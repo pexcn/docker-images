@@ -13,8 +13,8 @@ start_container() {
   # Debian dash shell doesn't recognize SIGTERM signal, use signal number 15 instead.
   trap _graceful_stop 15
 
-  # TODO: maybe can execute extra commands by arguments
-  #exec "$@"
+  # TODO: execute extra commands by arguments
+  #"$@"
 
   sleep infinity &
   wait

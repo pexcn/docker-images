@@ -19,7 +19,7 @@ ARG USER_NAME=vscode
 ARG USER_UID=1000
 ARG USER_GID=$USER_UID
 RUN groupadd $USER_NAME --gid $USER_GID \
-  && useradd $USER_NAME --uid $USER_UID --gid $USER_NAME --shell /bin/bash --create-home
+  && useradd $USER_NAME --uid $USER_UID --gid $USER_NAME --shell /bin/bash --create-home --home-dir /vscode
 
 # set timezone
 ENV TZ=Asia/Taipei
