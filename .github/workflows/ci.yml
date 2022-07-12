@@ -79,9 +79,6 @@ jobs:
           # cron
           - BUILD_CONTEXT: utils/cron
             TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # nezha
-          - BUILD_CONTEXT: utils/nezha
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # rng-tools
           - BUILD_CONTEXT: utils/rng-tools
             TARGET_PLATFORMS: linux/amd64,linux/arm64
@@ -126,6 +123,9 @@ jobs:
           #  TARGET_PLATFORMS: linux/amd64,linux/arm64
           ## iperf
           #- BUILD_CONTEXT: utils/iperf
+          #  TARGET_PLATFORMS: linux/amd64,linux/arm64
+          ## nezha
+          #- BUILD_CONTEXT: utils/nezha
           #  TARGET_PLATFORMS: linux/amd64,linux/arm64
           ## pptpd
           #- BUILD_CONTEXT: net/pptpd
