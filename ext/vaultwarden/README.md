@@ -7,6 +7,7 @@ docker run -d \
   --name vaultwarden \
   --restart unless-stopped \
   --network host \
+  --user nobody \
   --env-file $(pwd)/config.env
   -e ROCKET_ENV=production \
   -v $(pwd)/vaultwarden-data:/data \

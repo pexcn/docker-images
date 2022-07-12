@@ -7,9 +7,9 @@ services:
     restart: unless-stopped
     network_mode: host
     user: nobody
+    env_file: ./config.env
     environment:
       ROCKET_ENV: production
-    env_file: ./config.env
     volumes:
       - ./vaultwarden-data:/data
       - /etc/localtime:/etc/localtime:ro
