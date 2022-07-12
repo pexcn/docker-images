@@ -9,7 +9,7 @@ services:
     user: nobody
     environment:
       ROCKET_ENV: production
-    env_file: ./config.env
     volumes:
-      - /etc/localtime:/etc/localtime:ro
+      - ./vaultwarden-data/config.env:/.env
       - ./vaultwarden-data:/data
+      - /etc/localtime:/etc/localtime:ro
