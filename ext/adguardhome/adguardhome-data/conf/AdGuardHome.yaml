@@ -67,14 +67,15 @@ dns:
   parental_cache_size: 1048576
   cache_time: 30
   rewrites:
-  - domain: aircat.phicomm.com
-    answer: 192.168.1.10
-  - domain: phiclouds.phicomm.com
-    answer: 192.168.1.10
+  - domain: xtbg.gdzwfw.gov.cn
+    answer: 19.15.0.77
+  - domain: xtbgsafe.gdzwfw.gov.cn
+    answer: 19.15.0.77
+  - domain: mail.huadu.gov.cn
+    answer: 192.168.102.17
   blocked_services: []
   upstream_timeout: 10s
-  local_domain_name: lan
-  resolve_clients: true
+  private_networks: []
   use_private_ptr_resolvers: true
   local_ptr_upstreams: []
 tls:
@@ -110,10 +111,15 @@ filters:
   name: Yoyo Ad Servers
   id: 1636824666
 whitelist_filters: []
-user_rules: []
+user_rules:
+- '# JIKE-AC/AP'
+- '||ac.cnrouter.com^'
+- '||user.cnrouter.com^'
+- ""
 dhcp:
   enabled: false
   interface_name: ""
+  local_domain_name: lan
   dhcpv4:
     gateway_ip: ""
     subnet_mask: ""
@@ -127,10 +133,17 @@ dhcp:
     lease_duration: 86400
     ra_slaac_only: false
     ra_allow_slaac: false
-clients: []
+clients:
+  runtime_sources:
+    whois: true
+    arp: true
+    rdns: true
+    dhcp: true
+    hosts: true
+  persistent: []
 log_compress: true
 log_localtime: true
-log_max_backups: 2
+log_max_backups: 1
 log_max_size: 100
 log_max_age: 3
 log_file: ""
@@ -139,4 +152,4 @@ os:
   group: ""
   user: ""
   rlimit_nofile: 1048576
-schema_version: 12
+schema_version: 14
