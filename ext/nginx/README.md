@@ -12,5 +12,5 @@ docker run -d \
   -v $(pwd)/nginx-data/conf.d:/etc/nginx/conf.d \
   #-v $(pwd)/nginx-data/root:/srv/root \
   -v $(pwd)/../acme.sh/acme.sh-data:/cert \
-  nginx:1.21.6-alpine
+  nginx:1.22.0-alpine
 ```
