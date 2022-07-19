@@ -10,5 +10,5 @@ docker run -d \
   --privileged \
   -e TZ=Asia/Taipei \
   -v /root/docker/home-assistant:/config \
-  homeassistant/home-assistant:2021.9
+  homeassistant/home-assistant:2022.7
 ```

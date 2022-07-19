@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   home-assistant:
-    image: homeassistant/home-assistant:2021.9
+    image: homeassistant/home-assistant:2022.7
     container_name: home-assistant
     restart: unless-stopped
     network_mode: host
