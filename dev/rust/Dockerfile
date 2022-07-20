@@ -44,6 +44,9 @@ RUN git clone https://github.com/pexcn/dotfiles.git -b debian \
   && cd - \
   && rm -rf dotfiles
 
+ENV GIT_USER=
+ENV GIT_EMAIL=
+
 COPY rust.sh /usr/local/bin/
 
 ENTRYPOINT ["rust.sh"]
