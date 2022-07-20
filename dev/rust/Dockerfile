@@ -2,7 +2,7 @@
 # Dockerfile for Rust language development environment
 #
 
-FROM rust:1.61-slim-bullseye
+FROM rust:1.62-slim-bullseye
 LABEL maintainer="pexcn <i@pexcn.me>"
 
 # install packages
