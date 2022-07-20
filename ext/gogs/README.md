@@ -12,10 +12,10 @@ docker run -d \
   --network host \
   -e PUID="$(id -u git)" \
   -e PGID="$(id -g git)" \
+  -e TZ=Asia/Taipei \
   -v /root/docker/gogs-data:/data \
   -v /path/to/git-repos:/data/git/repos \
-  -v /etc/localtime:/etc/localtime:ro \
-  gogs/gogs:0.12.4
+  gogs/gogs:0.12.9
 ```
 
 ## 配置
@@ -26,4 +26,4 @@ docker run -d \
 
 ### 反向代理
 
-具体见：[@pexcn/docker-images/ext/caddy](https://github.com/pexcn/docker-images/tree/master/ext/caddy)
+详见: [@pexcn/docker-images/ext/nginx/nginx-data/conf.d/gogs.conf](https://github.com/pexcn/docker-images/blob/master/ext/nginx/nginx-data/conf.d/gogs.conf)
