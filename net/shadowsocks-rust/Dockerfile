@@ -87,10 +87,15 @@ RUN apk del .build-deps \
 FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
+RUN apk update \
+  && apk add --no-cache curl \
+  && rm -rf /var/cache/apk/*
+
 COPY --from=builder-ss /usr/local/bin/ /usr/local/bin/
 COPY --from=builder-obfs /usr/local/bin/ /usr/local/bin/
 COPY --from=builder-ray /usr/local/bin/ /usr/local/bin/
 COPY shadowsocks-rust.sh /usr/local/bin/
+COPY restart-container.sh /usr/local/bin/
 
 RUN cd /usr/local/bin/ \
   && ln -s ssservice service \
