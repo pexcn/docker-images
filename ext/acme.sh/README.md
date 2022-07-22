@@ -7,11 +7,11 @@ docker run -d \
   --name acme.sh \
   --restart unless-stopped \
   --network host \
-  -e HE_Username=user \
-  -e HE_Password=pass \
+  -e TZ=Asia/Taipei \
+  -e HE_Username=username \
+  -e HE_Password=password \
   -v /root/docker/acme.sh:/acme.sh \
-  -v /etc/localtime:/etc/localtime:ro \
-  neilpang/acme.sh:3.0.1 daemon
+  neilpang/acme.sh:3.0.4 daemon
 
 # issue
 docker exec -it acme.sh --issue --dns dns_he --dnssleep 30 -d pexcn.me -d *.pexcn.me -k ec-256 -m pexcn97@gmail.com
