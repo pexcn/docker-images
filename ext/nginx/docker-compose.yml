@@ -13,3 +13,5 @@ services:
       - ./nginx-data/conf.d:/etc/nginx/conf.d
       #- ./nginx-data/root:/srv/root
       - ../acme.sh/acme.sh-data:/cert
+    labels:
+      - "me.pexcn.container.name=nginx"

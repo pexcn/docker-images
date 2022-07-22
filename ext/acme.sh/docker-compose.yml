@@ -10,6 +10,9 @@ services:
       TZ: Asia/Taipei
       HE_Username: username
       HE_Password: password
+      DEPLOY_DOCKER_CONTAINER_LABEL: "me.pexcn.container.name=nginx"
+      DEPLOY_DOCKER_CONTAINER_RELOAD_CMD: "nginx -s reload"
     volumes:
       - ./acme.sh-data:/acme.sh
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     command: daemon
