@@ -11,6 +11,7 @@ docker run -d \
   -e HE_Username=username \
   -e HE_Password=password \
   -v $(pwd)/acme.sh-data:/acme.sh \
+  -v /var/run/docker.sock:/var/run/docker.sock:ro \
   neilpang/acme.sh:3.0.4 daemon
 
 # issue
