@@ -20,4 +20,6 @@ _restart_container_by_name() {
   curl --silent --unix-socket /var/run/docker.sock -X POST http://localhost/containers/${container_name}/restart
 }
 
-_restart_container_by_name "$1"
+for container_name in "$@"; do
+  _restart_container_by_name "$container_name"
+done

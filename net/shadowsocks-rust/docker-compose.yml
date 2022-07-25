@@ -72,7 +72,7 @@ services:
     restart: unless-stopped
     network_mode: host
     volumes:
-      - ../acme.sh/acme.sh/example.com_ecc/:/root/.acme.sh/example.com/
+      - ../acme.sh/acme.sh/example.com_ecc:/root/.acme.sh/example.com
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/localtime:/etc/localtime:ro
     labels:
@@ -99,7 +99,7 @@ services:
     restart: unless-stopped
     network_mode: host
     volumes:
-      - ../acme.sh/acme.sh/example.com_ecc/:/root/.acme.sh/example.com/
+      - ../acme.sh/acme.sh/example.com_ecc:/root/.acme.sh/example.com
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/localtime:/etc/localtime:ro
     labels:
