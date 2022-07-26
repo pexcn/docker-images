@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  rust:
+    image: pexcn/docker-images:rust
+    container_name: rust
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      GIT_USER: username
+      GIT_EMAIL: mail@example.com
+    volumes:
+      - ./rust-data:/vscode
