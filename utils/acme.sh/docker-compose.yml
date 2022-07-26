@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   acme.sh:
-    image: neilpang/acme.sh:3.0.4
+    image: pexcn/docker-images:acme.sh
     container_name: acme.sh
     restart: unless-stopped
     network_mode: host

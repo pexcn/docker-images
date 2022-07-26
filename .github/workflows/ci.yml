@@ -76,6 +76,9 @@ jobs:
           # wireguard
           - BUILD_CONTEXT: net/wireguard
             TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # acme.sh
+          - BUILD_CONTEXT: net/acme.sh
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # cron
           - BUILD_CONTEXT: utils/cron
             TARGET_PLATFORMS: linux/amd64,linux/arm64
