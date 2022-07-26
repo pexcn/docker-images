@@ -72,11 +72,8 @@ services:
     restart: unless-stopped
     network_mode: host
     volumes:
-      - ../acme.sh/acme.sh/example.com_ecc:/root/.acme.sh/example.com
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ../acme.sh/acme.sh-data/example.com_ecc:/root/.acme.sh/example.com
       - /etc/localtime:/etc/localtime:ro
-    labels:
-      - "me.pexcn.container.name=ssserver-websocket"
     command: >
       ssservice server
         --server-addr 0.0.0.0:443
@@ -99,11 +96,8 @@ services:
     restart: unless-stopped
     network_mode: host
     volumes:
-      - ../acme.sh/acme.sh/example.com_ecc:/root/.acme.sh/example.com
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ../acme.sh/acme.sh-data/example.com_ecc:/root/.acme.sh/example.com
       - /etc/localtime:/etc/localtime:ro
-    labels:
-      - "me.pexcn.container.name=ssserver-grpc"
     command: >
       ssservice server
         --server-addr 0.0.0.0:993
