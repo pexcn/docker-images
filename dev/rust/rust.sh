@@ -6,9 +6,9 @@ NON_ROOT_USER="vscode"
 NON_ROOT_USER_HOME=$(eval echo "~$NON_ROOT_USER")
 
 _graceful_stop() {
-  echo "Container stopped."
-
   [ "$ENABLE_SSH_DAEMON" = 1 ] && service ssh stop
+
+  echo "Container stopped."
   exit 0
 }
 
