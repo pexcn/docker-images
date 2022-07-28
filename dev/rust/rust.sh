@@ -27,12 +27,12 @@ start_container() {
   # Debian dash shell doesn't recognize SIGTERM signal, use signal number 15 instead.
   trap _graceful_stop 15
 
-  # TODO: execute extra commands by arguments
-  #"$@"
+  # allow execute extra commands by arguments
+  "$@"
 
   sleep infinity &
   wait
 }
 
 git_global_config
-start_container
+start_container "$@"
