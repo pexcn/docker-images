@@ -1,5 +1,6 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -e
+set -o pipefail
 
 _graceful_stop() {
   echo "Container stopped."
@@ -23,9 +24,7 @@ git_global_config() {
 start_container() {
   echo "Container started."
 
-  # Cause: /bin/sh -> dash
-  # Debian dash shell doesn't recognize SIGTERM signal, use signal number 15 instead.
-  trap _graceful_stop 15
+  trap _graceful_stop SIGTERM
 
   # allow execute extra commands by arguments
   "$@"

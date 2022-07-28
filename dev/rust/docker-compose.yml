@@ -11,3 +11,4 @@ services:
       GIT_EMAIL: mail@example.com
     volumes:
       - ./rust-data:/vscode
+    #command: echo "Hello Rust!"
