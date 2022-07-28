@@ -10,5 +10,13 @@ services:
       GIT_USER: username
       GIT_EMAIL: mail@example.com
     volumes:
-      - ./rust-data:/vscode
+      - rust-data:/vscode
     #command: echo "Hello Rust!"
+
+volumes:
+  rust-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/rust-data
