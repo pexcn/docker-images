@@ -11,6 +11,7 @@ RUN apt-get update \
       apt-utils dialog \
   && apt-get install --no-install-recommends -y \
       bash-completion curl wget net-tools git locales procps nano tree file \
+      openssh-server \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
@@ -46,6 +47,8 @@ RUN git clone https://github.com/pexcn/dotfiles.git -b debian \
 
 ENV GIT_USER=
 ENV GIT_EMAIL=
+ENV ENABLE_SSH_DAEMON=
+ENV SSH_PORT=2222
 
 COPY rust.sh /usr/local/bin/
 
