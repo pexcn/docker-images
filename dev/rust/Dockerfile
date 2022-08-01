@@ -5,6 +5,9 @@
 FROM rust:1.62-slim-bullseye
 LABEL maintainer="pexcn <i@pexcn.me>"
 
+# install components
+RUN rustup component add rustfmt clippy
+
 # install packages
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
