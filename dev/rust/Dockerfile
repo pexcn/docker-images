@@ -57,7 +57,7 @@ RUN git clone https://github.com/pexcn/dotfiles.git -b debian \
 
 ENV GIT_USER=
 ENV GIT_EMAIL=
-ENV ENABLE_SSH_DAEMON=
+ENV ENABLE_SSHD=
 ENV SSH_PORT=2222
 ENV DOCKER_GID=
 

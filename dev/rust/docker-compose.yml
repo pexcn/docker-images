@@ -9,7 +9,7 @@ services:
     environment:
       GIT_USER: username
       GIT_EMAIL: mail@example.com
-      #ENABLE_SSH_DAEMON: 0
+      #ENABLE_SSHD: 0
       #SSH_PORT: 2222
       #DOCKER_GID: 101
     volumes:

@@ -6,7 +6,7 @@ NON_ROOT_USER="vscode"
 NON_ROOT_USER_HOME=$(eval echo "~$NON_ROOT_USER")
 
 _graceful_stop() {
-  [ "$ENABLE_SSH_DAEMON" = 1 ] && service ssh stop
+  [ "$ENABLE_SSHD" = 1 ] && service ssh stop
 
   echo "Container stopped."
   exit 0
@@ -26,7 +26,7 @@ git_global_config() {
 }
 
 ssh_daemon_config() {
-  [ "$ENABLE_SSH_DAEMON" = 1 ] || return 0
+  [ "$ENABLE_SSHD" = 1 ] || return 0
 
   if [[ -n "$SSH_PORT" && "$SSH_PORT" != 22 ]]; then
     if [ ! -f /etc/ssh/sshd_config.d/ssh_port.conf ]; then
@@ -56,7 +56,7 @@ ssh_daemon_config() {
 }
 
 docker_group_config() {
-  [ "$ENABLE_SSH_DAEMON" = 1 ] || return 0
+  [ "$ENABLE_SSHD" = 1 ] || return 0
 
   if ! getent group docker &>/dev/null; then
     [ -n "$DOCKER_GID" ] && groupadd -g $DOCKER_GID docker || groupadd docker
