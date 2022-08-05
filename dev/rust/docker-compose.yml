@@ -11,13 +11,11 @@ services:
       GIT_EMAIL: mail@example.com
       #ENABLE_SSHD: 0
       #SSH_PORT: 2222
-      #DOCKER_GID: 101
     volumes:
       - rust-data:/vscode
       - /root/.ssh/authorized_keys:/root/.ssh/authorized_keys:ro
       - /etc/ssh/ssh_host_ed25519_key:/etc/ssh/ssh_host_ed25519_key:ro
       - /etc/ssh/ssh_host_ed25519_key.pub:/etc/ssh/ssh_host_ed25519_key.pub:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
     #command: echo "Hello Rust!"
 
 volumes:

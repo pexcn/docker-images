@@ -55,18 +55,6 @@ ssh_daemon_config() {
   service ssh start
 }
 
-docker_group_config() {
-  [ "$ENABLE_SSHD" = 1 ] || return 0
-
-  if ! getent group docker &>/dev/null; then
-    [ -n "$DOCKER_GID" ] && groupadd -g $DOCKER_GID docker || groupadd docker
-  fi
-
-  if ! id -nG "$NON_ROOT_USER" | grep -qw "docker"; then
-    usermod -aG docker $NON_ROOT_USER
-  fi
-}
-
 start_container() {
   echo "Container started."
 
@@ -81,5 +69,4 @@ start_container() {
 
 git_global_config
 ssh_daemon_config
-docker_group_config
 start_container "$@"

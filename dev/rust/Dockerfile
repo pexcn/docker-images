@@ -18,13 +18,6 @@ RUN apt-get update \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
-# install docker-cli
-ARG DOCKER_CLI_VER=20.10.17~3-0
-RUN DEB_ARCH="$(dpkg --print-architecture)" \
-  && wget "https://download.docker.com/linux/debian/dists/bullseye/pool/stable/${DEB_ARCH}/docker-ce-cli_${DOCKER_CLI_VER}~debian-bullseye_${DEB_ARCH}.deb" \
-  && dpkg -i docker-ce-cli_${DOCKER_CLI_VER}~debian-bullseye_${DEB_ARCH}.deb \
-  && rm docker-ce-cli_${DOCKER_CLI_VER}~debian-bullseye_${DEB_ARCH}.deb
-
 # create non-root user
 ARG USER_NAME=vscode
 ARG USER_UID=1000
@@ -59,7 +52,6 @@ ENV GIT_USER=
 ENV GIT_EMAIL=
 ENV ENABLE_SSHD=
 ENV SSH_PORT=2222
-ENV DOCKER_GID=
 
 COPY rust.sh /usr/local/bin/
 
