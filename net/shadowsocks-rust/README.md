@@ -71,6 +71,26 @@ ssservice local \
   -U
 
 #
+# Redir mode
+#
+ssservice local \
+  --protocol redir \
+  --local-addr 0.0.0.0:1234 \
+  --server-addr 111.222.33.44:2077 \
+  --password password \
+  --encrypt-method aes-128-gcm \
+  --timeout 3600 \
+  --udp-timeout 300 \
+  --udp-max-associations 1024 \
+  --nofile 1048576 \
+  --tcp-keep-alive 300 \
+  --tcp-fast-open \
+  --tcp-no-delay \
+  --tcp-redir tproxy \
+  --udp-redir tproxy \
+  -U
+
+#
 # Plugin options
 #
 # --plugin "obfs-local" --plugin-opts "obfs=tls;obfs-host=www.bing.com;fast-open"
