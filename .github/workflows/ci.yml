@@ -103,6 +103,9 @@ jobs:
           # speedtest-go
           - BUILD_CONTEXT: utils/speedtest-go
             TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # transproxy
+          - BUILD_CONTEXT: utils/transproxy
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # unixbench
           - BUILD_CONTEXT: utils/unixbench
             TARGET_PLATFORMS: linux/amd64,linux/arm64
