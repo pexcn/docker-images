@@ -11,4 +11,11 @@ services:
       DISABLE_IPV6: 0
     volumes:
       - /lib/modules:/lib/modules:ro
+      - /etc/localtime:/etc/localtime:ro
       - ./transproxy-data:/etc/transproxy
+    command: >
+      --tcp-port 1234
+      --src-direct /etc/transproxy/src-direct.txt
+      --dst-direct /etc/transproxy/dst-direct.txt
+      --server 111.222.33.44
+      --self-proxy
