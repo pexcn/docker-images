@@ -2,7 +2,7 @@
 set -e
 set -o pipefail
 
-[ "$USE_USERSPACE_MODE" == 1 ] && PATH=/srv/wireguard-go:$PATH
+[ "$USE_USERSPACE_MODE" != 1 ] || PATH=/srv/wireguard-go:$PATH
 
 _make_config_secure() {
   chmod 600 /etc/wireguard/*.conf
@@ -30,27 +30,30 @@ _graceful_stop() {
   _restore_sysctl
 }
 
-_apply_sysctl() {
-  sysctl "$1" >> /srv/origin.conf
-  sysctl -w "$1=$2"
+_backup_sysctl() {
+  sysctl "$1" >> /tmp/sysctl-origin.conf
 }
 
 _restore_sysctl() {
-  sysctl -p /srv/origin.conf
-  rm /srv/origin.conf
+  sysctl -pq /tmp/sysctl-origin.conf
+  rm /tmp/sysctl-origin.conf
+}
+
+_apply_sysctl() {
+  [ $(sysctl -n "$1") = "$2" ] || sysctl -wq "$1"="$2"
 }
 
 setup_sysctl() {
-  [ -f /srv/origin.conf ] && rm /srv/origin.conf
-
+  [ ! -f /tmp/sysctl-origin.conf ] || rm /tmp/sysctl-origin.conf
+  _backup_sysctl net.ipv4.ip_forward
   _apply_sysctl net.ipv4.ip_forward 1
 }
 
 start_wireguard() {
+  trap _graceful_stop SIGTERM
+
   _make_config_secure
   _up_wg_interface
-
-  trap _graceful_stop SIGTERM
 
   if [[ -z "$PEER_RESOLVE_INTERVAL" || "$PEER_RESOLVE_INTERVAL" = 0 ]]; then
     sleep infinity &
