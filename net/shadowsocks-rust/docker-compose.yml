@@ -43,29 +43,29 @@ services:
         --tcp-no-delay
         -U
 
-  ssserver-websocket:
-    image: pexcn/docker-images:shadowsocks-rust
-    container_name: ssserver-websocket
-    restart: unless-stopped
-    network_mode: host
-    volumes:
-      - ../acme.sh/acme.sh-data/example.com_ecc:/root/.acme.sh/example.com
-      - /etc/localtime:/etc/localtime:ro
-    command: >
-      ssservice server
-        --server-addr 0.0.0.0:443
-        --password password
-        --encrypt-method chacha20-ietf-poly1305
-        --timeout 3600
-        --udp-timeout 300
-        --udp-max-associations 1024
-        --nofile 1048576
-        --tcp-keep-alive 300
-        --tcp-fast-open
-        --tcp-no-delay
-        -U
-        --plugin "xray-plugin"
-        --plugin-opts "server;tls;fast-open;host=example.com;path=/ws"
+  #ssserver-websocket:
+  #  image: pexcn/docker-images:shadowsocks-rust
+  #  container_name: ssserver-websocket
+  #  restart: unless-stopped
+  #  network_mode: host
+  #  volumes:
+  #    - ../acme.sh/acme.sh-data/example.com_ecc:/root/.acme.sh/example.com
+  #    - /etc/localtime:/etc/localtime:ro
+  #  command: >
+  #    ssservice server
+  #      --server-addr 0.0.0.0:443
+  #      --password password
+  #      --encrypt-method chacha20-ietf-poly1305
+  #      --timeout 3600
+  #      --udp-timeout 300
+  #      --udp-max-associations 1024
+  #      --nofile 1048576
+  #      --tcp-keep-alive 300
+  #      --tcp-fast-open
+  #      --tcp-no-delay
+  #      -U
+  #      --plugin "xray-plugin"
+  #      --plugin-opts "server;tls;fast-open;host=example.com;path=/ws"
 
   ssserver-grpc:
     image: pexcn/docker-images:shadowsocks-rust
