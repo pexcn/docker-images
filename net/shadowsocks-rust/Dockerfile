@@ -10,12 +10,12 @@ FROM rustlang/rust:nightly-alpine AS builder-ss
 RUN apk update \
   && apk add --no-cache --virtual .build-deps musl-dev git
 
-ARG SS_VERSION=v1.14.3
+ARG SS_VERSION=v1.15.0-alpha.8
 RUN git clone https://github.com/shadowsocks/shadowsocks-rust.git --branch $SS_VERSION \
   && cd shadowsocks-rust \
   && case "$(apk --print-arch)" in \
-       aarch64) build_features="local-redir local-tun armv8 neon";; \
-       *) build_features="local-redir local-tun";; \
+       aarch64) build_features="local-redir local-tun aead-cipher-2022-extra armv8 neon";; \
+       *) build_features="local-redir local-tun aead-cipher-2022-extra";; \
      esac \
   && cargo build --release --features "$build_features" \
   && install target/release/ssservice target/release/ssserver target/release/sslocal target/release/ssmanager target/release/ssurl /usr/local/bin/ \
