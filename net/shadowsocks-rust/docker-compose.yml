@@ -1,9 +1,51 @@
 version: '3.9'
 
 services:
-  ssserver-aes:
+  #ssserver-aes:
+  #  image: pexcn/docker-images:shadowsocks-rust
+  #  container_name: ssserver-aes
+  #  restart: unless-stopped
+  #  network_mode: host
+  #  volumes:
+  #    - /etc/localtime:/etc/localtime:ro
+  #  command: >
+  #    ssservice server
+  #      --server-addr 0.0.0.0:1776
+  #      --password password
+  #      --encrypt-method aes-128-gcm
+  #      --timeout 3600
+  #      --udp-timeout 300
+  #      --udp-max-associations 1024
+  #      --nofile 1048576
+  #      --tcp-keep-alive 300
+  #      --tcp-fast-open
+  #      --tcp-no-delay
+  #      -U
+
+  #ssserver-chacha:
+  #  image: pexcn/docker-images:shadowsocks-rust
+  #  container_name: ssserver-chacha
+  #  restart: unless-stopped
+  #  network_mode: host
+  #  volumes:
+  #    - /etc/localtime:/etc/localtime:ro
+  #  command: >
+  #    ssservice server
+  #      --server-addr 0.0.0.0:1984
+  #      --password password
+  #      --encrypt-method chacha20-ietf-poly1305
+  #      --timeout 3600
+  #      --udp-timeout 300
+  #      --udp-max-associations 1024
+  #      --nofile 1048576
+  #      --tcp-keep-alive 300
+  #      --tcp-fast-open
+  #      --tcp-no-delay
+  #      -U
+
+  ssserver-2022-aes:
     image: pexcn/docker-images:shadowsocks-rust
-    container_name: ssserver-aes
+    container_name: ssserver-2022-aes
     restart: unless-stopped
     network_mode: host
     volumes:
@@ -11,8 +53,8 @@ services:
     command: >
       ssservice server
         --server-addr 0.0.0.0:1776
-        --password password
-        --encrypt-method aes-128-gcm
+        --password cGFzc3dvcmRwYXNzd29yZHBhc3N3b3JkcGFzc3dvcmQ=
+        --encrypt-method 2022-blake3-aes-128-gcm
         --timeout 3600
         --udp-timeout 300
         --udp-max-associations 1024
@@ -22,9 +64,9 @@ services:
         --tcp-no-delay
         -U
 
-  ssserver-chacha20:
+  ssserver-2022-chacha:
     image: pexcn/docker-images:shadowsocks-rust
-    container_name: ssserver-chacha20
+    container_name: ssserver-2022-chacha
     restart: unless-stopped
     network_mode: host
     volumes:
@@ -32,8 +74,8 @@ services:
     command: >
       ssservice server
         --server-addr 0.0.0.0:1984
-        --password password
-        --encrypt-method chacha20-ietf-poly1305
+        --password cGFzc3dvcmRwYXNzd29yZHBhc3N3b3JkcGFzc3dvcmQ=
+        --encrypt-method 2022-blake3-chacha8-poly1305
         --timeout 3600
         --udp-timeout 300
         --udp-max-associations 1024
@@ -77,7 +119,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
     command: >
       ssservice server
-        --server-addr 0.0.0.0:993
+        --server-addr 0.0.0.0:443
         --password password
         --encrypt-method chacha20-ietf-poly1305
         --timeout 3600
