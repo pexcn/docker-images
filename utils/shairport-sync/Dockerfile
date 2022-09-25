@@ -29,7 +29,7 @@ RUN apk update \
 FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
-ARG VERSION=3.3.9-r0
+ARG VERSION=3.3.9-r1
 RUN apk update \
   && apk add --no-cache dbus avahi alsa-utils alsa-lib \
   && apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/edge/testing shairport-sync=$VERSION
