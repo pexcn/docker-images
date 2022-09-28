@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  udp2raw:
+    image: pexcn/docker-images:udp2raw
+    container_name: udp2raw
+    restart: unless-stopped
+    network_mode: host
+    privileged: true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    #command: >
+    #  -s -l 0.0.0.0:1986 -r 0.0.0.0:1985 --raw-mode faketcp --cipher-mode none --auth-mode none -a

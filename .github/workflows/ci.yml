@@ -73,6 +73,9 @@ jobs:
           # trojan
           - BUILD_CONTEXT: net/trojan
             TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # udp2raw
+          - BUILD_CONTEXT: net/udp2raw
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # udpspeeder
           - BUILD_CONTEXT: net/udpspeeder
             TARGET_PLATFORMS: linux/amd64,linux/arm64
