@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  finalspeed:
+    image: pexcn/docker-images:finalspeed
+    container_name: finalspeed
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TZ: Asia/Taipei
+    volumes:
+      - ./finalspeed-data/client_config.json:/fs/client_config.json
+      - ./finalspeed-data/port_map.json:/fs/port_map.json
+    command: server 1234

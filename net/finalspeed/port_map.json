@@ -1,0 +1,17 @@
+{
+    "map_list": [
+        {
+            // 备注名
+            "name": "shadowsocks",
+            // 目标端口
+            "dst_port": 1234,
+            // 本地端口
+            "listen_port": 12345
+        },
+        {
+            "name": "socks5"
+            "dst_port": 1080,
+            "listen_port": 10800,
+        }
+    ]
+}

@@ -1,0 +1,14 @@
+{
+    // 服务器地址
+    "server_address": "1.2.3.4",
+    // 服务器端口
+    "server_port": 150,
+    // 协议
+    "protocal": "udp",
+    // Socks5 端口
+    "socks5_port": 1083,
+    // 上传速度 [byte/s]
+    "upload_speed": 3750000,
+    // 下载速度 [byte/s]
+    "download_speed": 18750000
+}
