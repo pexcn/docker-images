@@ -6,9 +6,11 @@ services:
     container_name: finalspeed
     restart: unless-stopped
     network_mode: host
+    privileged: true
     environment:
       TZ: Asia/Taipei
-    volumes:
-      - ./finalspeed-data/client_config.json:/fs/client_config.json
-      - ./finalspeed-data/port_map.json:/fs/port_map.json
+    #volumes:
+    #  - ./finalspeed-data/client_config.json:/fs/client_config.json
+    #  - ./finalspeed-data/port_map.json:/fs/port_map.json
     command: server 1234
+    #command: client
