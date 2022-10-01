@@ -10,7 +10,7 @@ services:
     environment:
       TZ: Asia/Taipei
     #volumes:
-    #  - ./finalspeed-data/client_config.json:/fs/client_config.json
-    #  - ./finalspeed-data/port_map.json:/fs/port_map.json
+    #  - ./finalspeed-data/client_config.json:/fs/client_config.json:ro
+    #  - ./finalspeed-data/port_map.json:/fs/port_map.json:ro
     command: server 1234
     #command: client

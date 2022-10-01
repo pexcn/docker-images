@@ -9,7 +9,7 @@ docker run -d \
   --network host \
   --privileged \
   -e TZ=Asia/Taipei \
-  -v $(pwd)/finalspeed-data/client_config.json:/fs/client_config.json \
-  -v $(pwd)/finalspeed-data/port_map.json:/fs/port_map.json \
+  -v $(pwd)/finalspeed-data/client_config.json:/fs/client_config.json:ro \
+  -v $(pwd)/finalspeed-data/port_map.json:/fs/port_map.json:ro \
   pexcn/docker-images:finalspeed [mode] [server_port]
 ```
