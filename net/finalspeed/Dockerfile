@@ -7,7 +7,7 @@
 #
 FROM alpine AS builder
 
-ARG VERSION=20220930
+ARG VERSION=20221002
 RUN apk update \
   && apk add --no-cache --virtual .build-deps curl \
   && mkdir finalspeed \
