@@ -21,13 +21,19 @@ error() {
   printf "${red}[${time}] [ERROR]: ${clear}%s\n" "$*" >&2
 }
 
-_clean_up() {
+_clean_rules() {
+  info "clean iptables rules."
+  eval "$(iptables-save | grep 'tun_fs' | sed 's/-A/iptables -D/')"
+}
+
+_clean_dir() {
   ! [ -d /fs/cnf ] || { info "clean /fs/cnf directory."; rm -r /fs/cnf; }
 }
 
 _graceful_stop() {
   warn "Caught SIGTERM or SIGINT signal, graceful stopping..."
-  _clean_up
+  _clean_rules
+  _clean_dir
 }
 
 _custom_server_port() {
