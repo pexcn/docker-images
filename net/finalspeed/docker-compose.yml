@@ -9,6 +9,7 @@ services:
     privileged: true
     environment:
       TZ: Asia/Taipei
+      JAVA_OPTS: "-server -Xmx512m -Xms512m"
     #volumes:
     #  - ./finalspeed-data/client_config.json:/fs/client_config.json:ro
     #  - ./finalspeed-data/port_map.json:/fs/port_map.json:ro

@@ -33,6 +33,8 @@ COPY --from=builder /finalspeed/ /fs/
 COPY *.json /fs/
 COPY finalspeed.sh /usr/local/bin/
 
+ENV JAVA_OPTS=
+
 WORKDIR /fs
 ENTRYPOINT ["finalspeed.sh"]
 CMD ["server"]
