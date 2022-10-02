@@ -7,6 +7,9 @@ services:
     restart: unless-stopped
     network_mode: host
     privileged: true
+    logging:
+      options:
+        max-size: 10m
     environment:
       TZ: Asia/Taipei
       JAVA_OPTS: "-server -Xmx512m -Xms512m"
