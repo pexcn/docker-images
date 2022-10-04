@@ -5,8 +5,6 @@
     "server_port": 150,
     // 协议
     "protocal": "udp",
-    // Socks5 端口
-    "socks5_port": 1083,
     // 上传速度 [byte/s]
     "upload_speed": 3574690,
     // 下载速度 [byte/s]
