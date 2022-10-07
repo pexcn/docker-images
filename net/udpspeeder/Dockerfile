@@ -10,13 +10,13 @@ FROM alpine AS builder
 ARG VERSION=fd72361deae7eebbaa814c3869babfd5539b1162
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git make g++ \
-  && git clone https://github.com/wangyu-/UDPspeeder.git \
-  && cd UDPspeeder \
+  && git clone https://github.com/wangyu-/UDPspeeder.git udpspeeder \
+  && cd udpspeeder \
   && git checkout $VERSION \
   && make OPT="-s -pipe -Wl,--build-id=none" \
   && install speederv2 /usr/local/bin/udpspeeder \
-  && cd .. \
-  && rm -r UDPspeeder \
+  && cd - \
+  && rm -r udpspeeder \
   && apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
@@ -25,6 +25,10 @@ RUN apk update \
 #
 FROM alpine:3.16
 LABEL maintainer="pexcn <i@pexcn.me>"
+
+RUN apk update \
+  && apk add --no-cache tzdata \
+  && rm -rf /var/cache/apk/*
 
 COPY --from=builder /usr/local/bin/udpspeeder /usr/local/bin/
 
