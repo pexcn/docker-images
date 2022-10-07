@@ -31,7 +31,6 @@ RUN apk update \
   && rm -rf /var/cache/apk/*
 
 COPY --from=builder /usr/local/bin/udp2raw /usr/local/bin/
-COPY udp2raw.sh /usr/local/bin/
 
-ENTRYPOINT ["udp2raw.sh"]
+ENTRYPOINT ["udp2raw"]
 CMD ["--help"]
