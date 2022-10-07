@@ -27,7 +27,7 @@ FROM alpine:3.16
 LABEL maintainer="pexcn <i@pexcn.me>"
 
 RUN apk update \
-  && apk add --no-cache iptables tzdata \
+  && apk add --no-cache iptables ip6tables tzdata \
   && rm -rf /var/cache/apk/*
 
 COPY --from=builder /usr/local/bin/udp2raw /usr/local/bin/
