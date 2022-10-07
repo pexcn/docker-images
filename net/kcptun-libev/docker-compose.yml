@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  kcptun-libev:
+    image: pexcn/docker-images:kcptun-libev
+    container_name: kcptun-libev
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TZ: Asia/Taipei
+    volumes:
+      #- ./kcptun-libev-data/server.json:/etc/kcptun-libev/server.json
+      - ./kcptun-libev-data/client.json:/etc/kcptun-libev/client.json
+    command: -c /etc/kcptun-libev/client.json

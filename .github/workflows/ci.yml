@@ -55,6 +55,9 @@ jobs:
           # ipt2socks
           - BUILD_CONTEXT: net/ipt2socks
             TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # kcptun-libev
+          - BUILD_CONTEXT: net/kcptun-libev
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # mtg
           - BUILD_CONTEXT: net/mtg
             TARGET_PLATFORMS: linux/amd64,linux/arm64
