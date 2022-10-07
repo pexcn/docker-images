@@ -1,0 +1,18 @@
+{
+    "connect": "127.0.0.1:1984",
+    "udp_bind": "0.0.0.0:1983",
+    "kcp": {
+        "mtu": 1400,
+        "sndwnd": 256,
+        "rcvwnd": 256,
+        "nodelay": 0,
+        "interval": 10,
+        "resend": 3,
+        "nc": 1
+    },
+    "udp": {
+        "sndbuf": 1048576,
+        "rcvbuf": 1048576
+    },
+    "loglevel": 2
+}
