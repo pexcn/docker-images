@@ -7,7 +7,13 @@ services:
     restart: unless-stopped
     network_mode: host
     privileged: true
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-    #command: >
-    #  -s -l 0.0.0.0:1986 -r 0.0.0.0:1985 --raw-mode faketcp --cipher-mode none --auth-mode none -a
+    environment:
+      TZ: Asia/Taipei
+    command: >
+      -s -l 0.0.0.0:1501 -r 127.0.0.1:1500
+      --raw-mode faketcp --cipher-mode none --auth-mode none -a
+      --dev eth0
+      --log-level 3
+      --mtu-warn 1375
+      --hb-mode 0
+      --wait-lock
