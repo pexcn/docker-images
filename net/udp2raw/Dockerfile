@@ -26,11 +26,12 @@ RUN apk update \
 FROM alpine:3.16
 LABEL maintainer="pexcn <i@pexcn.me>"
 
-COPY --from=builder /usr/local/bin/udp2raw /usr/local/bin/
-
 RUN apk update \
-  && apk add --no-cache iptables \
+  && apk add --no-cache iptables tzdata \
   && rm -rf /var/cache/apk/*
 
-ENTRYPOINT ["udp2raw"]
+COPY --from=builder /usr/local/bin/udp2raw /usr/local/bin/
+COPY udp2raw.sh /usr/local/bin/
+
+ENTRYPOINT ["udp2raw.sh"]
 CMD ["--help"]
