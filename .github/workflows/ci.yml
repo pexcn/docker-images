@@ -70,6 +70,9 @@ jobs:
           # shadowsocks-rust
           - BUILD_CONTEXT: net/shadowsocks-rust
             TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # smartdns
+          - BUILD_CONTEXT: net/smartdns
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # strongswan
           - BUILD_CONTEXT: net/strongswan
             TARGET_PLATFORMS: linux/amd64,linux/arm64

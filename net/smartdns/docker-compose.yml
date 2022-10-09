@@ -1,0 +1,12 @@
+version: '3.9'
+
+services:
+  smartdns:
+    image: pexcn/docker-images:smartdns
+    container_name: smartdns
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TZ: Asia/Taipei
+    volumes:
+      - ./smartdns-data/smartdns-china.conf:/etc/smartdns/smartdns.conf
