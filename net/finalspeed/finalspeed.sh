@@ -45,13 +45,13 @@ _custom_server_port() {
 start_server() {
   info "start finalspeed server."
   [ -z "$1" ] || _custom_server_port "$1"
-  java $JAVA_OPTS -jar /fs/fss.jar &
+  exec java $JAVA_OPTS -jar /fs/fss.jar &
   wait
 }
 
 start_client() {
   info "start finalspeed client."
-  xvfb-run -s "-screen 0 320x240x8" java $JAVA_OPTS -jar /fs/fsc.jar -b &
+  xvfb-run -s "-screen 0 320x240x8" exec java $JAVA_OPTS -jar /fs/fsc.jar -b &
   wait
 }
 
