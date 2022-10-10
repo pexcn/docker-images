@@ -10,7 +10,7 @@ FROM rustlang/rust:nightly-alpine AS builder-ss
 RUN apk update \
   && apk add --no-cache --virtual .build-deps musl-dev git
 
-ARG SS_VERSION=v1.15.0-alpha.8
+ARG SS_VERSION=v1.15.0-alpha.9
 RUN git clone https://github.com/shadowsocks/shadowsocks-rust.git --branch $SS_VERSION \
   && cd shadowsocks-rust \
   && case "$(apk --print-arch)" in \
