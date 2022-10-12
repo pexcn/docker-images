@@ -32,6 +32,7 @@ LABEL maintainer="pexcn <i@pexcn.me>"
 ARG VERSION=3.3.9-r1
 RUN apk update \
   && apk add --no-cache dbus avahi alsa-utils alsa-lib \
+  && sed -i 's/v3.16/edge/' /etc/apk/repositories \
   && apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/edge/testing shairport-sync=$VERSION
 
 COPY --from=builder /usr/local/bin/sps-alsa-explore /usr/local/bin/
