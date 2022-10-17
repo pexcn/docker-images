@@ -10,6 +10,10 @@ services:
     logging:
       options:
         max-size: 10m
+    deploy:
+      resources:
+        limits:
+          memory: 768M
     environment:
       TZ: Asia/Taipei
       JAVA_OPTS: "-server -Xmx512m -Xms512m"
