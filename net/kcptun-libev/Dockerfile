@@ -7,12 +7,11 @@
 #
 FROM alpine AS builder
 
-ARG VERSION=df2fd8d219535a9ff37e309c7f1fc42d7168a86b
+ARG VERSION=v2.0.1
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git cmake ninja gcc musl-dev libev-dev libsodium-dev libsodium-static \
-  && git clone https://github.com/hexian000/kcptun-libev.git \
+  && git clone https://github.com/hexian000/kcptun-libev.git --branch $VERSION \
   && cd kcptun-libev \
-  && git checkout $VERSION \
   && mkdir build \
   && cmake \
        -DCMAKE_BUILD_TYPE="Release" \
