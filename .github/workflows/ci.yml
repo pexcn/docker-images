@@ -49,9 +49,6 @@ jobs:
           # finalspeed
           - BUILD_CONTEXT: net/finalspeed
             TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # frp
-          - BUILD_CONTEXT: net/frp
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # ipt2socks
           - BUILD_CONTEXT: net/ipt2socks
             TARGET_PLATFORMS: linux/amd64,linux/arm64
@@ -139,6 +136,9 @@ jobs:
           ## buster-kernel
           #- BUILD_CONTEXT: buildbot/buster-kernel
           #  TARGET_PLATFORMS: linux/amd64
+          ## frp
+          #- BUILD_CONTEXT: net/frp
+          #  TARGET_PLATFORMS: linux/amd64,linux/arm64
           ## hev-socks5-server
           #- BUILD_CONTEXT: net/hev-socks5-server
           #  TARGET_PLATFORMS: linux/amd64,linux/arm64
