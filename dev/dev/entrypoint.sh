@@ -40,14 +40,13 @@ setup_ssh_daemon() {
     fi
   fi
 
-  service ssh start
-  info "sshd started."
+  info "$(service ssh start)"
 }
 
 graceful_stop() {
   warn "caught SIGTERM or SIGINT signal, graceful stopping..."
 
-  [ "$ENABLE_SSHD" != 1 ] || { service ssh stop; info "sshd stopped"; }
+  [ "$ENABLE_SSHD" != 1 ] || info "$(service ssh stop)"
 
   info "container stopped."
   exit 0
