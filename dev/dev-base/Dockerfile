@@ -1,5 +1,5 @@
 #
-# Dockerfile for base development environment
+# Dockerfile for development base environment
 #
 
 FROM debian:bullseye-slim
@@ -10,7 +10,8 @@ RUN apt-get update \
   && apt-get install --no-install-recommends -y \
       apt-utils dialog \
   && apt-get install --no-install-recommends -y \
-      bash-completion curl wget net-tools git locales procps nano tree file \
+      bash-completion ca-certificates curl wget net-tools \
+      git locales procps nano tree file \
   && apt-get install --no-install-recommends -y \
       openssh-server \
   && apt-get clean \
