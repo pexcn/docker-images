@@ -24,6 +24,9 @@ RUN apt-get update \
   && ./rustup-init -y --no-modify-path --profile minimal --default-toolchain $RUST_VERSION --default-host ${rust_arch} \
   && rm rustup-init \
   && chmod -R a+w $RUSTUP_HOME $CARGO_HOME \
+  && rustup --version \
+  && cargo --version \
+  && rustc --version \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
