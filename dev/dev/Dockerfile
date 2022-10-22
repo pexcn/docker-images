@@ -50,7 +50,7 @@ RUN git clone https://github.com/pexcn/dotfiles.git -b debian \
 ENV GIT_USER=
 ENV GIT_EMAIL=
 ENV ENABLE_SSHD=
-ENV SSH_PORT=2222
+ENV SSH_PORT=
 
 COPY function.sh /usr/local/lib/
 COPY entrypoint.sh /usr/local/bin/
