@@ -51,6 +51,7 @@ ENV GIT_EMAIL=
 ENV ENABLE_SSHD=
 ENV SSH_PORT=2222
 
-COPY base.sh /usr/local/bin/
+COPY function.sh /usr/local/lib/
+COPY entrypoint.sh /usr/local/bin/
 
-ENTRYPOINT ["base.sh"]
+ENTRYPOINT ["entrypoint.sh"]

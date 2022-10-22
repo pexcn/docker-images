@@ -1,28 +1,9 @@
 #!/usr/bin/env bash
 
+. /usr/local/lib/function.sh
+
 NON_ROOT_USER="vscode"
 NON_ROOT_USER_HOME=$(eval echo "~$NON_ROOT_USER")
-
-info() {
-  local green='\e[0;32m'
-  local clear='\e[0m'
-  local time=$(date '+%Y-%m-%d %T')
-  printf "${green}[${time}] [INFO]: ${clear}%s\n" "$*"
-}
-
-warn() {
-  local yellow='\e[1;33m'
-  local clear='\e[0m'
-  local time=$(date '+%Y-%m-%d %T')
-  printf "${yellow}[${time}] [WARN]: ${clear}%s\n" "$*" >&2
-}
-
-error() {
-  local red='\e[0;31m'
-  local clear='\e[0m'
-  local time=$(date '+%Y-%m-%d %T')
-  printf "${red}[${time}] [ERROR]: ${clear}%s\n" "$*" >&2
-}
 
 setup_git_config() {
   local user=$(git config --global --get user.name)
