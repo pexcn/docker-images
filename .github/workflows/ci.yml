@@ -37,6 +37,9 @@ jobs:
           # buster-padavan
           - BUILD_CONTEXT: buildbot/buster-padavan
             TARGET_PLATFORMS: linux/amd64
+          # base
+          - BUILD_CONTEXT: dev/base
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # rust
           - BUILD_CONTEXT: dev/rust
             TARGET_PLATFORMS: linux/amd64,linux/arm64
