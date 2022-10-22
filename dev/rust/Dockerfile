@@ -2,57 +2,33 @@
 # Dockerfile for Rust language development environment
 #
 
-FROM rust:1.62-slim-bullseye
+FROM pexcn/docker-images:dev
 LABEL maintainer="pexcn <i@pexcn.me>"
+
+#
+# https://github.com/rust-lang/docker-rust/blob/10f1b7cab43bde8b4d6299aa4d91a895a0e5388d/1.64.0/bullseye/slim/Dockerfile
+#
+ENV RUSTUP_HOME=/usr/local/rustup
+ENV CARGO_HOME=/usr/local/cargo
+ENV PATH=/usr/local/cargo/bin:$PATH
+ENV RUST_VERSION=1.64.0
+
+RUN apt-get update \
+  && apt-get install --no-install-recommends -y gcc libc6-dev \
+  && case "$(dpkg --print-architecture)" in \
+       amd64) rust_arch='x86_64-unknown-linux-gnu';; \
+       arm64) rust_arch='aarch64-unknown-linux-gnu';; \
+     esac \
+  && wget "https://static.rust-lang.org/rustup/archive/1.25.1/${rust_arch}/rustup-init" \
+  && chmod +x rustup-init \
+  && ./rustup-init -y --no-modify-path --profile minimal --default-toolchain $RUST_VERSION --default-host ${rust_arch} \
+  && rm rustup-init \
+  && chmod -R a+w $RUSTUP_HOME $CARGO_HOME \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
 # install components
 RUN rustup component add rustfmt clippy
 
-# install packages
-RUN apt-get update \
-  && apt-get install --no-install-recommends -y \
-      apt-utils dialog \
-  && apt-get install --no-install-recommends -y \
-      bash-completion curl wget net-tools git locales procps nano tree file \
-      openssh-server \
-  && apt-get clean \
-  && rm -rf /var/lib/apt/lists/*
-
-# create non-root user
-ARG USER_NAME=vscode
-ARG USER_UID=1000
-ARG USER_GID=$USER_UID
-RUN groupadd $USER_NAME --gid $USER_GID \
-  && useradd $USER_NAME --uid $USER_UID --gid $USER_NAME --shell /bin/bash --create-home --home-dir /vscode
-
-# set timezone
-ENV TZ=Asia/Taipei
-RUN ln -sf /usr/share/zoneinfo/Asia/Taipei /etc/localtime
-
-# set locales
-RUN sed -i '/^# en_US.UTF-8 UTF-8/s/^# //' /etc/locale.gen \
-  && sed -i '/^# zh_CN.UTF-8 UTF-8/s/^# //' /etc/locale.gen \
-  && sed -i '/^# zh_TW.UTF-8 UTF-8/s/^# //' /etc/locale.gen \
-  && locale-gen \
-  && update-locale LANG=zh_CN.UTF-8
-
-# dotfiles
-RUN git clone https://github.com/pexcn/dotfiles.git -b debian \
-  && cd dotfiles \
-  && ./install.sh root \
-  && git config --global --unset user.name \
-  && git config --global --unset user.email \
-  && ./install.sh $USER_NAME \
-  && su $USER_NAME -c "git config --global --unset user.name" \
-  && su $USER_NAME -c "git config --global --unset user.email" \
-  && cd - \
-  && rm -rf dotfiles
-
-ENV GIT_USER=
-ENV GIT_EMAIL=
-ENV ENABLE_SSHD=
-ENV SSH_PORT=2222
-
 COPY rust.sh /usr/local/bin/
-
-ENTRYPOINT ["rust.sh"]
+CMD ["rust.sh"]
