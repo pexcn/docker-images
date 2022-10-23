@@ -1,9 +1,9 @@
 version: '3.9'
 
 services:
-  c:
+  c-lang:
     image: pexcn/docker-images:c
-    container_name: c
+    container_name: c-lang
     restart: unless-stopped
     network_mode: host
     environment:
@@ -12,13 +12,13 @@ services:
       #ENABLE_SSHD: 0
       #SSH_PORT: 2222
     volumes:
-      - c-data:/vscode
+      - c-lang-data:/vscode
       - /root/.ssh/authorized_keys:/root/.ssh/authorized_keys:ro
       - /etc/ssh/ssh_host_ed25519_key:/etc/ssh/ssh_host_ed25519_key:ro
       - /etc/ssh/ssh_host_ed25519_key.pub:/etc/ssh/ssh_host_ed25519_key.pub:ro
 
 volumes:
-  c-data:
+  c-lang-data:
     driver: local
     driver_opts:
       type: none
