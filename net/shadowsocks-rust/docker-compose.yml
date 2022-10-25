@@ -6,8 +6,8 @@ services:
   #  container_name: ssserver-aes
   #  restart: unless-stopped
   #  network_mode: host
-  #  volumes:
-  #    - /etc/localtime:/etc/localtime:ro
+  #  environment:
+  #    TZ: Asia/Taipei
   #  command: >
   #    ssservice server
   #      --server-addr 0.0.0.0:1776
@@ -27,8 +27,8 @@ services:
   #  container_name: ssserver-chacha
   #  restart: unless-stopped
   #  network_mode: host
-  #  volumes:
-  #    - /etc/localtime:/etc/localtime:ro
+  #  environment:
+  #    TZ: Asia/Taipei
   #  command: >
   #    ssservice server
   #      --server-addr 0.0.0.0:1984
@@ -48,12 +48,12 @@ services:
     container_name: ssserver-2022-aes
     restart: unless-stopped
     network_mode: host
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
+    environment:
+      TZ: Asia/Taipei
     command: >
       ssservice server
         --server-addr 0.0.0.0:1776
-        --password cGFzc3dvcmRwYXNzd29yZHBhc3N3b3JkcGFzc3dvcmQ=
+        --password cGFzc3dvcmRwYXNzd29yZA==
         --encrypt-method 2022-blake3-aes-128-gcm
         --timeout 3600
         --udp-timeout 300
@@ -69,8 +69,8 @@ services:
     container_name: ssserver-2022-chacha
     restart: unless-stopped
     network_mode: host
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
+    environment:
+      TZ: Asia/Taipei
     command: >
       ssservice server
         --server-addr 0.0.0.0:1984
@@ -90,9 +90,10 @@ services:
   #  container_name: ssserver-websocket
   #  restart: unless-stopped
   #  network_mode: host
+  #  environment:
+  #    TZ: Asia/Taipei
   #  volumes:
   #    - ../acme.sh/acme.sh-data/example.com_ecc:/root/.acme.sh/example.com
-  #    - /etc/localtime:/etc/localtime:ro
   #  command: >
   #    ssservice server
   #      --server-addr 0.0.0.0:443
@@ -114,9 +115,10 @@ services:
     container_name: ssserver-grpc
     restart: unless-stopped
     network_mode: host
+    environment:
+      TZ: Asia/Taipei
     volumes:
       - ../acme.sh/acme.sh-data/example.com_ecc:/root/.acme.sh/example.com
-      - /etc/localtime:/etc/localtime:ro
     command: >
       ssservice server
         --server-addr 0.0.0.0:443
