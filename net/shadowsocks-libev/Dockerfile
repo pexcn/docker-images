@@ -135,6 +135,10 @@ FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
 RUN apk update \
+  && apk add --no-cache tzdata \
+  && rm -rf /var/cache/apk/*
+
+RUN apk update \
   && apk add --no-cache ca-certificates \
   && rm -rf /var/cache/apk/*
 
