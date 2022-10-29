@@ -13,7 +13,7 @@ RUN apk update \
       c-ares-dev mbedtls-dev pcre-dev libev-dev libsodium-dev \
       c-ares-static mbedtls-static libsodium-static
 
-ARG SS_VERSION=5fdb6624e304885fd51115ec6666aa6f926096cd
+ARG SS_VERSION=7f7f68afe40b227195f5d9a6bb03c7bce41d45d8
 RUN git clone https://github.com/shadowsocks/shadowsocks-libev.git --recurse-submodules -j2 \
   && cd shadowsocks-libev \
   && git checkout $SS_VERSION \
@@ -27,7 +27,7 @@ RUN git clone https://github.com/shadowsocks/shadowsocks-libev.git --recurse-sub
       LDFLAGS="-Wl,--build-id=none -Wl,-static -static -static-libgcc -no-pie" \
   && make -j$(nproc) \
   && make install-strip \
-  && cd .. \
+  && cd - \
   && rm -r shadowsocks-libev
 
 ARG OBFS_VERSION=486bebd9208539058e57e23a12f23103016e09b4
@@ -44,7 +44,7 @@ RUN git clone https://github.com/shadowsocks/simple-obfs.git --recurse-submodule
       LDFLAGS="-Wl,--build-id=none -Wl,-static -static -static-libgcc -no-pie" \
   && make -j$(nproc) \
   && make install-strip \
-  && cd .. \
+  && cd - \
   && rm -r simple-obfs
 
 RUN apk del .build-deps \
@@ -64,7 +64,7 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.8/main" >> /etc/apk/repositor
   && apk update \
   && apk add --no-cache linux-headers=4.4.6-r2
 
-ARG SS_VERSION=e21f8248b64528b9a30a87331074a0eae6676225
+ARG SS_VERSION=7f7f68afe40b227195f5d9a6bb03c7bce41d45d8
 RUN git clone https://github.com/shadowsocks/shadowsocks-libev.git --recurse-submodules -j2 \
   && cd shadowsocks-libev \
   && git checkout $SS_VERSION \
@@ -78,7 +78,7 @@ RUN git clone https://github.com/shadowsocks/shadowsocks-libev.git --recurse-sub
       LDFLAGS="-Wl,--build-id=none -Wl,-static -static -static-libgcc -no-pie" \
   && make -j$(nproc) \
   && make install-strip \
-  && cd .. \
+  && cd - \
   && rm -r shadowsocks-libev
 
 ARG OBFS_VERSION=486bebd9208539058e57e23a12f23103016e09b4
@@ -95,7 +95,7 @@ RUN git clone https://github.com/shadowsocks/simple-obfs.git --recurse-submodule
       LDFLAGS="-Wl,--build-id=none -Wl,-static -static -static-libgcc -no-pie" \
   && make -j$(nproc) \
   && make install-strip \
-  && cd .. \
+  && cd - \
   && rm -r simple-obfs
 
 RUN apk del .build-deps linux-headers \
@@ -104,25 +104,25 @@ RUN apk del .build-deps linux-headers \
 #
 # Build stage [v2ray-plugin & xray-plugin]
 #
-FROM golang:1.18-alpine AS builder-ray
+FROM golang:1.19-alpine AS builder-ray
 
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git
 
-ARG V2RAY_VERSION=v5.0.7
+ARG V2RAY_VERSION=v5.1.0
 RUN git clone https://github.com/teddysun/v2ray-plugin.git --branch $V2RAY_VERSION \
   && cd v2ray-plugin \
   && env CGO_ENABLED=0 go build -v -trimpath -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w -buildid=" -o v2ray-plugin \
   && install v2ray-plugin /usr/local/bin/ \
-  && cd .. \
+  && cd - \
   && rm -r v2ray-plugin
 
-ARG XRAY_VERSION=v1.5.8
+ARG XRAY_VERSION=v1.6.2
 RUN git clone https://github.com/teddysun/xray-plugin.git --branch $XRAY_VERSION \
   && cd xray-plugin \
   && env CGO_ENABLED=0 go build -v -trimpath -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w -buildid=" -o xray-plugin \
   && install xray-plugin /usr/local/bin/ \
-  && cd .. \
+  && cd - \
   && rm -r xray-plugin
 
 RUN apk del .build-deps \
