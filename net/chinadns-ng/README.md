@@ -8,6 +8,7 @@ docker run -d \
   --restart unless-stopped \
   --network host \
   -e TZ=Asia/Taipei \
+  -v $(pwd)/chinadns-ng-data:/etc/chinadns-ng \
   pexcn/docker-images:chinadns-ng \
     -b 0.0.0.0 \
     -l 5353 \

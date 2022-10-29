@@ -38,11 +38,4 @@ RUN apk update \
 
 COPY --from=builder /usr/local/bin/chinadns-ng /usr/local/bin/
 
-# allow bind port less than 1024
-RUN apk update \
-  && apk add --no-cache libcap \
-  && rm -rf /var/cache/apk/*
-RUN setcap cap_net_bind_service+ep /usr/local/bin/chinadns-ng
-
-USER nobody
 ENTRYPOINT ["chinadns-ng"]
