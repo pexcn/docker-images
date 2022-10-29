@@ -19,6 +19,7 @@ RUN git clone https://github.com/shadowsocks/shadowsocks-rust.git --branch $SS_V
      esac \
   && cargo build --release --features "$build_features" \
   && install target/release/ssservice target/release/ssserver target/release/sslocal target/release/ssmanager target/release/ssurl /usr/local/bin/ \
+  && cd - \
   && rm -r /shadowsocks-rust
 
 RUN apk del .build-deps \
@@ -48,7 +49,7 @@ RUN git clone https://github.com/shadowsocks/simple-obfs.git --recurse-submodule
       LDFLAGS="-Wl,--build-id=none -Wl,-static -static -static-libgcc -no-pie" \
   && make -j$(nproc) \
   && make install-strip \
-  && cd .. \
+  && cd - \
   && rm -r simple-obfs
 
 RUN apk del .build-deps \
@@ -57,25 +58,25 @@ RUN apk del .build-deps \
 #
 # Build stage [v2ray-plugin & xray-plugin]
 #
-FROM golang:1.18-alpine AS builder-ray
+FROM golang:1.19-alpine AS builder-ray
 
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git
 
-ARG V2RAY_VERSION=v5.0.7
+ARG V2RAY_VERSION=v5.1.0
 RUN git clone https://github.com/teddysun/v2ray-plugin.git --branch $V2RAY_VERSION \
   && cd v2ray-plugin \
   && env CGO_ENABLED=0 go build -v -trimpath -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w -buildid=" -o v2ray-plugin \
   && install v2ray-plugin /usr/local/bin/ \
-  && cd .. \
+  && cd - \
   && rm -r v2ray-plugin
 
-ARG XRAY_VERSION=v1.5.8
+ARG XRAY_VERSION=v1.6.2
 RUN git clone https://github.com/teddysun/xray-plugin.git --branch $XRAY_VERSION \
   && cd xray-plugin \
   && env CGO_ENABLED=0 go build -v -trimpath -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w -buildid=" -o xray-plugin \
   && install xray-plugin /usr/local/bin/ \
-  && cd .. \
+  && cd - \
   && rm -r xray-plugin
 
 RUN apk del .build-deps \
