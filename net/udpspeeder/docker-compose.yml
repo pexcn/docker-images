@@ -6,7 +6,7 @@ services:
     container_name: udpspeeder
     restart: unless-stopped
     network_mode: host
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
+    environment:
+      TZ: Asia/Taipei
     command: >
       -s -l 0.0.0.0:444 -r 127.0.0.1:443 -f10:6 --timeout 3 --log-level 3 --disable-obscure --disable-checksum
