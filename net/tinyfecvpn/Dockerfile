@@ -10,7 +10,7 @@ FROM alpine AS builder
 ARG VERSION=cd4973c36fb75fb0d84241987febea41eee43611
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git make g++ linux-headers \
-  && git clone https://github.com/wangyu-/tinyfecVPN.git tinyfecvpn --recurse-submodules \
+  && git clone https://github.com/wangyu-/tinyfecVPN.git tinyfecvpn --recursive \
   && cd tinyfecvpn \
   && git checkout $VERSION \
   && make OPT="-DNOLIMIT -s" \

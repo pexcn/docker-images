@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  tinyfecvpn:
+    image: pexcn/docker-images:tinyfecvpn
+    container_name: tinyfecvpn
+    restart: unless-stopped
+    network_mode: host
+    privileged: true
+    environment:
+      TZ: Asia/Taipei
+    command: >
+      -s -l 0.0.0.0:1024
+      --tun-dev tinyfecvpn --sub-net 100.100.100.0
+      -f10:6 --timeout 3 --log-level 3 --disable-obscure --disable-checksum
