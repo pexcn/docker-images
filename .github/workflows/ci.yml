@@ -79,6 +79,9 @@ jobs:
           # strongswan
           - BUILD_CONTEXT: net/strongswan
             TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # tinyfecvpn
+          - BUILD_CONTEXT: net/tinyfecvpn
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # tor
           - BUILD_CONTEXT: net/tor
             TARGET_PLATFORMS: linux/amd64,linux/arm64
