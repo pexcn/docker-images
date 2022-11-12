@@ -13,7 +13,7 @@ create_user() {
   local password=$(echo "$2" | openssl passwd -crypt -stdin)
   local uid=10000
   local gid=10000
-  groupadd $uid --gid $gid
+  groupadd $username --gid $gid
   useradd $username --uid $uid --gid $gid --shell /bin/bash --password $password --create-home
   cp /root/.* $(eval echo "~$username") 2>/dev/null
 }

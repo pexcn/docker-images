@@ -27,7 +27,7 @@ RUN case "$(dpkg --print-architecture)" in \
        *) arch="aarch64";; \
     esac \
   && curl https://download.docker.com/linux/static/stable/${arch}/docker-${DOCKER_VERSION}.tgz | \
-    tar zxv docker/docker --strip-components 1 -C /usr/local/bin/ \
+      tar zxv -C /usr/local/bin/ docker/docker --strip-components 1 \
   && curl https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-linux-${arch} -L -o /usr/local/bin/docker-compose \
   && chmod +x /usr/local/bin/docker-compose
 
