@@ -6,6 +6,7 @@ is_initialized() {
 
 mark_initialized() {
   date +%s > /.initialized
+  info "container users initialized."
 }
 
 create_user() {
@@ -23,8 +24,14 @@ set_root_password() {
   usermod -p $password root
 }
 
+append_user_to_docker() {
+  local username="$1"
+  groupadd docker --gid $DOCKER_GID
+  usermod -aG docker $username
+}
+
 ! is_initialized || { info "container already initialized, skip."; exit 0; }
 create_user $USERNAME $PASSWORD
 set_root_password $ROOT_PASSWORD
+append_user_to_docker $USERNAME
 mark_initialized
-info "container users initialized."

@@ -7,13 +7,14 @@ services:
     restart: unless-stopped
     network_mode: host
     environment:
+      ENABLE_SSHD: 1
+      SSH_PORT: 2222
+      DOCKER_GID: 972
       USERNAME: user
       PASSWORD: password
       ROOT_PASSWORD: password
       GIT_USER: username
       GIT_EMAIL: mail@example.com
-      ENABLE_SSHD: 1
-      SSH_PORT: 2222
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /data:/data
