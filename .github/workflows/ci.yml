@@ -43,6 +43,9 @@ jobs:
           # dev
           - BUILD_CONTEXT: dev/dev
             TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # dev-isolate
+          - BUILD_CONTEXT: dev/dev-isolate
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # rust
           - BUILD_CONTEXT: dev/rust
             TARGET_PLATFORMS: linux/amd64,linux/arm64
