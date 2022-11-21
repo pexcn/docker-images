@@ -12,4 +12,4 @@ services:
     command: >
       -s -l 0.0.0.0:1024
       --tun-dev tinyfecvpn --sub-net 100.100.100.0
-      -f10:6 --timeout 3 --log-level 3 --disable-obscure --disable-checksum
+      -f10:6 --timeout 3 --log-level 3 --mssfix 0 --disable-obscure --disable-checksum
