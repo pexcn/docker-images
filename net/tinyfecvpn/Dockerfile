@@ -31,6 +31,7 @@ RUN apk update \
   && rm -rf /var/cache/apk/*
 
 COPY --from=builder /usr/local/bin/tinyfecvpn /usr/local/bin/
+COPY tinyfecvpn.sh /usr/local/bin/
 
-ENTRYPOINT ["tinyfecvpn"]
+ENTRYPOINT ["tinyfecvpn.sh"]
 CMD ["--help"]
