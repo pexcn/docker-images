@@ -2,6 +2,6 @@
 # Dockerfile for acme.sh
 #
 
-FROM neilpang/acme.sh:3.0.4
+FROM neilpang/acme.sh:v3.0.5
 
 COPY restart-container.sh /usr/local/bin/
