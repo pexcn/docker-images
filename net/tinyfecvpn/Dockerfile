@@ -27,7 +27,7 @@ FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
 RUN apk update \
-  && apk add --no-cache tzdata \
+  && apk add --no-cache iptables tzdata \
   && rm -rf /var/cache/apk/*
 
 COPY --from=builder /usr/local/bin/tinyfecvpn /usr/local/bin/
