@@ -5,7 +5,7 @@
 #
 # Build stage [shadowsocks-rust]
 #
-FROM rustlang/rust:nightly-alpine AS builder-ss
+FROM rust:alpine AS builder-ss
 
 RUN apk update \
   && apk add --no-cache --virtual .build-deps musl-dev git
