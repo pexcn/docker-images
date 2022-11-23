@@ -80,14 +80,14 @@ graceful_stop() {
 }
 
 start_tinyfecvpn() {
-  # TODO: caught exit or others... signal?
-  # e.g.: pass `--help` argument.
-  trap 'graceful_stop "$@"' SIGTERM SIGINT
-
   if _is_server_mode "$1"; then
+    # TODO: caught exit or others... signal?
+    # e.g.: pass `--help` argument.
+    trap 'graceful_stop "$@"' SIGTERM SIGINT
     apply_sysctl
     setup_firewall "$@"
-    tinyfecvpn "$@"
+    tinyfecvpn "$@" &
+    wait
   else
     exec tinyfecvpn "$@"
   fi
