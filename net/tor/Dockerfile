@@ -5,7 +5,7 @@
 #
 # Build stage
 #
-FROM alpine AS builder
+FROM alpine:3.16 AS builder
 
 # depends
 RUN apk update \
