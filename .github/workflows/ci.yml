@@ -43,9 +43,6 @@ jobs:
           # dev
           - BUILD_CONTEXT: dev/dev
             TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # dev-isolate
-          - BUILD_CONTEXT: dev/dev-isolate
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # rust
           - BUILD_CONTEXT: dev/rust
             TARGET_PLATFORMS: linux/amd64,linux/arm64
@@ -141,6 +138,9 @@ jobs:
           #
           ## chisel
           #- BUILD_CONTEXT: net/chisel
+          #  TARGET_PLATFORMS: linux/amd64,linux/arm64
+          ## dev-isolate
+          #- BUILD_CONTEXT: dev/dev-isolate
           #  TARGET_PLATFORMS: linux/amd64,linux/arm64
           ## dsm-open-vm-tools
           #- BUILD_CONTEXT: utils/dsm-open-vm-tools
