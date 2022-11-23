@@ -5,7 +5,7 @@
 #
 # Build stage [shadowsocks-libev]
 #
-FROM alpine AS builder-ss
+FROM alpine:3.16 AS builder-ss
 
 RUN apk update \
   && apk add --no-cache --virtual .build-deps \
@@ -53,7 +53,7 @@ RUN apk del .build-deps \
 #
 # Build stage [shadowsocks-libev TFO compatible]
 #
-FROM alpine AS builder-ss-tfo-cpt
+FROM alpine:3.16 AS builder-ss-tfo-cpt
 
 RUN apk update \
   && apk add --no-cache --virtual .build-deps \
