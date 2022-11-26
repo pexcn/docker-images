@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  motd:
+    image: pexcn/docker-images:motd
+    container_name: motd
+    restart: unless-stopped
+    network_mode: bridge
+    environment:
+      TZ: Asia/Taipei
+      WELCOME_MESSAGE: "Welcome to ARCH!"
+    volumes:
+      - /etc/motd:/etc/motd
+      - /var/log/lastlog:/var/log/lastlog:ro
