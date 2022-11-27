@@ -6,9 +6,12 @@ FROM alpine
 LABEL maintainer="pexcn <i@pexcn.me>"
 
 RUN apk update \
-  && apk add --no-cache tzdata \
+  && apk add --no-cache bash tzdata \
   && rm -rf /var/cache/apk/*
 
+COPY messages /srv/
 COPY motd.sh /usr/local/bin/
 
-#ENTRYPOINT ["motd.sh"]
+ENV MESSAGE_HEADER=
+
+ENTRYPOINT ["motd.sh"]
