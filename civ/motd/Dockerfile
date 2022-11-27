@@ -9,7 +9,7 @@ RUN apk update \
   && apk add --no-cache bash tzdata \
   && rm -rf /var/cache/apk/*
 
-COPY messages /srv/
+COPY messages /srv/messages/
 COPY motd.sh /usr/local/bin/
 
 ENV MESSAGE_HEADER=

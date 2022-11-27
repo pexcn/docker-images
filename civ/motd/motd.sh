@@ -35,10 +35,12 @@ login_callback() {
 }
 
 start_motd() {
+  trap 'warn "caught SIGTERM or SIGINT signal, graceful stopping..."; exit 0' SIGTERM SIGINT
   inotifyd - /var/log/lastlog:c | while read line; do
     info "user logged in, trigger callback."
     login_callback
-  done
+  done &
+  wait
 }
 
 start_motd

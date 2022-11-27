@@ -8,7 +8,7 @@ services:
     network_mode: bridge
     environment:
       TZ: Asia/Taipei
-      MESSAGE_HEADER: "Welcome to ARCH!"
+      MESSAGE_HEADER: "\nWelcome to ARCH!\n"
     volumes:
       - /etc/motd:/etc/motd
       - /var/log/lastlog:/var/log/lastlog:ro
