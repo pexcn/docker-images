@@ -66,13 +66,7 @@ dns:
   safesearch_cache_size: 1048576
   parental_cache_size: 1048576
   cache_time: 30
-  rewrites:
-  - domain: xtbg.gdzwfw.gov.cn
-    answer: 19.15.0.77
-  - domain: xtbgsafe.gdzwfw.gov.cn
-    answer: 19.15.0.77
-  - domain: mail.huadu.gov.cn
-    answer: 192.168.102.17
+  rewrites: []
   blocked_services: []
   upstream_timeout: 10s
   private_networks: []
