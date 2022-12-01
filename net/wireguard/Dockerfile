@@ -36,7 +36,7 @@ RUN apk update \
 
 RUN install /usr/share/doc/wireguard-tools/contrib/reresolve-dns/reresolve-dns.sh /usr/local/bin/
 
-COPY --from=builder /usr/bin/wireguard-go /srv/wireguard-go/
+COPY --from=builder /usr/bin/wireguard-go /srv/bin/
 COPY wireguard.sh /usr/local/bin/
 
 ENV USE_USERSPACE_MODE=0

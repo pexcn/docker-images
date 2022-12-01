@@ -1,72 +1,68 @@
 #!/bin/sh
-set -e
-set -o pipefail
 
-[ "$USE_USERSPACE_MODE" != 1 ] || PATH=/srv/wireguard-go:$PATH
+info() {
+  local green='\e[0;32m'
+  local clear='\e[0m'
+  local time=$(date '+%Y-%m-%d %T')
+  printf "${green}[${time}] [INFO]: ${clear}%s\n" "$*"
+}
 
-_make_config_secure() {
-  chmod 600 /etc/wireguard/*.conf
+warn() {
+  local yellow='\e[1;33m'
+  local clear='\e[0m'
+  local time=$(date '+%Y-%m-%d %T')
+  printf "${yellow}[${time}] [WARN]: ${clear}%s\n" "$*" >&2
 }
 
 _get_wg_interfaces() {
-  ls -A1 /etc/wireguard/*.conf | xargs -n 1 -I {} basename {} .conf
-}
-
-_up_wg_interface() {
-  for interface in $(_get_wg_interfaces); do
-    wg-quick up "$interface"
-  done
-}
-
-_down_wg_interface() {
-  for interface in $(_get_wg_interfaces); do
-    wg-quick down "$interface"
-  done
+  find /etc/wireguard -maxdepth 1 -type f -name "*.conf" -exec basename -a -s ".conf" {} +
 }
 
 _graceful_stop() {
-  echo "Caught SIGTERM signal, graceful stopping..."
-  _down_wg_interface
-  _restore_sysctl
+  warn "caught SIGTERM or SIGINT signal, graceful stopping..."
+
+  for interface in $(_get_wg_interfaces); do
+    info "[${interface}]: interface down."
+    wg-quick down "$interface"
+  done
+
+  exit 0
 }
 
-_backup_sysctl() {
-  sysctl "$1" >> /tmp/sysctl-origin.conf
-}
+setup_environment() {
+  [ "$USE_USERSPACE_MODE" != 1 ] || PATH="/srv/bin:$PATH"
 
-_restore_sysctl() {
-  sysctl -pq /tmp/sysctl-origin.conf
-  rm /tmp/sysctl-origin.conf
-}
+  # make configs be safe
+  chmod 600 /etc/wireguard/*.conf
 
-_apply_sysctl() {
-  [ $(sysctl -n "$1") = "$2" ] || sysctl -wq "$1"="$2"
-}
-
-setup_sysctl() {
-  [ ! -f /tmp/sysctl-origin.conf ] || rm /tmp/sysctl-origin.conf
-  _backup_sysctl net.ipv4.ip_forward
-  _apply_sysctl net.ipv4.ip_forward 1
+  # makesure ip_forward enabled
+  sysctl -wq net.ipv4.ip_forward=1
 }
 
 start_wireguard() {
-  trap _graceful_stop SIGTERM
+  trap _graceful_stop SIGTERM SIGINT
 
-  _make_config_secure
-  _up_wg_interface
+  for interface in $(_get_wg_interfaces); do
+    info "[${interface}]: interface up."
+    wg-quick up "$interface"
+  done
 
-  if [[ -z "$PEER_RESOLVE_INTERVAL" || "$PEER_RESOLVE_INTERVAL" = 0 ]]; then
+  if [ "$PEER_RESOLVE_INTERVAL" = 0 ]; then
+    info "sleep infinity."
     sleep infinity &
     wait
   else
-    while true
-    do
+    while true; do
+      info "sleep ${PEER_RESOLVE_INTERVAL} seconds."
       sleep "$PEER_RESOLVE_INTERVAL" &
       wait
-      for cfg in /etc/wireguard/*.conf; do reresolve-dns.sh "$cfg"; done
+      for cfg in /etc/wireguard/*.conf; do
+        info "[$(basename ${cfg} .conf)]: interval refresh endpoint."
+        reresolve-dns.sh "$cfg"
+      done
     done
   fi
 }
 
-setup_sysctl
+setup_environment
 start_wireguard
