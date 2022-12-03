@@ -1,0 +1,245 @@
+version: '3.9'
+
+services:
+  # ssserver
+  ssserver:
+    image: pexcn/docker-images:shadowsocks-rust
+    container_name: ssserver
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TZ: Asia/Taipei
+    command: >
+      ssservice server
+        --server-addr 0.0.0.0:1776
+        --password password
+        --encrypt-method aes-128-gcm
+        --timeout 3600
+        --udp-timeout 300
+        --udp-max-associations 1024
+        --nofile 1048576
+        --tcp-keep-alive 300
+        --tcp-fast-open
+        --tcp-no-delay
+        -U
+
+  # ssserver-2022
+  ssserver-2022:
+    image: pexcn/docker-images:shadowsocks-rust
+    container_name: ssserver-2022
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TZ: Asia/Taipei
+    command: >
+      ssservice server
+        --server-addr 0.0.0.0:1776
+        --password cGFzc3dvcmRwYXNzd29yZA==
+        --encrypt-method 2022-blake3-aes-128-gcm
+        --timeout 3600
+        --udp-timeout 300
+        --udp-max-associations 1024
+        --nofile 1048576
+        --tcp-keep-alive 300
+        --tcp-fast-open
+        --tcp-no-delay
+        -U
+
+  # ssserver-obfs
+  ssserver-obfs:
+    image: pexcn/docker-images:shadowsocks-rust
+    container_name: ssserver-obfs
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TZ: Asia/Taipei
+    command: >
+      ssservice server
+        --server-addr 0.0.0.0:80
+        --password password
+        --encrypt-method aes-128-gcm
+        --timeout 3600
+        --udp-timeout 300
+        --udp-max-associations 1024
+        --nofile 1048576
+        --tcp-keep-alive 300
+        --tcp-fast-open
+        --tcp-no-delay
+        -U
+        --plugin "obfs-server"
+        --plugin-opts "obfs=tls;fast-open"
+
+  # ssserver-websocket
+  ssserver-websocket:
+    image: pexcn/docker-images:shadowsocks-rust
+    container_name: ssserver-websocket
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TZ: Asia/Taipei
+    volumes:
+      - ../acme.sh/acme.sh-data/example.com_ecc:/root/.acme.sh/example.com
+    command: >
+      ssservice server
+        --server-addr 0.0.0.0:443
+        --password password
+        --encrypt-method chacha20-ietf-poly1305
+        --timeout 3600
+        --udp-timeout 300
+        --udp-max-associations 1024
+        --nofile 1048576
+        --tcp-keep-alive 300
+        --tcp-fast-open
+        --tcp-no-delay
+        -U
+        --plugin "xray-plugin"
+        --plugin-opts "server;tls;fast-open;host=example.com;path=/ws"
+
+  # ssserver-grpc
+  ssserver-grpc:
+    image: pexcn/docker-images:shadowsocks-rust
+    container_name: ssserver-grpc
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TZ: Asia/Taipei
+    volumes:
+      - ../acme.sh/acme.sh-data/example.com_ecc:/root/.acme.sh/example.com
+    command: >
+      ssservice server
+        --server-addr 0.0.0.0:443
+        --password password
+        --encrypt-method chacha20-ietf-poly1305
+        --timeout 3600
+        --udp-timeout 300
+        --udp-max-associations 1024
+        --nofile 1048576
+        --tcp-keep-alive 300
+        --tcp-fast-open
+        --tcp-no-delay
+        -U
+        --plugin "xray-plugin"
+        --plugin-opts "server;tls;fast-open;mode=grpc;host=example.com"
+
+  # sslocal
+  sslocal:
+    image: pexcn/docker-images:shadowsocks-rust
+    container_name: sslocal
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TZ: Asia/Taipei
+    command: >
+      ssservice local
+        --local-addr 0.0.0.0:1080
+        --server-addr 111.222.33.44:80
+        --password password
+        --encrypt-method aes-128-gcm
+        --timeout 3600
+        --udp-timeout 300
+        --udp-max-associations 1024
+        --nofile 1048576
+        --tcp-keep-alive 300
+        --tcp-fast-open
+        --tcp-no-delay
+        -U
+
+  # sstunnel
+  sstunnel:
+    image: pexcn/docker-images:shadowsocks-rust
+    container_name: sslocal
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TZ: Asia/Taipei
+    command: >
+      ssservice local
+        --protocol tunnel
+        --local-addr 0.0.0.0:8123
+        --forward-addr 192.168.1.30:8123
+        --server-addr 111.222.33.44:2077
+        --password password
+        --encrypt-method aes-128-gcm
+        --timeout 3600
+        --udp-timeout 300
+        --udp-max-associations 1024
+        --nofile 1048576
+        --tcp-keep-alive 300
+        --tcp-fast-open
+        --tcp-no-delay
+        -U
+
+  # ssredir
+  ssredir:
+    image: pexcn/docker-images:shadowsocks-rust
+    container_name: ssredir
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TZ: Asia/Taipei
+    command: >
+      ssservice local
+        --protocol redir
+        --local-addr 0.0.0.0:1234
+        --server-addr 111.222.33.44:2077
+        --password password
+        --encrypt-method aes-128-gcm
+        --timeout 3600
+        --udp-timeout 300
+        --udp-max-associations 1024
+        --nofile 1048576
+        --tcp-keep-alive 300
+        --tcp-fast-open
+        --tcp-no-delay
+        --tcp-redir tproxy
+        --udp-redir tproxy
+        -U
+
+  # ssredir-tcp
+  ssredir-tcp:
+    image: pexcn/docker-images:shadowsocks-rust
+    container_name: ssredir-tcp
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TZ: Asia/Taipei
+    command: >
+      ssservice local
+        --protocol redir
+        --local-addr 0.0.0.0:1234
+        --server-addr 111.222.33.44:2077
+        --password password
+        --encrypt-method aes-128-gcm
+        --timeout 3600
+        --udp-timeout 300
+        --udp-max-associations 1024
+        --nofile 1048576
+        --tcp-keep-alive 300
+        --tcp-fast-open
+        --tcp-no-delay
+        --tcp-redir tproxy
+
+  # ssredir-udp
+  ssredir-udp:
+    image: pexcn/docker-images:shadowsocks-rust
+    container_name: ssredir-udp
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TZ: Asia/Taipei
+    command: >
+      ssservice local
+        --protocol redir
+        --local-addr 0.0.0.0:1234
+        --server-addr 111.222.33.44:2077
+        --password password
+        --encrypt-method aes-128-gcm
+        --timeout 3600
+        --udp-timeout 300
+        --udp-max-associations 1024
+        --nofile 1048576
+        --tcp-keep-alive 300
+        --tcp-fast-open
+        --tcp-no-delay
+        --udp-redir tproxy
+        -u
