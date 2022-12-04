@@ -1,69 +1,31 @@
 version: '3.9'
 
 services:
-  ssserver-2022-aes:
+  ssserver:
     image: pexcn/docker-images:shadowsocks-rust
-    container_name: ssserver-2022-aes
+    container_name: ssserver
     restart: unless-stopped
     network_mode: host
     environment:
       TZ: Asia/Taipei
-    command: >
-      ssservice server
-        --server-addr 0.0.0.0:1776
-        --password cGFzc3dvcmRwYXNzd29yZA==
-        --encrypt-method 2022-blake3-aes-128-gcm
-        --timeout 3600
-        --udp-timeout 300
-        --udp-max-associations 1024
-        --nofile 1048576
-        --tcp-keep-alive 300
-        --tcp-fast-open
-        --tcp-no-delay
-        -U
-
-  ssserver-2022-chacha:
-    image: pexcn/docker-images:shadowsocks-rust
-    container_name: ssserver-2022-chacha
-    restart: unless-stopped
-    network_mode: host
-    environment:
-      TZ: Asia/Taipei
-    command: >
-      ssservice server
-        --server-addr 0.0.0.0:1984
-        --password cGFzc3dvcmRwYXNzd29yZHBhc3N3b3JkcGFzc3dvcmQ=
-        --encrypt-method 2022-blake3-chacha8-poly1305
-        --timeout 3600
-        --udp-timeout 300
-        --udp-max-associations 1024
-        --nofile 1048576
-        --tcp-keep-alive 300
-        --tcp-fast-open
-        --tcp-no-delay
-        -U
-
-  ssserver-grpc:
-    image: pexcn/docker-images:shadowsocks-rust
-    container_name: ssserver-grpc
-    restart: unless-stopped
-    network_mode: host
-    environment:
-      TZ: Asia/Taipei
+      SHADOWSOCKS_PASSWORD_1: password_1
+      SHADOWSOCKS_PASSWORD_2: password_2
+      SHADOWSOCKS_PASSWORD_3: password_3
     volumes:
+      - ./shadowsocks-rust-data:/etc/shadowsocks-rust
       - ../acme.sh/acme.sh-data/example.com_ecc:/root/.acme.sh/example.com
-    command: >
-      ssservice server
-        --server-addr 0.0.0.0:443
-        --password password
-        --encrypt-method chacha20-ietf-poly1305
-        --timeout 3600
-        --udp-timeout 300
-        --udp-max-associations 1024
-        --nofile 1048576
-        --tcp-keep-alive 300
-        --tcp-fast-open
-        --tcp-no-delay
-        -U
-        --plugin "xray-plugin"
-        --plugin-opts "server;tls;fast-open;mode=grpc;host=example.com"
+    command: ssservice server --config /etc/shadowsocks-rust/server.json
+
+  sslocal:
+    image: pexcn/docker-images:shadowsocks-rust
+    container_name: sslocal
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TZ: Asia/Taipei
+      SHADOWSOCKS_PASSWORD_1: password_1
+      SHADOWSOCKS_PASSWORD_2: password_2
+      SHADOWSOCKS_PASSWORD_3: password_3
+    volumes:
+      - ./shadowsocks-rust-data:/etc/shadowsocks-rust
+    command: ssservice local --config /etc/shadowsocks-rust/local.json
