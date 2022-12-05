@@ -5,7 +5,7 @@ services:
     image: pexcn/docker-images:motd
     container_name: motd
     restart: unless-stopped
-    network_mode: bridge
+    network_mode: host
     environment:
       TZ: Asia/Taipei
       MESSAGE_HEADER: "\nWelcome to ARCH!\n"
