@@ -10,6 +10,7 @@ services:
       TZ: Asia/Taipei
     volumes:
       - ./smartdns-data/smartdns-china.conf:/etc/smartdns/smartdns.conf
+      - ./smartdns-data/smartdns-china.cache:/etc/smartdns/smartdns.cache
 
   smartdns-world:
     image: pexcn/docker-images:smartdns
@@ -20,3 +21,4 @@ services:
       TZ: Asia/Taipei
     volumes:
       - ./smartdns-data/smartdns-world.conf:/etc/smartdns/smartdns.conf
+      - ./smartdns-data/smartdns-world.cache:/etc/smartdns/smartdns.cache
