@@ -6,6 +6,9 @@ services:
     container_name: ssserver
     restart: unless-stopped
     network_mode: host
+    logging:
+      options:
+        max-size: 20m
     environment:
       TZ: Asia/Taipei
       SHADOWSOCKS_PASSWORD_1: password_1
@@ -21,6 +24,9 @@ services:
     container_name: sslocal
     restart: unless-stopped
     network_mode: host
+    logging:
+      options:
+        max-size: 20m
     environment:
       TZ: Asia/Taipei
       SHADOWSOCKS_PASSWORD_1: password_1
