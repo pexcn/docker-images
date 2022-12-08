@@ -6,6 +6,9 @@ services:
     container_name: smartdns-china
     restart: unless-stopped
     network_mode: host
+    logging:
+      options:
+        max-size: 20m
     environment:
       TZ: Asia/Taipei
     volumes:
@@ -17,6 +20,9 @@ services:
     container_name: smartdns-world
     restart: unless-stopped
     network_mode: host
+    logging:
+      options:
+        max-size: 20m
     environment:
       TZ: Asia/Taipei
     volumes:
