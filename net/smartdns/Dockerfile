@@ -7,7 +7,7 @@
 #
 FROM alpine AS builder
 
-ARG VERSION=Release38
+ARG VERSION=Release39
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git make pkgconfig gcc musl-dev linux-headers openssl-dev openssl-libs-static \
   && git clone https://github.com/pymumu/smartdns.git --branch $VERSION \
