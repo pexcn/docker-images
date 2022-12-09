@@ -12,7 +12,6 @@ services:
         max-size: 20m
     environment:
       TZ: Asia/Taipei
-      USE_USERSPACE_MODE: 0
       PEER_RESOLVE_INTERVAL: 0
     volumes:
       - ./wireguard-data:/etc/wireguard

@@ -30,8 +30,6 @@ _graceful_stop() {
 }
 
 setup_environment() {
-  [ "$USE_USERSPACE_MODE" != 1 ] || PATH="/srv/bin:$PATH"
-
   # make configs be safe
   chmod 600 /etc/wireguard/*.conf
 
