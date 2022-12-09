@@ -14,6 +14,12 @@ warn() {
   printf "${yellow}[${time}] [WARN]: ${clear}%s\n" "$*" >&2
 }
 
+_get_boringtun_threads() {
+  local cores=$(grep -c "^processor" /proc/cpuinfo)
+  local default=4
+  [ "$cores" -lt "$default" ] && echo "$default" || echo "$cores"
+}
+
 _get_wg_interfaces() {
   find /etc/wireguard -maxdepth 1 -type f -name "*.conf" -exec basename -a -s ".conf" {} +
 }
@@ -30,6 +36,13 @@ _graceful_stop() {
 }
 
 setup_environment() {
+  # setup boringtun environment variables
+  export WG_SUDO=1
+  export WG_LOG_LEVEL=info
+  export WG_LOG_FILE=/dev/stdout
+  export WG_THREADS=$(_get_boringtun_threads)
+  export WG_QUICK_USERSPACE_IMPLEMENTATION=boringtun-cli
+
   # make configs be safe
   chmod 600 /etc/wireguard/*.conf
 

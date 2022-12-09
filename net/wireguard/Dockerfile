@@ -5,19 +5,19 @@
 #
 # Build stage
 #
-FROM golang:1.19-alpine AS builder
+FROM rust:alpine AS builder
 
-ARG VERSION=0.0.20220316
+ARG VERSION=boringtun-0.5.2
 RUN apk update \
-  && apk add --no-cache --virtual .build-deps git make gcc musl-dev \
-  && git clone https://github.com/WireGuard/wireguard-go.git --branch $VERSION \
-  && cd wireguard-go \
+  && apk add --no-cache --virtual .build-deps git musl-dev \
+  && git clone https://github.com/cloudflare/boringtun.git --branch $VERSION \
+  && cd boringtun \
   && git checkout $VERSION \
-  && sed -i 's/go build -v -o "$@"/CGO_ENABLED=0 go build -v -o "$@" -trimpath -ldflags "-s -w"/' Makefile \
-  && make \
-  && make install \
+  && cargo build --bin boringtun-cli --release \
+  && strip target/release/boringtun-cli \
+  && install target/release/boringtun-cli /usr/local/bin/ \
   && cd - \
-  && rm -r wireguard-go \
+  && rm -r boringtun \
   && apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
@@ -36,7 +36,7 @@ RUN apk update \
 
 RUN install /usr/share/doc/wireguard-tools/contrib/reresolve-dns/reresolve-dns.sh /usr/local/bin/
 
-COPY --from=builder /usr/bin/wireguard-go /usr/local/bin/
+COPY --from=builder /usr/local/bin/boringtun-cli /usr/local/bin/
 COPY wireguard.sh /usr/local/bin/
 
 ENV PEER_RESOLVE_INTERVAL=0
