@@ -33,9 +33,9 @@ _get_addr_by_iface() {
   ip -4 addr show dev "$1" | grep -w "inet" | awk '{print $2}' | awk -F '/' '{print $1}' | head -1
 }
 
-_get_peer_by_iface() {
-  ip -4 addr show dev "$1" | grep -w "inet" | awk '{print $4}' | awk -F '/' '{print $1}' | head -1
-}
+#_get_peer_by_iface() {
+#  ip -4 addr show dev "$1" | grep -w "inet" | awk '{print $4}' | awk -F '/' '{print $1}' | head -1
+#}
 
 _check_rule_by_comment() {
   iptables-save | grep -q "$1"
@@ -58,8 +58,13 @@ _is_ipv4_only() {
 }
 
 _get_tun_from_args() {
-  local tundev=$(echo "$@" | awk -F '--tun' '{print $2}' | awk '{print $1}')
-  echo ${tundev:=tun0}
+  local tun=$(echo "$@" | awk -F '--tun' '{print $2}' | awk '{print $1}')
+  echo ${tun:=tun0}
+}
+
+_get_peer_from_args() {
+  local peer=$(echo "$@" | awk -F '--tun-peer' '{print $2}' | awk '{print $1}')
+  _is_server_mode "$1" && echo ${peer:=192.168.201.2} || echo ${peer:=192.168.200.2}
 }
 
 _get_localport_from_args() {
@@ -75,7 +80,7 @@ setup_iptables() {
   local interface=$(_get_default_iface)
   local address=$(_get_addr_by_iface "${interface}")
   local tun=$(_get_tun_from_args "$@")
-  local peer=$(_get_peer_by_iface "${tun}")
+  local peer=$(_get_peer_from_args "$@")
   local localport=$(_get_localport_from_args "$@")
   local comment="phantun_${tun}_${localport}"
 
@@ -107,7 +112,6 @@ graceful_stop() {
 }
 
 start_phantun() {
-  # TODO: caught exit or others... signal? e.g.: pass `--help` argument.
   trap 'graceful_stop "$@"' SIGTERM SIGINT
   apply_sysctl "$@"
   setup_iptables "$@"
