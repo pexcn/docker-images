@@ -102,7 +102,7 @@ jobs:
             TARGET_PLATFORMS: linux/amd64,linux/arm64
           # wireguard
           - BUILD_CONTEXT: net/wireguard
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
+            TARGET_PLATFORMS: linux/amd64
           # acme.sh
           - BUILD_CONTEXT: utils/acme.sh
             TARGET_PLATFORMS: linux/amd64,linux/arm64
