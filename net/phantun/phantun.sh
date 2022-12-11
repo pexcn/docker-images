@@ -37,10 +37,6 @@ _get_addr6_by_iface() {
   ip -6 addr show dev "$1" | grep -w "inet6" | awk '{print $2}' | awk -F '/' '{print $1}' | head -1
 }
 
-#_get_peer_by_iface() {
-#  ip -4 addr show dev "$1" | grep -w "inet" | awk '{print $4}' | awk -F '/' '{print $1}' | head -1
-#}
-
 _check_rule_by_comment() {
   iptables-save | grep -q "$1"
 }
@@ -94,7 +90,7 @@ _revoke_iptables() {
   local port=$(_get_port_from_args "$@")
   local comment="phantun_${tun}_${port}"
   iptables-save | grep -v "${comment}" | iptables-restore
-  info "remove iptables rule: [${comment}]."
+  info "remove iptables rule: [${comment}]"
 }
 
 _revoke_ip6tables() {
@@ -103,7 +99,7 @@ _revoke_ip6tables() {
   local port=$(_get_port_from_args "$@")
   local comment="phantun_${tun}_${port}"
   ip6tables-save | grep -v "${comment}" | ip6tables-restore
-  info "remove ip6tables rule: [${comment}]."
+  info "remove ip6tables rule: [${comment}]"
 }
 
 apply_sysctl() {
