@@ -95,7 +95,13 @@ _revoke_iptables() {
   local comment="phantun_${tun}_${port}"
   iptables-save | grep -v "${comment}" | iptables-restore
   info "remove iptables rule: [${comment}]."
+}
+
+_revoke_ip6tables() {
   ! _is_ipv4_only "$@" || return
+  local tun=$(_get_tun_from_args "$@")
+  local port=$(_get_port_from_args "$@")
+  local comment="phantun_${tun}_${port}"
   ip6tables-save | grep -v "${comment}" | ip6tables-restore
   info "remove ip6tables rule: [${comment}]."
 }
@@ -129,12 +135,17 @@ apply_iptables() {
         -m comment --comment "${comment}" || error "iptables SNAT rule add failed."
     fi
   fi
+}
 
+apply_ip6tables() {
   ! _is_ipv4_only "$@" || return
 
-  local interface6=$(_get_default6_iface)
-  local address6=$(_get_addr6_by_iface "${interface6}")
-  local peer6=$(_get_peer6_from_args "$@")
+  local interface=$(_get_default6_iface)
+  local address=$(_get_addr6_by_iface "${interface}")
+  local tun=$(_get_tun_from_args "$@")
+  local peer=$(_get_peer6_from_args "$@")
+  local port=$(_get_port_from_args "$@")
+  local comment="phantun_${tun}_${port}"
 
   if _check_rule6_by_comment "${comment}"; then
     warn "ip6tables rule already exist, maybe needs to check."
@@ -142,12 +153,12 @@ apply_iptables() {
     ip6tables -A FORWARD -i $tun -j ACCEPT -m comment --comment "${comment}"
     ip6tables -A FORWARD -o $tun -j ACCEPT -m comment --comment "${comment}"
     if _is_server_mode "$1"; then
-      info "add ip6tables DNAT rule: [${comment}]: ${interface6} -> ${tun}, ${address6} -> ${peer6}"
-      ip6tables -t nat -A PREROUTING -p tcp -i $interface6 --dport $port -j DNAT --to-destination $peer6 \
+      info "add ip6tables DNAT rule: [${comment}]: ${interface} -> ${tun}, ${address} -> ${peer}"
+      ip6tables -t nat -A PREROUTING -p tcp -i $interface --dport $port -j DNAT --to-destination $peer \
         -m comment --comment "${comment}" || error "ip6tables DNAT rule add failed."
     else
-      info "add ip6tables SNAT rule: [${comment}]: ${tun} -> ${interface6}, ${peer6} -> ${address6}"
-      ip6tables -t nat -A POSTROUTING -s $peer6 -o $interface6 -j SNAT --to-source $address6 \
+      info "add ip6tables SNAT rule: [${comment}]: ${tun} -> ${interface}, ${peer} -> ${address}"
+      ip6tables -t nat -A POSTROUTING -s $peer -o $interface -j SNAT --to-source $address \
         -m comment --comment "${comment}" || error "ip6tables SNAT rule add failed."
     fi
   fi
@@ -157,12 +168,14 @@ graceful_stop() {
   warn "caught SIGTERM or SIGINT signal, graceful stopping..."
   _stop_process
   _revoke_iptables "$@"
+  _revoke_ip6tables "$@"
 }
 
 start_phantun() {
   trap 'graceful_stop "$@"' SIGTERM SIGINT
   apply_sysctl "$@"
   apply_iptables "$@"
+  apply_ip6tables "$@"
   "$@" &
   wait
 }
