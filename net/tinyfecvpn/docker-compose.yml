@@ -10,6 +10,6 @@ services:
     environment:
       TZ: Asia/Taipei
     command: >
-      -s -l 0.0.0.0:1024
+      -s -l 0.0.0.0:1024 -k password
       --tun-dev tinyfecvpn --sub-net 100.100.100.0
       -f10:6 --timeout 3 --log-level 3 --mssfix 0 --disable-obscure --disable-checksum
