@@ -103,6 +103,16 @@ _revoke_ip6tables() {
   info "remove ip6tables rule: [${comment}]"
 }
 
+prepare_env() {
+  [ "$USE_IPTABLES_NFT_BACKEND" = 1 ] || return
+  alias iptables=iptables-nft
+  alias iptables-save=iptables-nft-save
+  alias iptables-restore=iptables-nft-restore
+  alias ip6tables=ip6tables-nft
+  alias ip6tables-save=ip6tables-nft-save
+  alias ip6tables-restore=ip6tables-nft-restore
+}
+
 apply_sysctl() {
   info "apply sysctl: $(sysctl -w net.ipv4.ip_forward=1)"
   ! _is_ipv4_only "$@" || return
@@ -170,6 +180,7 @@ graceful_stop() {
 
 start_phantun() {
   trap 'graceful_stop "$@"' SIGTERM SIGINT
+  prepare_env
   apply_sysctl "$@"
   apply_iptables "$@"
   apply_ip6tables "$@"
