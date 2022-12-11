@@ -1,9 +1,5 @@
 #!/bin/sh
 
-#
-# TODO: add ipv6 support
-#
-
 info() {
   local green='\e[0;32m'
   local clear='\e[0m'
@@ -29,8 +25,16 @@ _get_default_iface() {
   ip -4 route show default | awk -F 'dev' '{print $2}' | awk '{print $1}'
 }
 
+_get_default6_iface() {
+  ip -6 route show default | awk -F 'dev' '{print $2}' | awk '{print $1}'
+}
+
 _get_addr_by_iface() {
   ip -4 addr show dev "$1" | grep -w "inet" | awk '{print $2}' | awk -F '/' '{print $1}' | head -1
+}
+
+_get_addr6_by_iface() {
+  ip -6 addr show dev "$1" | grep -w "inet6" | awk '{print $2}' | awk -F '/' '{print $1}' | head -1
 }
 
 #_get_peer_by_iface() {
@@ -39,6 +43,10 @@ _get_addr_by_iface() {
 
 _check_rule_by_comment() {
   iptables-save | grep -q "$1"
+}
+
+_check_rule6_by_comment() {
+  ip6tables-save | grep -q "$1"
 }
 
 _is_server_mode() {
@@ -67,6 +75,11 @@ _get_peer_from_args() {
   _is_server_mode "$1" && echo ${peer:=192.168.201.2} || echo ${peer:=192.168.200.2}
 }
 
+_get_peer6_from_args() {
+  local peer=$(echo "$@" | awk -F '--tun-peer6' '{print $2}' | awk '{print $1}')
+  _is_server_mode "$1" && echo ${peer:=fcc9::2} || echo ${peer:=fcc8::2}
+}
+
 _get_port_from_args() {
   echo "$@" | awk -F '-l|--local' '{print $2}' | awk '{print $1}'
 }
@@ -82,11 +95,15 @@ _revoke_iptables() {
   local comment="phantun_${tun}_${port}"
   iptables-save | grep -v "${comment}" | iptables-restore
   info "remove iptables rule: [${comment}]."
+  ! _is_ipv4_only "$@" || return
+  ip6tables-save | grep -v "${comment}" | ip6tables-restore
+  info "remove ip6tables rule: [${comment}]."
 }
 
 apply_sysctl() {
   info "apply sysctl: $(sysctl -w net.ipv4.ip_forward=1)"
-  _is_ipv4_only "$@" || info "apply sysctl: $(sysctl -w net.ipv6.conf.all.forwarding=1)"
+  ! _is_ipv4_only "$@" || return
+  info "apply sysctl: $(sysctl -w net.ipv6.conf.all.forwarding=1)"
 }
 
 apply_iptables() {
@@ -110,6 +127,28 @@ apply_iptables() {
       info "add iptables SNAT rule: [${comment}]: ${tun} -> ${interface}, ${peer} -> ${address}"
       iptables -t nat -A POSTROUTING -s $peer -o $interface -j SNAT --to-source $address \
         -m comment --comment "${comment}" || error "iptables SNAT rule add failed."
+    fi
+  fi
+
+  ! _is_ipv4_only "$@" || return
+
+  local interface6=$(_get_default6_iface)
+  local address6=$(_get_addr6_by_iface "${interface6}")
+  local peer6=$(_get_peer6_from_args "$@")
+
+  if _check_rule6_by_comment "${comment}"; then
+    warn "ip6tables rule already exist, maybe needs to check."
+  else
+    ip6tables -A FORWARD -i $tun -j ACCEPT -m comment --comment "${comment}"
+    ip6tables -A FORWARD -o $tun -j ACCEPT -m comment --comment "${comment}"
+    if _is_server_mode "$1"; then
+      info "add ip6tables DNAT rule: [${comment}]: ${interface6} -> ${tun}, ${address6} -> ${peer6}"
+      ip6tables -t nat -A PREROUTING -p tcp -i $interface6 --dport $port -j DNAT --to-destination $peer6 \
+        -m comment --comment "${comment}" || error "ip6tables DNAT rule add failed."
+    else
+      info "add ip6tables SNAT rule: [${comment}]: ${tun} -> ${interface6}, ${peer6} -> ${address6}"
+      ip6tables -t nat -A POSTROUTING -s $peer6 -o $interface6 -j SNAT --to-source $address6 \
+        -m comment --comment "${comment}" || error "ip6tables SNAT rule add failed."
     fi
   fi
 }
