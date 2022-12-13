@@ -99,28 +99,6 @@ _ip6tables() {
   ip6tables -w 10 "$@"
 }
 
-_stop_process() {
-  kill $(pidof phantun-server phantun-client)
-  info "terminate phantun process."
-}
-
-_revoke_iptables() {
-  local tun=$(_get_tun_from_args "$@")
-  local port=$(_get_port_from_args "$@")
-  local comment="phantun_${tun}_${port}"
-  iptables-save | grep -v "${comment}" | iptables-restore -w 10
-  info "remove iptables rule: [${comment}]"
-}
-
-_revoke_ip6tables() {
-  ! _is_ipv4_only "$@" || return
-  local tun=$(_get_tun_from_args "$@")
-  local port=$(_get_port_from_args "$@")
-  local comment="phantun_${tun}_${port}"
-  ip6tables-save | grep -v "${comment}" | ip6tables-restore -w 10
-  info "remove ip6tables rule: [${comment}]"
-}
-
 apply_sysctl() {
   info "apply sysctl: $(sysctl -w net.ipv4.ip_forward=1)"
   ! _is_ipv4_only "$@" || return
@@ -179,11 +157,33 @@ apply_ip6tables() {
   fi
 }
 
+stop_process() {
+  kill $(pidof phantun-server phantun-client)
+  info "terminate phantun process."
+}
+
+revoke_iptables() {
+  local tun=$(_get_tun_from_args "$@")
+  local port=$(_get_port_from_args "$@")
+  local comment="phantun_${tun}_${port}"
+  iptables-save | grep -v "${comment}" | iptables-restore -w 10
+  info "remove iptables rule: [${comment}]"
+}
+
+revoke_ip6tables() {
+  ! _is_ipv4_only "$@" || return
+  local tun=$(_get_tun_from_args "$@")
+  local port=$(_get_port_from_args "$@")
+  local comment="phantun_${tun}_${port}"
+  ip6tables-save | grep -v "${comment}" | ip6tables-restore -w 10
+  info "remove ip6tables rule: [${comment}]"
+}
+
 graceful_stop() {
   warn "caught SIGTERM or SIGINT signal, graceful stopping..."
-  _stop_process
-  _revoke_iptables "$@"
-  _revoke_ip6tables "$@"
+  stop_process
+  revoke_iptables "$@"
+  revoke_ip6tables "$@"
 }
 
 start_phantun() {
