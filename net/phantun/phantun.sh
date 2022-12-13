@@ -114,16 +114,16 @@ apply_iptables() {
   local comment="phantun_${tun}_${port}"
 
   if _check_rule_by_comment "${comment}"; then
-    warn "iptables rule already exist, maybe needs to check."
+    warn "iptables rules already exist, maybe needs to check."
   else
-    _iptables -A FORWARD -i $tun -j ACCEPT -m comment --comment "${comment}"
-    _iptables -A FORWARD -o $tun -j ACCEPT -m comment --comment "${comment}"
+    _iptables -A FORWARD -i $tun -j ACCEPT -m comment --comment "${comment}" || error "iptables filter rule add failed."
+    _iptables -A FORWARD -o $tun -j ACCEPT -m comment --comment "${comment}" || error "iptables filter rule add failed."
     if _is_server_mode "$1"; then
-      info "add iptables DNAT rule: [${comment}]: ${interface} -> ${tun}, ${address} -> ${peer}"
+      info "iptables DNAT rule added: [${comment}]: ${interface} -> ${tun}, ${address} -> ${peer}"
       _iptables -t nat -A PREROUTING -p tcp -i $interface --dport $port -j DNAT --to-destination $peer \
         -m comment --comment "${comment}" || error "iptables DNAT rule add failed."
     else
-      info "add iptables SNAT rule: [${comment}]: ${tun} -> ${interface}, ${peer} -> ${address}"
+      info "iptables SNAT rule added: [${comment}]: ${tun} -> ${interface}, ${peer} -> ${address}"
       _iptables -t nat -A POSTROUTING -s $peer -o $interface -j SNAT --to-source $address \
         -m comment --comment "${comment}" || error "iptables SNAT rule add failed."
     fi
@@ -141,16 +141,16 @@ apply_ip6tables() {
   local comment="phantun_${tun}_${port}"
 
   if _check_rule6_by_comment "${comment}"; then
-    warn "ip6tables rule already exist, maybe needs to check."
+    warn "ip6tables rules already exist, maybe needs to check."
   else
-    _ip6tables -A FORWARD -i $tun -j ACCEPT -m comment --comment "${comment}"
-    _ip6tables -A FORWARD -o $tun -j ACCEPT -m comment --comment "${comment}"
+    _ip6tables -A FORWARD -i $tun -j ACCEPT -m comment --comment "${comment}" || error "ip6tables filter rule add failed."
+    _ip6tables -A FORWARD -o $tun -j ACCEPT -m comment --comment "${comment}" || error "ip6tables filter rule add failed."
     if _is_server_mode "$1"; then
-      info "add ip6tables DNAT rule: [${comment}]: ${interface} -> ${tun}, ${address} -> ${peer}"
+      info "ip6tables DNAT rule added: [${comment}]: ${interface} -> ${tun}, ${address} -> ${peer}"
       _ip6tables -t nat -A PREROUTING -p tcp -i $interface --dport $port -j DNAT --to-destination $peer \
         -m comment --comment "${comment}" || error "ip6tables DNAT rule add failed."
     else
-      info "add ip6tables SNAT rule: [${comment}]: ${tun} -> ${interface}, ${peer} -> ${address}"
+      info "ip6tables SNAT rule added: [${comment}]: ${tun} -> ${interface}, ${peer} -> ${address}"
       _ip6tables -t nat -A POSTROUTING -s $peer -o $interface -j SNAT --to-source $address \
         -m comment --comment "${comment}" || error "ip6tables SNAT rule add failed."
     fi
