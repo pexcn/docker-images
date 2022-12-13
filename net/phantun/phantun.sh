@@ -166,17 +166,30 @@ revoke_iptables() {
   local tun=$(_get_tun_from_args "$@")
   local port=$(_get_port_from_args "$@")
   local comment="phantun_${tun}_${port}"
-  iptables-save | grep -v "${comment}" | iptables-restore -w 10
-  info "remove iptables rule: [${comment}]"
+
+  iptables-save -t filter | grep "${comment}" | while read rule; do
+    _iptables -t filter ${rule/-A/-D} || error "iptables filter rule remove failed."
+  done
+  iptables-save -t nat | grep "${comment}" | while read rule; do
+    _iptables -t nat ${rule/-A/-D} || error "iptables nat rule remove failed."
+  done
+  info "iptables rule: [${comment}] removed."
 }
 
 revoke_ip6tables() {
   ! _is_ipv4_only "$@" || return
+
   local tun=$(_get_tun_from_args "$@")
   local port=$(_get_port_from_args "$@")
   local comment="phantun_${tun}_${port}"
-  ip6tables-save | grep -v "${comment}" | ip6tables-restore -w 10
-  info "remove ip6tables rule: [${comment}]"
+
+  ip6tables-save -t filter | grep "${comment}" | while read rule; do
+    _ip6tables -t filter ${rule/-A/-D} || error "ip6tables filter rule remove failed."
+  done
+  ip6tables-save -t nat | grep "${comment}" | while read rule; do
+    _ip6tables -t nat ${rule/-A/-D} || error "ip6tables nat rule remove failed."
+  done
+  info "ip6tables rule: [${comment}] removed."
 }
 
 graceful_stop() {
