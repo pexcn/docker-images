@@ -26,16 +26,11 @@ _get_default_iface() {
 }
 
 _get_addr_by_iface() {
-  ip addr show dev "$1" | grep -w "inet" | awk '{print $2}' | awk -F '/' '{print $1}' | head -1
+  ip -4 addr show dev "$1" | grep -w "inet" | awk '{print $2}' | awk -F '/' '{print $1}' | head -1
 }
 
 _is_server_mode() {
   [ "$1" = "-s" ]
-}
-
-_get_subnet_from_args() {
-  local addr=$(echo "$@" | awk -F '--sub-net' '{print $2}' | awk '{print $1}')
-  echo ${addr:=10.22.22.0}
 }
 
 _get_tundev_from_args() {
@@ -43,49 +38,67 @@ _get_tundev_from_args() {
   echo ${tundev:=tinyfecvpn}
 }
 
-_check_fw_rule_by_comment() {
+_get_subnet_from_args() {
+  local addr=$(echo "$@" | awk -F '--sub-net' '{print $2}' | awk '{print $1}')
+  echo ${addr:=10.22.22.0}
+}
+
+_get_port_from_args() {
+  echo "$@" | awk -F '-l|-r' '{print $2}' | awk '{print $1}' | awk -F ':' '{print $2}'
+}
+
+_check_rule_by_comment() {
   iptables-save | grep -q "$1"
 }
 
 apply_sysctl() {
-  # if do better, it will have backup and restore logic
   info "apply sysctl: $(sysctl -w net.ipv4.ip_forward=1)"
 }
 
-setup_firewall() {
+apply_iptables() {
   local interface=$(_get_default_iface)
-  local address=$(_get_addr_by_iface $interface)
-  local subnet=$(_get_subnet_from_args "$@")
+  local address=$(_get_addr_by_iface ${interface})
   local tundev=$(_get_tundev_from_args "$@")
-  local comment="${tundev}_${subnet}"
+  local subnet=$(_get_subnet_from_args "$@")
+  local port=$(_get_port_from_args "$@")
+  local comment="tinyfecvpn_${tundev}_${port}"
 
-  if _check_fw_rule_by_comment "${comment}"; then
-    warn "iptables rule already exist, maybe needs to check."
+  if _check_rule_by_comment "${comment}"; then
+    warn "iptables rules already exist, maybe needs to check."
   else
-    # like this: https://github.com/pexcn/docker-images/blob/cce4d32/net/strongswan/entrypoint.sh#L119-L121
-    info "add iptables rule: [${comment}]: ${tundev} -> ${interface}, ${subnet} -> ${address}"
-    iptables -t nat -A POSTROUTING -s ${subnet}/24 -o $interface -j SNAT --to-source $address \
-      -m comment --comment "${comment}" || error "iptables add failed, using as a VPN will have issues."
+    info "iptables SNAT rule added: [${comment}]: ${tundev} -> ${interface}, ${subnet} -> ${address}"
+    iptables -w 10 -t nat -A POSTROUTING -s "${subnet}/30" -o $interface -j SNAT --to-source $address \
+      -m comment --comment "${comment}" || error "iptables SNAT rule add failed, using as a VPN will have issues."
   fi
+}
+
+stop_process() {
+  kill $(pidof tinyfecvpn)
+  info "terminate tinyfecvpn process."
+}
+
+revoke_iptables() {
+  local tun=$(_get_tundev_from_args "$@")
+  local port=$(_get_port_from_args "$@")
+  local comment="tinyfecvpn_${tun}_${port}"
+
+  iptables-save -t nat | grep "${comment}" | while read rule; do
+    iptables -w 10 -t nat ${rule/-A/-D} || error "iptables nat rule remove failed."
+  done
+  info "iptables rule: [${comment}] removed."
 }
 
 graceful_stop() {
   warn "caught SIGTERM or SIGINT signal, graceful stopping..."
-
-  local subnet=$(_get_subnet_from_args "$@")
-  local tundev=$(_get_tundev_from_args "$@")
-  local comment="${tundev}_${subnet}"
-  iptables-save | grep -v "$comment" | iptables-restore
-  info "remove iptables rule: [${comment}]"
+  stop_process
+  revoke_iptables "$@"
 }
 
 start_tinyfecvpn() {
   if _is_server_mode "$1"; then
-    # TODO: caught exit or others... signal?
-    # e.g.: pass `--help` argument.
     trap 'graceful_stop "$@"' SIGTERM SIGINT
     apply_sysctl
-    setup_firewall "$@"
+    apply_iptables "$@"
     tinyfecvpn "$@" &
     wait
   else
