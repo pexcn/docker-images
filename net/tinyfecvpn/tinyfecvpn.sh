@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# alias ​​settings must be global, and must be defined before the function being called with the alias
+if [ "$USE_IPTABLES_NFT_BACKEND" = 1 ]; then
+  alias iptables=iptables-nft
+  alias iptables-save=iptables-nft-save
+fi
+
 info() {
   local green='\e[0;32m'
   local clear='\e[0m'

@@ -33,5 +33,7 @@ RUN apk update \
 COPY --from=builder /usr/local/bin/tinyfecvpn /usr/local/bin/
 COPY tinyfecvpn.sh /usr/local/bin/
 
+ENV USE_IPTABLES_NFT_BACKEND=0
+
 ENTRYPOINT ["tinyfecvpn.sh"]
 CMD ["--help"]
