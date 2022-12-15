@@ -9,7 +9,7 @@ RUN apk update \
   && apk add --no-cache iproute2-minimal ipset iptables ip6tables \
   && rm -rf /var/cache/apk/*
 
-ARG VERSION=v0.2.8
+ARG VERSION=v0.3.2
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git \
   && git clone https://github.com/pexcn/transproxy.git --branch $VERSION \
