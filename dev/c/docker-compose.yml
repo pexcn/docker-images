@@ -1,26 +1,26 @@
 version: '3.9'
 
 services:
-  c-lang:
+  cc:
     image: pexcn/docker-images:c
-    container_name: c-lang
+    container_name: cc
     restart: unless-stopped
     network_mode: host
     environment:
       GIT_USER: username
       GIT_EMAIL: mail@example.com
-      #ENABLE_SSHD: 0
-      #SSH_PORT: 2222
+      ENABLE_SSHD: 1
+      SSH_PORT: 3333
     volumes:
-      - c-lang-data:/vscode
+      - cc-data:/vscode
       - /root/.ssh/authorized_keys:/root/.ssh/authorized_keys:ro
       - /etc/ssh/ssh_host_ed25519_key:/etc/ssh/ssh_host_ed25519_key:ro
       - /etc/ssh/ssh_host_ed25519_key.pub:/etc/ssh/ssh_host_ed25519_key.pub:ro
 
 volumes:
-  c-lang-data:
+  cc-data:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: ${PWD}/c-lang-data
+      device: ${PWD}/cc-data

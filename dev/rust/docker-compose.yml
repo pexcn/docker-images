@@ -9,8 +9,8 @@ services:
     environment:
       GIT_USER: username
       GIT_EMAIL: mail@example.com
-      #ENABLE_SSHD: 0
-      #SSH_PORT: 2222
+      ENABLE_SSHD: 1
+      SSH_PORT: 4444
     volumes:
       - rust-data:/vscode
       - /root/.ssh/authorized_keys:/root/.ssh/authorized_keys:ro
