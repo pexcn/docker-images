@@ -5,6 +5,14 @@
 FROM pexcn/docker-images:dev
 LABEL maintainer="pexcn <i@pexcn.me>"
 
+# install packages
+RUN apt-get update \
+  && apt-get install --no-install-recommends -y \
+      bzip2 gzip tar xz-utils zip unzip \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
+# shellcheck
 ARG SHELLCHECK_VER=v0.9.0
 RUN case "$(dpkg --print-architecture)" in \
        amd64) arch="x86_64";; \
