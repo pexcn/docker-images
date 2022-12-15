@@ -2,6 +2,9 @@
 
 ## Configs
 
+Use `iptables` or `iptables-nft` for `PostUp` and `PostDown`, it depends on the iptables backend used by your host machine.  
+Under this image (based on alpine), `iptables` is the symlink of `iptables-legacy`, so `iptables-legacy` is used by default.  
+
 ```sh
 #
 # /etc/wireguard/wg-server.conf
