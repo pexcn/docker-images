@@ -1,0 +1,16 @@
+{
+	"name": "Shell",
+	"image": "pexcn/docker-images:shell",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"mads-hartmann.bash-ide-vscode",
+				"rogalmic.bash-debug",
+				"timonwong.shellcheck",
+				"foxundermoon.shell-format",
+				"Remisa.shellman"
+			]
+		}
+	},
+	"remoteUser": "vscode"
+}
