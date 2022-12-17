@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "bashdb",
+            "request": "launch",
+            "name": "Run script",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/script.sh",
+            "args": [
+                "arg1",
+                "arg2"
+            ]
+        }
+    ]
+}
