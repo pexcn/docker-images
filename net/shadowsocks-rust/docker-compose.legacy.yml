@@ -82,7 +82,7 @@ services:
       TZ: Asia/Taipei
       CHILLING_EFFECT: 0
     volumes:
-      - ../../utils/acme.sh/acme.sh-data/example.com_ecc:/root/.acme.sh/example.com
+      - ../../utils/acme.sh/acme.sh-data/example.com_ecc:/.acme.sh/example.com
     command: >
       ssservice server
         --server-addr 0.0.0.0:443
@@ -109,7 +109,7 @@ services:
       TZ: Asia/Taipei
       CHILLING_EFFECT: 0
     volumes:
-      - ../../utils/acme.sh/acme.sh-data/example.com_ecc:/root/.acme.sh/example.com
+      - ../../utils/acme.sh/acme.sh-data/example.com_ecc:/.acme.sh/example.com
     command: >
       ssservice server
         --server-addr 0.0.0.0:443
