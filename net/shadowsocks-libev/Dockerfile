@@ -13,7 +13,7 @@ RUN apk update \
       c-ares-dev mbedtls-dev pcre-dev libev-dev libsodium-dev \
       c-ares-static mbedtls-static libsodium-static
 
-ARG SS_VERSION=7f7f68afe40b227195f5d9a6bb03c7bce41d45d8
+ARG SS_VERSION=d83ace0f0d9c05656c13d66aa4a449bf70143254
 RUN git clone https://github.com/shadowsocks/shadowsocks-libev.git --recurse-submodules -j2 \
   && cd shadowsocks-libev \
   && git checkout $SS_VERSION \
@@ -64,7 +64,7 @@ RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.8/main" >> /etc/apk/repositor
   && apk update \
   && apk add --no-cache linux-headers=4.4.6-r2
 
-ARG SS_VERSION=7f7f68afe40b227195f5d9a6bb03c7bce41d45d8
+ARG SS_VERSION=d83ace0f0d9c05656c13d66aa4a449bf70143254
 RUN git clone https://github.com/shadowsocks/shadowsocks-libev.git --recurse-submodules -j2 \
   && cd shadowsocks-libev \
   && git checkout $SS_VERSION \
@@ -117,7 +117,7 @@ RUN git clone https://github.com/teddysun/v2ray-plugin.git --branch $V2RAY_VERSI
   && cd - \
   && rm -r v2ray-plugin
 
-ARG XRAY_VERSION=v1.6.2
+ARG XRAY_VERSION=v1.6.6
 RUN git clone https://github.com/teddysun/xray-plugin.git --branch $XRAY_VERSION \
   && cd xray-plugin \
   && env CGO_ENABLED=0 go build -v -trimpath -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w -buildid=" -o xray-plugin \
