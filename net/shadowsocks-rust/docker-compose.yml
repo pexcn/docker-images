@@ -8,6 +8,7 @@ services:
     network_mode: host
     environment:
       TZ: Asia/Taipei
+      CHILLING_EFFECT: 0
       SHADOWSOCKS_PASSWORD_1: password_1
       SHADOWSOCKS_PASSWORD_2: password_2
       SHADOWSOCKS_PASSWORD_3: password_3
@@ -23,6 +24,7 @@ services:
     network_mode: host
     environment:
       TZ: Asia/Taipei
+      CHILLING_EFFECT: 0
       SHADOWSOCKS_PASSWORD_1: password_1
       SHADOWSOCKS_PASSWORD_2: password_2
       SHADOWSOCKS_PASSWORD_3: password_3

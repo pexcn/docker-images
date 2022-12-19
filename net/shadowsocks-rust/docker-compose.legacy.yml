@@ -9,6 +9,7 @@ services:
     network_mode: host
     environment:
       TZ: Asia/Taipei
+      CHILLING_EFFECT: 0
     command: >
       ssservice server
         --server-addr 0.0.0.0:1776
@@ -31,6 +32,7 @@ services:
     network_mode: host
     environment:
       TZ: Asia/Taipei
+      CHILLING_EFFECT: 0
     command: >
       ssservice server
         --server-addr 0.0.0.0:1776
@@ -53,6 +55,7 @@ services:
     network_mode: host
     environment:
       TZ: Asia/Taipei
+      CHILLING_EFFECT: 0
     command: >
       ssservice server
         --server-addr 0.0.0.0:80
@@ -77,6 +80,7 @@ services:
     network_mode: host
     environment:
       TZ: Asia/Taipei
+      CHILLING_EFFECT: 0
     volumes:
       - ../../utils/acme.sh/acme.sh-data/example.com_ecc:/root/.acme.sh/example.com
     command: >
@@ -103,6 +107,7 @@ services:
     network_mode: host
     environment:
       TZ: Asia/Taipei
+      CHILLING_EFFECT: 0
     volumes:
       - ../../utils/acme.sh/acme.sh-data/example.com_ecc:/root/.acme.sh/example.com
     command: >
@@ -129,6 +134,7 @@ services:
     network_mode: host
     environment:
       TZ: Asia/Taipei
+      CHILLING_EFFECT: 0
     command: >
       ssservice local
         --local-addr 0.0.0.0:1080
@@ -152,6 +158,7 @@ services:
     network_mode: host
     environment:
       TZ: Asia/Taipei
+      CHILLING_EFFECT: 0
     command: >
       ssservice local
         --protocol tunnel
@@ -177,6 +184,7 @@ services:
     network_mode: host
     environment:
       TZ: Asia/Taipei
+      CHILLING_EFFECT: 0
     command: >
       ssservice local
         --protocol redir
@@ -203,6 +211,7 @@ services:
     network_mode: host
     environment:
       TZ: Asia/Taipei
+      CHILLING_EFFECT: 0
     command: >
       ssservice local
         --protocol redir
@@ -227,6 +236,7 @@ services:
     network_mode: host
     environment:
       TZ: Asia/Taipei
+      CHILLING_EFFECT: 0
     command: >
       ssservice local
         --protocol redir

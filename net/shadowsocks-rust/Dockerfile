@@ -10,14 +10,10 @@ FROM rust:alpine AS builder-ss
 RUN apk update \
   && apk add --no-cache --virtual .build-deps musl-dev git
 
-ARG SS_VERSION=v1.15.0-alpha.9
+ARG SS_VERSION=v1.15.1
 RUN git clone https://github.com/shadowsocks/shadowsocks-rust.git --branch $SS_VERSION \
   && cd shadowsocks-rust \
-  && case "$(apk --print-arch)" in \
-       aarch64) build_features="local-redir local-tun aead-cipher-2022-extra armv8 neon";; \
-       *) build_features="local-redir local-tun aead-cipher-2022-extra";; \
-     esac \
-  && cargo build --release --features "$build_features" \
+  && cargo build --release --features "local-redir local-tun aead-cipher-2022-extra" \
   && install target/release/ssservice target/release/ssserver target/release/sslocal target/release/ssmanager target/release/ssurl /usr/local/bin/ \
   && cd - \
   && rm -r /shadowsocks-rust
@@ -71,7 +67,7 @@ RUN git clone https://github.com/teddysun/v2ray-plugin.git --branch $V2RAY_VERSI
   && cd - \
   && rm -r v2ray-plugin
 
-ARG XRAY_VERSION=v1.6.2
+ARG XRAY_VERSION=v1.6.6
 RUN git clone https://github.com/teddysun/xray-plugin.git --branch $XRAY_VERSION \
   && cd xray-plugin \
   && env CGO_ENABLED=0 go build -v -trimpath -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w -buildid=" -o xray-plugin \
@@ -109,5 +105,6 @@ RUN cd /usr/local/bin/ \
   && ln -s obfs-local mix-local
 
 ENV CHILLING_EFFECT=0
+
 ENTRYPOINT ["shadowsocks-rust.sh"]
 CMD ["ssserver", "--version"]
