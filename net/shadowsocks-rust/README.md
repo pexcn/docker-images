@@ -14,7 +14,7 @@ ssservice server \
   --encrypt-method aes-128-gcm \
   --timeout 3600 \
   --udp-timeout 300 \
-  --udp-max-associations 1024 \
+  --user nobody \
   --nofile 1048576 \
   --tcp-keep-alive 300 \
   --tcp-fast-open \
@@ -44,7 +44,7 @@ ssservice local \
   --encrypt-method aes-128-gcm \
   --timeout 3600 \
   --udp-timeout 300 \
-  --udp-max-associations 1024 \
+  --user nobody \
   --nofile 1048576 \
   --tcp-keep-alive 300 \
   --tcp-fast-open \
@@ -63,7 +63,7 @@ ssservice local \
   --encrypt-method aes-128-gcm \
   --timeout 3600 \
   --udp-timeout 300 \
-  --udp-max-associations 1024 \
+  --user nobody \
   --nofile 1048576 \
   --tcp-keep-alive 300 \
   --tcp-fast-open \
@@ -81,7 +81,7 @@ ssservice local \
   --encrypt-method aes-128-gcm \
   --timeout 3600 \
   --udp-timeout 300 \
-  --udp-max-associations 1024 \
+  --user nobody \
   --nofile 1048576 \
   --tcp-keep-alive 300 \
   --tcp-fast-open \
@@ -110,7 +110,7 @@ ssservice manager \
   --encrypt-method aes-128-gcm \
   --timeout 3600 \
   --udp-timeout 300 \
-  --udp-max-associations 1024 \
+  --user nobody \
   --nofile 1048576 \
   --tcp-keep-alive 300 \
   --tcp-fast-open \

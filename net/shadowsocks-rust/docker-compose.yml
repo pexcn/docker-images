@@ -15,7 +15,7 @@ services:
     volumes:
       - ./shadowsocks-rust-data:/etc/shadowsocks-rust
       - ../../utils/acme.sh/acme.sh-data/example.com_ecc:/root/.acme.sh/example.com
-    command: ssservice server --config /etc/shadowsocks-rust/server.json
+    command: ssservice server --user nobody --config /etc/shadowsocks-rust/server.json
 
   sslocal:
     image: pexcn/docker-images:shadowsocks-rust
@@ -30,4 +30,4 @@ services:
       SHADOWSOCKS_PASSWORD_3: password_3
     volumes:
       - ./shadowsocks-rust-data:/etc/shadowsocks-rust
-    command: ssservice local --config /etc/shadowsocks-rust/local.json
+    command: ssservice local --user nobody --config /etc/shadowsocks-rust/local.json

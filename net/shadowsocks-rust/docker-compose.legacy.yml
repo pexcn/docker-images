@@ -17,7 +17,7 @@ services:
         --encrypt-method aes-128-gcm
         --timeout 3600
         --udp-timeout 300
-        --udp-max-associations 1024
+        --user nobody
         --nofile 1048576
         --tcp-keep-alive 300
         --tcp-fast-open
@@ -40,7 +40,7 @@ services:
         --encrypt-method 2022-blake3-aes-128-gcm
         --timeout 3600
         --udp-timeout 300
-        --udp-max-associations 1024
+        --user nobody
         --nofile 1048576
         --tcp-keep-alive 300
         --tcp-fast-open
@@ -63,7 +63,7 @@ services:
         --encrypt-method aes-128-gcm
         --timeout 3600
         --udp-timeout 300
-        --udp-max-associations 1024
+        --user nobody
         --nofile 1048576
         --tcp-keep-alive 300
         --tcp-fast-open
@@ -90,7 +90,7 @@ services:
         --encrypt-method chacha20-ietf-poly1305
         --timeout 3600
         --udp-timeout 300
-        --udp-max-associations 1024
+        --user nobody
         --nofile 1048576
         --tcp-keep-alive 300
         --tcp-fast-open
@@ -117,7 +117,7 @@ services:
         --encrypt-method chacha20-ietf-poly1305
         --timeout 3600
         --udp-timeout 300
-        --udp-max-associations 1024
+        --user nobody
         --nofile 1048576
         --tcp-keep-alive 300
         --tcp-fast-open
@@ -143,7 +143,7 @@ services:
         --encrypt-method aes-128-gcm
         --timeout 3600
         --udp-timeout 300
-        --udp-max-associations 1024
+        --user nobody
         --nofile 1048576
         --tcp-keep-alive 300
         --tcp-fast-open
@@ -169,7 +169,7 @@ services:
         --encrypt-method aes-128-gcm
         --timeout 3600
         --udp-timeout 300
-        --udp-max-associations 1024
+        --user nobody
         --nofile 1048576
         --tcp-keep-alive 300
         --tcp-fast-open
@@ -194,7 +194,7 @@ services:
         --encrypt-method aes-128-gcm
         --timeout 3600
         --udp-timeout 300
-        --udp-max-associations 1024
+        --user nobody
         --nofile 1048576
         --tcp-keep-alive 300
         --tcp-fast-open
@@ -221,7 +221,7 @@ services:
         --encrypt-method aes-128-gcm
         --timeout 3600
         --udp-timeout 300
-        --udp-max-associations 1024
+        --user nobody
         --nofile 1048576
         --tcp-keep-alive 300
         --tcp-fast-open
@@ -246,7 +246,7 @@ services:
         --encrypt-method aes-128-gcm
         --timeout 3600
         --udp-timeout 300
-        --udp-max-associations 1024
+        --user nobody
         --nofile 1048576
         --tcp-keep-alive 300
         --tcp-fast-open
