@@ -17,7 +17,7 @@ on:
 
 jobs:
   build-and-push:
-    #if: "!startsWith(github.event.head_commit.message, 'ext:')"
+    #if: "!contains(github.event.head_commit.message, 'do-not-build')"
     runs-on: ubuntu-22.04
     env:
       TZ: Asia/Taipei
