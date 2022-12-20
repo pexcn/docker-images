@@ -75,13 +75,13 @@ jobs:
             TARGET_PLATFORMS: linux/amd64,linux/arm64
           # phantun
           - BUILD_CONTEXT: net/phantun
-            TARGET_PLATFORMS: linux/amd64
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # shadowsocks-libev
           - BUILD_CONTEXT: net/shadowsocks-libev
             TARGET_PLATFORMS: linux/amd64,linux/arm64
           # shadowsocks-rust
           - BUILD_CONTEXT: net/shadowsocks-rust
-            TARGET_PLATFORMS: linux/amd64
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # smartdns
           - BUILD_CONTEXT: net/smartdns
             TARGET_PLATFORMS: linux/amd64,linux/arm64
@@ -105,7 +105,7 @@ jobs:
             TARGET_PLATFORMS: linux/amd64,linux/arm64
           # wireguard
           - BUILD_CONTEXT: net/wireguard
-            TARGET_PLATFORMS: linux/amd64
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # acme.sh
           - BUILD_CONTEXT: utils/acme.sh
             TARGET_PLATFORMS: linux/amd64,linux/arm64
