@@ -6,6 +6,9 @@ services:
     container_name: nginx
     restart: unless-stopped
     network_mode: host
+    logging:
+      options:
+        max-size: 20m
     environment:
       TZ: Asia/Taipei
     volumes:
