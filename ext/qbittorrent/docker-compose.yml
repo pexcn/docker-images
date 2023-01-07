@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  qbittorrent:
+    image: linuxserver/qbittorrent:4.5.0
+    container_name: qbittorrent
+    restart: unless-stopped
+    networks:
+      qbittorrent-network:
+        ipv4_address: 192.168.1.22
+    environment:
+      TZ: Asia/Taipei
+      PUID: 1000
+      PGID: 1000
+      WEBUI_PORT: 8080
+    volumes:
+      - ./qbittorrent-data/config:/config
+      - /mnt/share/share/下载:/downloads
+
+networks:
+  qbittorrent-network:
+    name: qbittorrent-network
+    driver: macvlan
+    driver_opts:
+      parent: enp4s0
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24
+          gateway: 192.168.1.1

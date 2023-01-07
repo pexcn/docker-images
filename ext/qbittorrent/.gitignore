@@ -1,0 +1,2 @@
+qbittorrent-data/*
+!qbittorrent-data/config/qBittorrent/qBittorrent.conf
