@@ -13,6 +13,7 @@ services:
       PUID: 1000
       PGID: 1000
       WEBUI_PORT: 8080
+      #DOCKER_MODS: arafatamim/linuxserver-io-mod-vuetorrent
     volumes:
       - ./qbittorrent-data/config:/config
       - /mnt/share/share/下载:/downloads
