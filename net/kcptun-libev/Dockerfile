@@ -7,17 +7,18 @@
 #
 FROM alpine AS builder
 
-ARG VERSION=v2.0.1
+ARG VERSION=v2.1.1
 RUN apk update \
-  && apk add --no-cache --virtual .build-deps git cmake ninja gcc musl-dev libev-dev libsodium-dev libsodium-static \
+  && apk add --no-cache --virtual .build-deps git cmake make gcc linux-headers musl-dev libev-dev libsodium-dev libsodium-static \
   && git clone https://github.com/hexian000/kcptun-libev.git --branch $VERSION \
   && cd kcptun-libev \
   && mkdir build \
   && cmake \
+       -G "Unix Makefiles" \
        -DCMAKE_BUILD_TYPE="Release" \
        -DCMAKE_EXE_LINKER_FLAGS="-static" \
+       -DCMAKE_EXPORT_COMPILE_COMMANDS=1 \
        -DLINK_STATIC_LIBS=TRUE \
-       -G Ninja \
        -S . \
        -B build \
   && cmake --build build --parallel \
