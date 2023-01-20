@@ -1,4 +1,4 @@
-# :whale: Docker Images<img src="https://raw.githubusercontent.com/pexcn/pexcn/master/flag.png" width="56px" align="right"><img src="https://raw.githubusercontent.com/pexcn/pexcn/master/a4.png" width="56px" align="right">
+# :whale: Docker Images<img src="https://raw.githubusercontent.com/pexcn/pexcn/master/flag.png" width="56px" align="right">
 
 [![CI](https://github.com/pexcn/docker-images/workflows/CI/badge.svg)](https://github.com/pexcn/docker-images/actions)
 
@@ -6,18 +6,18 @@ Personally made docker images.
 
 ## :notebook_with_decorative_cover: Usage
 
-```bash
-# from dockerhub
+```sh
+# DockerHub
 docker pull pexcn/docker-images:<tag>
 
-# from ghcr.io
+# GitHub Container Registry (GHCR)
 docker pull ghcr.io/pexcn/docker-images:<tag>
 ```
 
 ## :memo: License
 
 ```
-Copyright (C) 2021-2022, pexcn <i@pexcn.me>
+Copyright (C) 2021-2023, pexcn <i@pexcn.me>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
