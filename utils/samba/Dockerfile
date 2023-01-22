@@ -2,10 +2,10 @@
 # Dockerfile for samba
 #
 
-FROM alpine:3.15
+FROM alpine:3.16
 LABEL maintainer="pexcn <i@pexcn.me>"
 
-ARG SAMBA_VER=4.15.5-r0
+ARG SAMBA_VER=4.15.7-r0
 RUN apk update \
   && apk add --no-cache samba=$SAMBA_VER \
   && rm -rf /var/cache/apk/*
