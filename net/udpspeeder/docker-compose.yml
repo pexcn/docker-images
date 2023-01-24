@@ -9,7 +9,7 @@ services:
     environment:
       TZ: Asia/Taipei
     command: >
-      -s -l 0.0.0.0:1985 -r 127.0.0.1:1984 -f10:5 --timeout 3 --log-level 3 --disable-obscure --disable-checksum
+      -s -l 0.0.0.0:1985 -r 127.0.0.1:1984 -f10:6 --timeout 3 --log-level 3 --disable-obscure --disable-checksum
 
   udpspeeder-client:
     image: pexcn/docker-images:udpspeeder
@@ -19,4 +19,4 @@ services:
     environment:
       TZ: Asia/Taipei
     command: >
-      -c -l 127.0.0.1:1984 -r 11.22.33.44:1985 -f10:5 --timeout 3 --log-level 3 --disable-obscure --disable-checksum
+      -c -l 127.0.0.1:1984 -r 11.22.33.44:1985 -f10:6 --timeout 3 --log-level 3 --disable-obscure --disable-checksum
