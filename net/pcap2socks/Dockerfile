@@ -13,7 +13,8 @@ RUN apk update \
   && git clone https://github.com/zhxie/pcap2socks.git \
   && cd pcap2socks \
   && git checkout $VERSION \
-  && sed -i 's/^.*interfaces.*$/interfaces = "0.0.8"/' Cargo.toml \ # workaround for compile
+  # workaround for compile
+  && sed -i 's/^.*interfaces.*$/interfaces = "0.0.8"/' Cargo.toml \
   && cargo build --release \
   && strip target/release/pcap2socks \
   && install target/release/pcap2socks /usr/local/bin/pcap2socks \
