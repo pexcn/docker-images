@@ -66,7 +66,23 @@ dns:
   safesearch_cache_size: 1048576
   parental_cache_size: 1048576
   cache_time: 30
-  rewrites: []
+  rewrites:
+  - domain: assets1.xboxlive.com
+    answer: 192.168.1.10
+  - domain: assets2.xboxlive.com
+    answer: 192.168.1.10
+  - domain: dlassets.xboxlive.com
+    answer: 192.168.1.10
+  - domain: dlassets2.xboxlive.com
+    answer: 192.168.1.10
+  - domain: d1.xboxlive.com
+    answer: 192.168.1.10
+  - domain: d2.xboxlive.com
+    answer: 192.168.1.10
+  - domain: xvcf1.xboxlive.com
+    answer: 192.168.1.10
+  - domain: xvcf2.xboxlive.com
+    answer: 192.168.1.10
   blocked_services: []
   upstream_timeout: 10s
   private_networks: []
