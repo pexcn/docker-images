@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  pcap2socks:
+    image: pexcn/docker-images:pcap2socks
+    container_name: pcap2socks
+    restart: unless-stopped
+    networks:
+      pcap2socks-network:
+        ipv4_address: 192.168.1.11
+    sysctls:
+      # TEST NEEDED, see: https://github.com/zhxie/pcap2socks/commit/64de4e67388dbcfe4fb531e2cde1c969f61ed330
+      net.ipv4.ip_forward: 0
+    command: >
+      --interface eth0
+      --source 192.168.1.50
+      --publish 192.168.1.1
+      --destination 127.0.0.1:1080
+
+networks:
+  pcap2socks-network:
+    name: pcap2socks-network
+    driver: macvlan
+    driver_opts:
+      parent: eth0
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24
+          gateway: 192.168.1.1

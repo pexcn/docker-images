@@ -73,6 +73,9 @@ jobs:
           # netspeeder
           - BUILD_CONTEXT: net/netspeeder
             TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # pcap2socks
+          - BUILD_CONTEXT: net/pcap2socks
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # phantun
           - BUILD_CONTEXT: net/phantun
             TARGET_PLATFORMS: linux/amd64,linux/arm64
