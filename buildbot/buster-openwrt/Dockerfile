@@ -3,7 +3,7 @@
 #
 
 FROM pexcn/docker-images:buster
-LABEL maintainer="pexcn <i@pexcn.me>"
+LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 # install openwrt depends
 RUN apt-get update \

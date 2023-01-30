@@ -24,7 +24,7 @@ RUN apk update \
 # Runtime stage
 #
 FROM alpine
-LABEL maintainer="pexcn <i@pexcn.me>"
+LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 RUN apk update \
   && apk add --no-cache iptables ip6tables tzdata \

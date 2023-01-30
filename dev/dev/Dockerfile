@@ -3,7 +3,7 @@
 #
 
 FROM debian:bullseye-slim
-LABEL maintainer="pexcn <i@pexcn.me>"
+LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 # install packages
 RUN apt-get update \

@@ -3,7 +3,7 @@
 #
 
 FROM pexcn/docker-images:dev
-LABEL maintainer="pexcn <i@pexcn.me>"
+LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 #
 # https://github.com/rust-lang/docker-rust/blob/10f1b7cab43bde8b4d6299aa4d91a895a0e5388d/1.64.0/bullseye/slim/Dockerfile

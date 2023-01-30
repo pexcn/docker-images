@@ -3,7 +3,7 @@
 #
 
 FROM alpine:3.15
-LABEL maintainer="pexcn <i@pexcn.me>"
+LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 ARG STRONGSWAN_VER=5.9.1-r4
 RUN apk update \

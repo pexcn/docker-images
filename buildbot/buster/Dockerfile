@@ -3,7 +3,7 @@
 #
 
 FROM debian:buster-slim
-LABEL maintainer="pexcn <i@pexcn.me>"
+LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 # apt non-interactive
 ENV DEBIAN_FRONTEND=noninteractive

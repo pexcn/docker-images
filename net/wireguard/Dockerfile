@@ -25,7 +25,7 @@ RUN apk update \
 # Runtime stage
 #
 FROM alpine:3.16
-LABEL maintainer="pexcn <i@pexcn.me>"
+LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 ARG WIREGUARD_VER=1.0.20210914-r0
 RUN apk update \

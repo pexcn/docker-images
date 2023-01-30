@@ -34,7 +34,7 @@ RUN apk update \
 # Runtime stage
 #
 FROM alpine:3.16
-LABEL maintainer="pexcn <i@pexcn.me>"
+LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 RUN apk update \
   && apk add --no-cache tzdata \

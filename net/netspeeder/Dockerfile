@@ -27,7 +27,7 @@ RUN apk del .build-deps \
 # Runtime stage
 #
 FROM alpine
-LABEL maintainer="pexcn <i@pexcn.me>"
+LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 COPY --from=builder /app/bin/netspeeder /usr/local/bin/
 COPY entrypoint.sh /usr/local/bin/

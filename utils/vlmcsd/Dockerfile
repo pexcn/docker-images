@@ -26,7 +26,7 @@ RUN apk del .build-deps \
 # Runtime stage
 #
 FROM alpine
-LABEL maintainer="pexcn <i@pexcn.me>"
+LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 COPY --from=builder /usr/local/bin/vlmcsd /usr/local/bin/
 COPY --from=builder /etc/vlmcsd.* /etc/

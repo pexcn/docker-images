@@ -3,7 +3,7 @@
 #
 
 FROM alpine:3.14
-LABEL maintainer="pexcn <i@pexcn.me>"
+LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 ARG SMARTMONTOOLS_VERSION=7.2-r1
 ARG MSMTP_VERSION=1.8.15-r0
