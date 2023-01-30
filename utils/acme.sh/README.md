@@ -11,4 +11,11 @@ docker exec -it acme.sh --renew -d local.pexcn.me -d *.local.pexcn.me --ecc --fo
 
 # Deploy
 docker exec -it acme.sh --deploy --deploy-hook docker -d local.pexcn.me -d *.local.pexcn.me --ecc
+
+# Revoke
+docker exec -it acme.sh --revoke -d local.pexcn.me -d *.local.pexcn.me --ecc
+
+# Remove
+docker exec -it acme.sh --remove -d local.pexcn.me -d *.local.pexcn.me --ecc
+docker exec -it acme.sh rm -r /acme.sh/local.pexcn.me_ecc
 ```
