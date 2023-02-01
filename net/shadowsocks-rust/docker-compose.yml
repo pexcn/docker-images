@@ -12,6 +12,7 @@ services:
       SHADOWSOCKS_PASSWORD_1: password_1
       SHADOWSOCKS_PASSWORD_2: password_2
       SHADOWSOCKS_PASSWORD_3: password_3
+      SHADOWSOCKS_PASSWORD_4: password_4
     volumes:
       - ./shadowsocks-rust-data:/etc/shadowsocks-rust
       - ../../utils/acme.sh/acme.sh-data/example.com_ecc:/.acme.sh/example.com
@@ -28,6 +29,7 @@ services:
       SHADOWSOCKS_PASSWORD_1: password_1
       SHADOWSOCKS_PASSWORD_2: password_2
       SHADOWSOCKS_PASSWORD_3: password_3
+      SHADOWSOCKS_PASSWORD_4: password_4
     volumes:
       - ./shadowsocks-rust-data:/etc/shadowsocks-rust
     command: ssservice local --user nobody --config /etc/shadowsocks-rust/local.json

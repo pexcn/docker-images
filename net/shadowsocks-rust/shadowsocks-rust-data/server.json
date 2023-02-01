@@ -19,6 +19,15 @@
             "method": "chacha20-ietf-poly1305",
             "plugin": "xray-plugin",
             "plugin_opts": "server;tls;fast-open;mode=grpc;host=example.com"
+        },
+        {
+            "server": "0.0.0.0",
+            "server_port": 2047,
+            "password": "${SHADOWSOCKS_PASSWORD_4}",
+            "method": "chacha20-ietf-poly1305",
+            "mode": "tcp_only",
+            "plugin": "qtun-server",
+            "plugin_opts": "acme_host=example.com"
         }
     ],
 
