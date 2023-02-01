@@ -85,7 +85,7 @@ FROM rust:alpine AS builder-qtun
 
 ARG QTUN_VERSION=b7d6dff8649e34544457f7f5617137de8a86c562
 RUN apk update \
-  && apk add --no-cache --virtual .build-deps git musl-dev \
+  && apk add --no-cache --virtual .build-deps git curl musl-dev \
   && git clone https://github.com/shadowsocks/qtun.git \
   && cd qtun \
   && git checkout $QTUN_VERSION \
