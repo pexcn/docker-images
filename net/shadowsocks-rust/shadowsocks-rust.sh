@@ -1,5 +1,4 @@
 #!/bin/sh
-set -e
 
 if [ "$CHILLING_EFFECT" = 1 ]; then
   exec $(echo "$@" | sed '
@@ -8,10 +7,12 @@ if [ "$CHILLING_EFFECT" = 1 ]; then
     s/sslocal/local/;
     s/ssmanager/manager/;
     s/ssurl/url/;
+    s/obfs-server/mix-server/;
+    s/obfs-local/mix-local/;
     s/v2ray-plugin/pv-plugin/;
     s/xray-plugin/px-plugin/;
-    s/obfs-server/mix-server/;
-    s/obfs-local/mix-local/
+    s/qtun-server/qt-server/;
+    s/qtun-client/qt-client/
   ')
 else
   exec "$@"

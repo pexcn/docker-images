@@ -121,10 +121,12 @@ RUN cd /usr/local/bin/ \
   && ln -s sslocal local \
   && ln -s ssmanager manager \
   && ln -s ssurl url \
+  && ln -s obfs-server mix-server \
+  && ln -s obfs-local mix-local \
   && ln -s v2ray-plugin pv-plugin \
   && ln -s xray-plugin px-plugin \
-  && ln -s obfs-server mix-server \
-  && ln -s obfs-local mix-local
+  && ln -s qtun-server qt-server \
+  && ln -s qtun-client qt-client
 
 ENV CHILLING_EFFECT=0
 
