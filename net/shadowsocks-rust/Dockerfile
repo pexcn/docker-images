@@ -79,6 +79,27 @@ RUN apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
 #
+# Build stage [qtun]
+#
+FROM rust:alpine AS builder-qtun
+
+ARG QTUN_VERSION=b7d6dff8649e34544457f7f5617137de8a86c562
+RUN apk update \
+  && apk add --no-cache --virtual .build-deps git musl-dev \
+  && git clone https://github.com/shadowsocks/qtun.git \
+  && cd qtun \
+  && git checkout $QTUN_VERSION \
+  # pick pr #13
+  && curl -sSL https://github.com/shadowsocks/qtun/pull/13.patch | git apply -v --index \
+  && cargo build --release \
+  && strip target/release/qtun-server target/release/qtun-client \
+  && install target/release/qtun-server target/release/qtun-client /usr/local/bin/ \
+  && cd - \
+  && rm -r qtun \
+  && apk del .build-deps \
+  && rm -rf /var/cache/apk/*
+
+#
 # Runtime stage
 #
 FROM alpine
@@ -91,6 +112,7 @@ RUN apk update \
 COPY --from=builder-ss /usr/local/bin/ /usr/local/bin/
 COPY --from=builder-obfs /usr/local/bin/ /usr/local/bin/
 COPY --from=builder-ray /usr/local/bin/ /usr/local/bin/
+COPY --from=builder-qtun /usr/local/bin/ /usr/local/bin/
 COPY shadowsocks-rust.sh /usr/local/bin/
 
 RUN cd /usr/local/bin/ \
