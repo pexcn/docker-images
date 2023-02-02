@@ -91,7 +91,7 @@ RUN apk update \
   && git clone https://github.com/shadowsocks/qtun.git \
   && cd qtun \
   && git checkout $QTUN_VERSION \
-  && git am /srv/001-change-acme-path.patch \
+  && git apply /srv/001-change-acme-path.patch -v --index \
   && cargo build --release \
   && strip target/release/qtun-server target/release/qtun-client \
   && install target/release/qtun-server target/release/qtun-client /usr/local/bin/ \
