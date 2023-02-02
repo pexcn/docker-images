@@ -83,14 +83,15 @@ RUN apk del .build-deps \
 #
 FROM rust:alpine AS builder-qtun
 
-ARG QTUN_VERSION=b7d6dff8649e34544457f7f5617137de8a86c562
+COPY 001-change-acme-path.patch /srv/
+
+ARG QTUN_VERSION=9e1834e00f38d0424f5252fe6331533bfc50d207
 RUN apk update \
-  && apk add --no-cache --virtual .build-deps git curl musl-dev \
+  && apk add --no-cache --virtual .build-deps git musl-dev \
   && git clone https://github.com/shadowsocks/qtun.git \
   && cd qtun \
   && git checkout $QTUN_VERSION \
-  # pick pr #13
-  && curl -sSL https://github.com/shadowsocks/qtun/pull/13.patch | git apply -v --index \
+  && git am /srv/001-change-acme-path.patch \
   && cargo build --release \
   && strip target/release/qtun-server target/release/qtun-client \
   && install target/release/qtun-server target/release/qtun-client /usr/local/bin/ \
