@@ -27,6 +27,10 @@ RUN apk update \
 FROM alpine
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
+RUN apk update \
+  && apk add --no-cache tzdata \
+  && rm -rf /var/cache/apk/*
+
 COPY --from=builder /usr/local/bin/php-proxy /usr/local/bin/
 COPY php-proxy.crt /etc/php-proxy/
 COPY php-proxy.key /etc/php-proxy/
