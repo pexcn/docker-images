@@ -16,6 +16,10 @@ RUN apk update \
   && go mod tidy \
   && go build -trimpath -ldflags "-s -w -buildid=" -o php-proxy *.go \
   && install php-proxy /usr/local/bin/ \
+  && install -d /usr/share/php-proxy/ \
+  && install -m 0644 README.md /usr/share/php-proxy/ \
+  && install -d /usr/share/php-proxy/server/ \
+  && install -m 0644 server/* /usr/share/php-proxy/server/ \
   && cd - \
   && rm -r php-proxy \
   && apk del .build-deps \
@@ -32,6 +36,7 @@ RUN apk update \
   && rm -rf /var/cache/apk/*
 
 COPY --from=builder /usr/local/bin/php-proxy /usr/local/bin/
+COPY --from=builder /usr/share/php-proxy/ /usr/share/php-proxy/
 COPY php-proxy.crt /etc/php-proxy/
 COPY php-proxy.key /etc/php-proxy/
 
