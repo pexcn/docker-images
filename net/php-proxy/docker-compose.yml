@@ -12,6 +12,6 @@ services:
     environment:
       TZ: Asia/Taipei
     command: >
-      -s https://example.com.com/index.php
+      -s https://example.com/index.php
       -p password
       -l 127.0.0.1:8081
