@@ -1,0 +1,17 @@
+version: '3.9'
+
+services:
+  php-proxy:
+    image: pexcn/docker-images:php-proxy
+    container_name: php-proxy
+    restart: unless-stopped
+    network_mode: host
+    logging:
+      options:
+        max-size: 20m
+    environment:
+      TZ: Asia/Taipei
+    command: >
+      -s https://example.com.com/index.php
+      -p password
+      -l 127.0.0.1:8081
