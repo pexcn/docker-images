@@ -14,7 +14,7 @@ RUN apk update \
   && cd php-proxy \
   && git checkout $VERSION \
   && go mod tidy \
-  && go build -trimpath -ldflags "-s -w -buildid=" \
+  && go build -trimpath -ldflags "-s -w -buildid=" *.go -o php-proxy \
   && install php-proxy /usr/local/bin/ \
   && cd - \
   && rm -r php-proxy \
