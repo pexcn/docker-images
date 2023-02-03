@@ -85,7 +85,7 @@ FROM rust:alpine AS builder-qtun
 
 COPY 001-change-acme-path.patch /srv/
 
-ARG QTUN_VERSION=9e1834e00f38d0424f5252fe6331533bfc50d207
+ARG QTUN_VERSION=db2e18c3555bcae27148c6bac3594ff969ed5634
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git musl-dev \
   && git clone https://github.com/shadowsocks/qtun.git \
