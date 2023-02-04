@@ -23,7 +23,7 @@
         {
             "server": "0.0.0.0",
             "server_port": 2047,
-            "password": "${SHADOWSOCKS_PASSWORD_4}",
+            "password": "${SHADOWSOCKS_PASSWORD_3}",
             "method": "chacha20-ietf-poly1305",
             "mode": "tcp_only",
             "plugin": "qtun-server",
