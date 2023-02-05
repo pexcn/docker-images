@@ -1,18 +1,18 @@
 bind_host: 0.0.0.0
 bind_port: 3001
-beta_bind_port: 0
 users:
-- name: pexcn
-  password: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  - name: pexcn
+    password: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 auth_attempts: 5
 block_auth_min: 15
 http_proxy: ""
 language: zh-cn
+theme: auto
 debug_pprof: false
 web_session_ttl: 720
 dns:
   bind_hosts:
-  - 192.168.1.1
+    - 192.168.1.1
   port: 5354
   statistics_interval: 1
   querylog_enabled: true
@@ -31,22 +31,22 @@ dns:
   ratelimit_whitelist: []
   refuse_any: false
   upstream_dns:
-  - 192.168.1.1
+    - 192.168.1.1
   upstream_dns_file: ""
   bootstrap_dns:
-  - 192.168.1.1
+    - 192.168.1.1
   all_servers: false
   fastest_addr: false
   fastest_timeout: 1s
   allowed_clients:
-  - 192.168.1.0/24
-  - 127.0.0.1/32
+    - 192.168.1.0/24
+    - 127.0.0.1/32
   disallowed_clients: []
   blocked_hosts:
-  - hostname.bind
+    - hostname.bind
   trusted_proxies:
-  - 127.0.0.0/8
-  - ::1/128
+    - 127.0.0.0/8
+    - ::1/128
   cache_size: 4194304
   cache_ttl_min: 0
   cache_ttl_max: 0
@@ -56,7 +56,9 @@ dns:
   enable_dnssec: false
   edns_client_subnet: false
   max_goroutines: 300
+  handle_ddr: true
   ipset: []
+  ipset_file: ""
   filtering_enabled: true
   filters_update_interval: 24
   parental_enabled: false
@@ -67,27 +69,31 @@ dns:
   parental_cache_size: 1048576
   cache_time: 30
   rewrites:
-  - domain: assets1.xboxlive.com
-    answer: 192.168.1.10
-  - domain: assets2.xboxlive.com
-    answer: 192.168.1.10
-  - domain: dlassets.xboxlive.com
-    answer: 192.168.1.10
-  - domain: dlassets2.xboxlive.com
-    answer: 192.168.1.10
-  - domain: d1.xboxlive.com
-    answer: 192.168.1.10
-  - domain: d2.xboxlive.com
-    answer: 192.168.1.10
-  - domain: xvcf1.xboxlive.com
-    answer: 192.168.1.10
-  - domain: xvcf2.xboxlive.com
-    answer: 192.168.1.10
+    - domain: assets1.xboxlive.com
+      answer: 192.168.1.10
+    - domain: assets2.xboxlive.com
+      answer: 192.168.1.10
+    - domain: dlassets.xboxlive.com
+      answer: 192.168.1.10
+    - domain: dlassets2.xboxlive.com
+      answer: 192.168.1.10
+    - domain: d1.xboxlive.com
+      answer: 192.168.1.10
+    - domain: d2.xboxlive.com
+      answer: 192.168.1.10
+    - domain: xvcf1.xboxlive.com
+      answer: 192.168.1.10
+    - domain: xvcf2.xboxlive.com
+      answer: 192.168.1.10
   blocked_services: []
   upstream_timeout: 10s
   private_networks: []
   use_private_ptr_resolvers: true
   local_ptr_upstreams: []
+  use_dns64: false
+  dns64_prefixes: []
+  serve_http3: false
+  use_http3_upstreams: false
 tls:
   enabled: false
   server_name: ""
@@ -98,36 +104,36 @@ tls:
   port_dnscrypt: 0
   dnscrypt_config_file: ""
   allow_unencrypted_doh: false
-  strict_sni_check: false
   certificate_chain: ""
   private_key: ""
   certificate_path: ""
   private_key_path: ""
+  strict_sni_check: false
 filters:
-- enabled: true
-  url: https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt
-  name: AdGuard DNS filter
-  id: 1657671059
-- enabled: true
-  url: https://adaway.org/hosts.txt
-  name: AdAway Default Blocklist
-  id: 1636824661
-- enabled: true
-  url: https://easylist-downloads.adblockplus.org/easylistchina+easylist.txt
-  name: EasyList+EasyListChina
-  id: 1636824663
-- enabled: true
-  url: https://pgl.yoyo.org/adservers/serverlist.php?hostformat=adblockplus&showintro=0&mimetype=plaintext
-  name: Yoyo Ad Servers
-  id: 1636824666
+  - enabled: true
+    url: https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt
+    name: AdGuard DNS filter
+    id: 1657671059
+  - enabled: true
+    url: https://adaway.org/hosts.txt
+    name: AdAway Default Blocklist
+    id: 1636824661
+  - enabled: true
+    url: https://easylist-downloads.adblockplus.org/easylistchina+easylist.txt
+    name: EasyList+EasyListChina
+    id: 1636824663
+  - enabled: true
+    url: https://pgl.yoyo.org/adservers/serverlist.php?hostformat=adblockplus&showintro=0&mimetype=plaintext
+    name: Yoyo Ad Servers
+    id: 1636824666
 whitelist_filters: []
 user_rules:
-- '# JIKE-AC/AP'
-- '||ac.cnrouter.com^'
-- '||user.cnrouter.com^'
-- '||reg.cnrouter.com^'
-- '||regx.cnrouter.com^'
-- ""
+  - '# JIKE-AC/AP'
+  - '||ac.cnrouter.com^'
+  - '||user.cnrouter.com^'
+  - '||reg.cnrouter.com^'
+  - '||regx.cnrouter.com^'
+  - ""
 dhcp:
   enabled: false
   interface_name: ""
@@ -153,12 +159,12 @@ clients:
     dhcp: true
     hosts: true
   persistent: []
-log_compress: true
-log_localtime: true
+log_file: ""
 log_max_backups: 1
 log_max_size: 100
 log_max_age: 3
-log_file: ""
+log_compress: true
+log_localtime: true
 verbose: false
 os:
   group: ""
