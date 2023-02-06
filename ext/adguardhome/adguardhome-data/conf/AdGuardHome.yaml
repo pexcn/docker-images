@@ -133,6 +133,8 @@ user_rules:
   - '||user.cnrouter.com^'
   - '||reg.cnrouter.com^'
   - '||regx.cnrouter.com^'
+  - '# Twitter'
+  - '@@||t.co^$important'
   - ""
 dhcp:
   enabled: false
