@@ -3,14 +3,14 @@
 #
 
 # redirect http to https
-http://adg.local.pexcn.me {
+http://adg.local.example.com {
 	redir https://{host}{uri} permanent
 }
 
 # reverse proxy to adguardhome endpoint
-https://adg.local.pexcn.me {
+https://adg.local.example.com {
 	encode zstd gzip
-	tls /cert/adg.local.pexcn.me_ecc/fullchain.cer /cert/adg.local.pexcn.me_ecc/adg.local.pexcn.me.key
+	tls /cert/adg.local.example.com_ecc/fullchain.cer /cert/adg.local.example.com_ecc/adg.local.example.com.key
 
 	reverse_proxy 127.0.0.1:3001 {
 		header_up Host {host}

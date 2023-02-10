@@ -26,7 +26,7 @@ WORKDIR /home/builder
 
 # set git configs
 RUN git config --global user.name "Android Builder" \
-  && git config --global user.email "buildbot-buster-android@pexcn.me"
+  && git config --global user.email "buster-android@ovvo.uk"
 
 # setup ccache
 #RUN ccache -M 20G

@@ -3,14 +3,14 @@
 #
 
 # redirect http to https
-http://vault.local.pexcn.me {
+http://vault.local.example.com {
 	redir https://{host}{uri} permanent
 }
 
 # reverse proxy to vaultwarden endpoint
-https://vault.local.pexcn.me {
+https://vault.local.example.com {
 	encode zstd gzip
-	tls /cert/vault.local.pexcn.me_ecc/fullchain.cer /cert/vault.local.pexcn.me_ecc/vault.local.pexcn.me.key
+	tls /cert/vault.local.example.com_ecc/fullchain.cer /cert/vault.local.example.com_ecc/vault.local.example.com.key
 
 	reverse_proxy 127.0.0.1:8000 {
 		header_up Host {host}

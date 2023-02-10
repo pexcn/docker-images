@@ -2,6 +2,6 @@
 # Caddyfile for speedtest-go
 #
 
-http://speedtest.local.pexcn.me {
+http://speedtest.local.example.com {
 	reverse_proxy 127.0.0.1:8989
 }

@@ -24,7 +24,7 @@ WORKDIR /home/builder
 
 # set git configs
 RUN git config --global user.name "OpenWrt Builder" \
-  && git config --global user.email "buildbot-buster-openwrt@pexcn.me"
+  && git config --global user.email "buster-openwrt@ovvo.uk"
 
 # install po2lmo
 RUN git clone https://github.com/openwrt-dev/po2lmo.git --single-branch -b master \

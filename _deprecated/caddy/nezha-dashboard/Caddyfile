@@ -3,14 +3,14 @@
 #
 
 # redirect http to https
-http://status.local.pexcn.me {
+http://status.local.example.com {
 	redir https://{host}{uri} permanent
 }
 
 # reverse proxy to nezha dashboard endpoint
-https://status.local.pexcn.me {
+https://status.local.example.com {
 	encode zstd gzip
-	tls /cert/status.local.pexcn.me_ecc/fullchain.cer /cert/status.local.pexcn.me_ecc/status.local.pexcn.me.key
+	tls /cert/status.local.example.com_ecc/fullchain.cer /cert/status.local.example.com_ecc/status.local.example.com.key
 
 	reverse_proxy 127.0.0.1:8008 {
 		header_up Host {host}
@@ -29,9 +29,9 @@ https://status.local.pexcn.me {
 }
 
 # reverse proxy to nezha dashboard endpoint (external)
-https://status.pexcn.me:2501 {
+https://status.example.com:2501 {
 	encode zstd gzip
-	tls /cert/status.pexcn.me_ecc/fullchain.cer /cert/status.pexcn.me_ecc/status.pexcn.me.key {
+	tls /cert/status.example.com_ecc/fullchain.cer /cert/status.example.com_ecc/status.example.com.key {
 		protocols tls1.3
 	}
 
@@ -52,9 +52,9 @@ https://status.pexcn.me:2501 {
 }
 
 # reverse proxy to nezha dashboard grpc endpoint (external)
-https://status-grpc.pexcn.me:2501 {
+https://status-grpc.example.com:2501 {
 	encode zstd gzip
-	tls /cert/status-grpc.pexcn.me_ecc/fullchain.cer /cert/status-grpc.pexcn.me_ecc/status-grpc.pexcn.me.key {
+	tls /cert/status-grpc.example.com_ecc/fullchain.cer /cert/status-grpc.example.com_ecc/status-grpc.example.com.key {
 		protocols tls1.3
 	}
 

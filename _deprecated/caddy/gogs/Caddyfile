@@ -3,14 +3,14 @@
 #
 
 # redirect http to https
-http://git.local.pexcn.me {
+http://git.local.example.com {
 	redir https://{host}{uri} permanent
 }
 
 # reverse proxy to gogs endpoint
-https://git.local.pexcn.me {
+https://git.local.example.com {
 	encode zstd gzip
-	tls /cert/git.local.pexcn.me_ecc/fullchain.cer /cert/git.local.pexcn.me_ecc/git.local.pexcn.me.key
+	tls /cert/git.local.example.com_ecc/fullchain.cer /cert/git.local.example.com_ecc/git.local.example.com.key
 
 	header Strict-Transport-Security max-age=31536000;
 

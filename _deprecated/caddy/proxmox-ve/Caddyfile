@@ -3,14 +3,14 @@
 #
 
 # redirect http to https
-http://pve.local.pexcn.me {
+http://pve.local.example.com {
 	redir https://{host}{uri} permanent
 }
 
 # reverse proxy to Proxmox VE endpoint
-https://pve.local.pexcn.me {
+https://pve.local.example.com {
 	encode zstd gzip
-	tls /cert/pve.local.pexcn.me_ecc/fullchain.cer /cert/pve.local.pexcn.me_ecc/pve.local.pexcn.me.key
+	tls /cert/pve.local.example.com_ecc/fullchain.cer /cert/pve.local.example.com_ecc/pve.local.example.com.key
 
 	header Strict-Transport-Security max-age=31536000;
 
