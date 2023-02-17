@@ -6,18 +6,20 @@ services:
     container_name: chinadns-ng
     restart: unless-stopped
     network_mode: host
+    privileged: true
     environment:
       TZ: Asia/Taipei
     volumes:
       - ./chinadns-ng-data:/etc/chinadns-ng
     command: >
-      -b 0.0.0.0
-      -l 5353
-      -c 223.5.5.5
-      -t 127.0.0.1#5300
-      -g /etc/chinadns-ng/gfwlist.txt
-      -m /etc/chinadns-ng/chinalist.txt
-      -o 3
-      -p 3
-      -f
-      -r
+      --bind-addr 0.0.0.0
+      --bind-port 5353
+      --china-dns 223.5.5.5,119.29.29.29
+      --trust-dns 127.0.0.1#5300
+      --gfwlist-file /etc/chinadns-ng/gfwlist.txt
+      --chnlist-file /etc/chinadns-ng/chinalist.txt
+      --timeout-sec 3
+      --repeat-times 2
+      --fair-mode
+      --reuse-port
+      --noip-as-chnip
