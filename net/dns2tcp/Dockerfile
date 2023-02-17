@@ -33,12 +33,6 @@ RUN apk update \
 
 COPY --from=builder /usr/local/bin/dns2tcp /usr/local/bin/
 
-# allow bind port less than 1024
-RUN apk update \
-  && apk add --no-cache libcap \
-  && rm -rf /var/cache/apk/*
-RUN setcap cap_net_bind_service+ep /app/dns2tcp
-
 USER nobody
 ENTRYPOINT ["dns2tcp"]
 CMD ["-h"]
