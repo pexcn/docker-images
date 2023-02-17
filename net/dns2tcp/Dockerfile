@@ -7,23 +7,18 @@
 #
 FROM alpine AS builder
 
-# depends
-RUN apk update \
-  && apk add --no-cache --virtual .build-deps build-base linux-headers git
-
-# build
 ARG VERSION=10ed687778f18d1b9c98bb51187a3a9086d3a0d9
-RUN git clone https://github.com/zfl9/dns2tcp.git \
+RUN apk update \
+  && apk add --no-cache --virtual .build-deps build-base linux-headers git \
+  && git clone https://github.com/zfl9/dns2tcp.git \
   && cd dns2tcp \
   && git checkout $VERSION \
-  && make -j$(nproc) EVCFLAGS="-w -O3 -pipe" CFLAGS="-std=c99 -Wall -Wextra -O3 -pipe" \
-  && make install DESTDIR="/app" \
+  && make -j$(nproc) EVCFLAGS="-w -O3" CFLAGS="-std=c99 -Wall -Wextra -O3 -static" \
+  && make install \
   && make clean \
-  && cd .. \
-  && rm -r dns2tcp
-
-# clean
-RUN apk del .build-deps \
+  && cd - \
+  && rm -r dns2tcp \
+  && apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
 #
@@ -32,7 +27,11 @@ RUN apk del .build-deps \
 FROM alpine
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
-COPY --from=builder /app/dns2tcp /app/dns2tcp
+RUN apk update \
+  && apk add --no-cache tzdata \
+  && rm -rf /var/cache/apk/*
+
+COPY --from=builder /usr/local/bin/dns2tcp /usr/local/bin/
 
 # allow bind port less than 1024
 RUN apk update \
@@ -40,6 +39,6 @@ RUN apk update \
   && rm -rf /var/cache/apk/*
 RUN setcap cap_net_bind_service+ep /app/dns2tcp
 
-EXPOSE 5300/udp
 USER nobody
-ENTRYPOINT ["/app/dns2tcp"]
+ENTRYPOINT ["dns2tcp"]
+CMD ["-h"]

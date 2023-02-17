@@ -1,0 +1,11 @@
+version: '3.9'
+
+services:
+  dns2tcp:
+    image: pexcn/docker-images:dns2tcp
+    container_name: dns2tcp
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TZ: Asia/Taipei
+    command: -L 127.0.0.1#5300 -R 8.8.8.8#53 -r -a -f
