@@ -8,4 +8,4 @@ services:
     network_mode: host
     environment:
       TZ: Asia/Taipei
-    command: -L 127.0.0.1#5300 -R 8.8.8.8#53 -r -a -f
+    command: -L 127.0.0.1#5301 -R 8.8.8.8#53 -r -a -f
