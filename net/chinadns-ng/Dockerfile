@@ -32,12 +32,15 @@ RUN apk update \
   && rm -rf /var/cache/apk/*
 
 RUN curl -sSL --create-dirs --output-dir /etc/chinadns-ng \
-  -O https://github.com/pexcn/daily/raw/gh-pages/gfwlist/gfwlist.txt \
-  -O https://github.com/pexcn/daily/raw/gh-pages/chinalist/chinalist.txt \
   -O https://github.com/pexcn/daily/raw/gh-pages/chnroute/chnroute.txt \
-  -O https://github.com/pexcn/daily/raw/gh-pages/chnroute/chnroute6.txt
+  -O https://github.com/pexcn/daily/raw/gh-pages/chnroute/chnroute6.txt \
+  -O https://github.com/pexcn/daily/raw/gh-pages/gfwlist/gfwlist.txt \
+  -O https://github.com/pexcn/daily/raw/gh-pages/chinalist/chinalist.txt
 
 COPY --from=builder /usr/local/bin/chinadns-ng /usr/local/bin/
+COPY chinadns-ng.sh /usr/local/bin/
+
+ENV RULES_UPDATE_INTERVAL=0
 
 ENTRYPOINT ["chinadns-ng"]
 CMD ["--help"]
