@@ -27,9 +27,9 @@ _update_rule() {
   local url="$1"
   local file="$(basename "$url")"
   local dir="/etc/chinadns-ng"
-  local lines="$(wc -l < "${dir}/${file}")"
+  local lines="$(wc -l <"${dir}/${file}")"
   curl -sSL --create-dirs --output-dir $dir -O "$url" || return 1
-  info "update ${file}: ${lines} -> $(wc -l < "${dir}/${file}")"
+  info "update ${file}: ${lines} -> $(wc -l <"${dir}/${file}")."
 }
 
 update_rules() {
@@ -48,27 +48,37 @@ _destroy_ipset() {
   ipset destroy "$1" 2>/dev/null
 }
 
-create_chnroutes() {
-  # TODO: custom ipset name from args
-  local ipset4=chnroute
+# FIXME: don't hardcode ipset name, should be parse from args.
+create_ipsets() {
+  local ipset4="chnroute"
   if _is_exist_ipset $ipset4; then
     ipset flush $ipset4
   else
     ipset create $ipset4 hash:net hashsize 64 family inet
   fi
   ipset restore <<-EOF
-	$(sed "s/^/add $ipset4 /" < /etc/chinadns-ng/chnroute.txt)
+	$(sed "s/^/add $ipset4 /" </etc/chinadns-ng/chnroute.txt)
 	EOF
+  info "ipset4: import to $ipset4 done."
 
-  local ipset6=chnroute6
+  local ipset6="chnroute6"
   if _is_exist_ipset $ipset6; then
     ipset flush $ipset6
   else
     ipset create $ipset6 hash:net hashsize 64 family inet6
   fi
-  ipset restore <<- EOF
-	$(sed "s/^/add $ipset6 /" < /etc/chinadns-ng/chnroute6.txt)
+  ipset restore <<-EOF
+	$(sed "s/^/add $ipset6 /" </etc/chinadns-ng/chnroute6.txt)
 	EOF
+  info "ipset6: import to $ipset6 done."
+}
+
+# FIXME: don't hardcode ipset name, should be parse from args.
+destroy_ipsets() {
+  local ipset4="chnroute"
+  _destroy_ipset $ipset4
+  local ipset6="chnroute6"
+  _destroy_ipset $ipset6
 }
 
 stop_process() {
@@ -76,12 +86,12 @@ stop_process() {
   info "terminate chinadns-ng processes."
 
   # ensure child process terminate completely, avoid <defunct> processes
-  sleep 5
+  sleep 3
 }
 
 graceful_stop() {
+  destroy_ipsets
   stop_process
-  # TODO: remove chnroutes ipset
 
   # exit infinite loop
   exit 0
@@ -90,7 +100,7 @@ graceful_stop() {
 start_chinadns_ng() {
   trap 'graceful_stop' TERM INT
 
-  #create_chnroutes
+  create_ipsets
 
   if [ "$RULES_UPDATE_INTERVAL" = 0 ]; then
     chinadns-ng "$@" &
