@@ -28,29 +28,29 @@ _update_rule() {
   local file="$(basename "$url")"
   local dir="/etc/chinadns-ng"
   local lines="$(wc -l < "${dir}/${file}")"
-  curl -sSL --create-dirs --output-dir $dir -O "$url"
+  curl -sSL --create-dirs --output-dir $dir -O "$url" || return 1
   info "update ${file}: ${lines} -> $(wc -l < "${dir}/${file}")"
 }
 
 update_rules() {
-  _update_rule https://github.com/pexcn/daily/raw/gh-pages/chnroute/chnroute.txt
-  _update_rule https://github.com/pexcn/daily/raw/gh-pages/chnroute/chnroute6.txt
-  _update_rule https://github.com/pexcn/daily/raw/gh-pages/gfwlist/gfwlist.txt
-  _update_rule https://github.com/pexcn/daily/raw/gh-pages/chinalist/chinalist.txt
-  # TODO: cannot restart chinadns-ng if download fails
-  # _update_rule xxx || return 1 ?
+  _update_rule https://github.com/pexcn/daily/raw/gh-pages/chnroute/chnroute.txt || return 1
+  _update_rule https://github.com/pexcn/daily/raw/gh-pages/chnroute/chnroute6.txt || return 1
+  _update_rule https://github.com/pexcn/daily/raw/gh-pages/gfwlist/gfwlist.txt || return 1
+  _update_rule https://github.com/pexcn/daily/raw/gh-pages/chinalist/chinalist.txt || return 1
 }
 
 stop_process() {
   kill "$(pidof chinadns-ng)"
   info "terminate chinadns-ng processes."
 
-  # make sure signal can delivered to child process, avoid <defunct> processes
+  # ensure child process terminate completely, avoid <defunct> processes
   sleep 5
 }
 
 restart_process() {
   stop_process
+
+  # TODO: move `&` to invoker?
   chinadns-ng "$@" &
 }
 
@@ -62,24 +62,20 @@ graceful_stop() {
 }
 
 start_chinadns_ng() {
-  trap 'graceful_stop' SIGTERM SIGINT
+  trap 'graceful_stop' TERM INT
 
-  chinadns-ng "$@" &
-
-  # if [ "$RULES_UPDATE_INTERVAL" = 0 ]; then
-  #   echo    
-  # else
-  #   echo
-  # fi
-
-  while true; do
-    sleep 10
-    update_rules
-    restart_process "$@"
-    #if update_rules; then
-    #  restart_process
-    #fi
-  done
+  if [ "$RULES_UPDATE_INTERVAL" = 0 ]; then
+    # try replace to: `exec chinadns-ng "$@"`
+    # need test `docker stop ...` and `docker-compose up, then ctrl + c`
+    chinadns-ng "$@" &
+    wait
+  else
+    chinadns-ng "$@" &
+    while true; do
+      sleep "$RULES_UPDATE_INTERVAL"
+      update_rules && restart_process "$@"
+    done
+  fi
 }
 
 start_chinadns_ng "$@"
