@@ -100,7 +100,8 @@ start_chinadns_ng() {
   else
     chinadns-ng "$@" &
     while true; do
-      sleep "$RULES_UPDATE_INTERVAL"
+      sleep "$RULES_UPDATE_INTERVAL" &
+      wait $!
       if update_rules; then
         stop_process
         chinadns-ng "$@" &
