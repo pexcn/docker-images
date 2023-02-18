@@ -9,8 +9,9 @@ services:
     privileged: true
     environment:
       TZ: Asia/Taipei
-    volumes:
-      - ./chinadns-ng-data:/etc/chinadns-ng
+      RULES_UPDATE_INTERVAL: 30
+    #volumes:
+    #  - ./chinadns-ng-data:/etc/chinadns-ng
     command: >
       --bind-addr 0.0.0.0
       --bind-port 5353

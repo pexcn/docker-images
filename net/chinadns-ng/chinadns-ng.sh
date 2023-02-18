@@ -39,6 +39,38 @@ update_rules() {
   _update_rule https://github.com/pexcn/daily/raw/gh-pages/chinalist/chinalist.txt || return 1
 }
 
+_is_exist_ipset() {
+  ipset list -n "$1" >/dev/null 2>&1
+}
+
+_destroy_ipset() {
+  ipset flush "$1" 2>/dev/null
+  ipset destroy "$1" 2>/dev/null
+}
+
+create_chnroutes() {
+  # TODO: custom ipset name from args
+  local ipset4=chnroute
+  if _is_exist_ipset $ipset4; then
+    ipset flush $ipset4
+  else
+    ipset create $ipset4 hash:net hashsize 64 family inet
+  fi
+  ipset restore <<-EOF
+	$(sed "s/^/add $ipset4 /" < /etc/chinadns-ng/chnroute.txt)
+	EOF
+
+  local ipset6=chnroute6
+  if _is_exist_ipset $ipset6; then
+    ipset flush $ipset6
+  else
+    ipset create $ipset6 hash:net hashsize 64 family inet6
+  fi
+  ipset restore <<- EOF
+	$(sed "s/^/add $ipset6 /" < /etc/chinadns-ng/chnroute6.txt)
+	EOF
+}
+
 stop_process() {
   kill "$(pidof chinadns-ng)"
   info "terminate chinadns-ng processes."
@@ -47,15 +79,9 @@ stop_process() {
   sleep 5
 }
 
-restart_process() {
-  stop_process
-
-  # TODO: move `&` to invoker?
-  chinadns-ng "$@" &
-}
-
 graceful_stop() {
   stop_process
+  # TODO: remove chnroutes ipset
 
   # exit infinite loop
   exit 0
@@ -63,6 +89,8 @@ graceful_stop() {
 
 start_chinadns_ng() {
   trap 'graceful_stop' TERM INT
+
+  #create_chnroutes
 
   if [ "$RULES_UPDATE_INTERVAL" = 0 ]; then
     # try replace to: `exec chinadns-ng "$@"`
@@ -73,7 +101,10 @@ start_chinadns_ng() {
     chinadns-ng "$@" &
     while true; do
       sleep "$RULES_UPDATE_INTERVAL"
-      update_rules && restart_process "$@"
+      if update_rules; then
+        stop_process
+        chinadns-ng "$@" &
+      fi
     done
   fi
 }

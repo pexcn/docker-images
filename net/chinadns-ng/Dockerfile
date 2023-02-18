@@ -42,5 +42,5 @@ COPY chinadns-ng.sh /usr/local/bin/
 
 ENV RULES_UPDATE_INTERVAL=0
 
-ENTRYPOINT ["chinadns-ng"]
+ENTRYPOINT ["chinadns-ng.sh"]
 CMD ["--help"]
