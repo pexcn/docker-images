@@ -28,7 +28,7 @@ FROM alpine
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 RUN apk update \
-  && apk add --no-cache tzdata curl \
+  && apk add --no-cache tzdata curl ipset \
   && rm -rf /var/cache/apk/*
 
 RUN curl -sSL --create-dirs --output-dir /etc/chinadns-ng \
