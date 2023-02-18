@@ -93,8 +93,6 @@ start_chinadns_ng() {
   #create_chnroutes
 
   if [ "$RULES_UPDATE_INTERVAL" = 0 ]; then
-    # try replace to: `exec chinadns-ng "$@"`
-    # need test `docker stop ...` and `docker-compose up, then ctrl + c`
     chinadns-ng "$@" &
     wait
   else
