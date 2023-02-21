@@ -7,13 +7,13 @@
 #
 FROM alpine AS builder
 
-ARG VERSION=fd72361deae7eebbaa814c3869babfd5539b1162
+ARG VERSION=61b24a369700c3d8248dd18fa9a524b778741454
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git make g++ \
   && git clone https://github.com/wangyu-/UDPspeeder.git udpspeeder \
   && cd udpspeeder \
   && git checkout $VERSION \
-  && make OPT="-s -pipe -Wl,--build-id=none" \
+  && make OPT="-s" \
   && install speederv2 /usr/local/bin/udpspeeder \
   && cd - \
   && rm -r udpspeeder \
