@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  gfw-defense:
+    image: pexcn/docker-images:gfw-defense
+    container_name: gfw-defense
+    restart: unless-stopped
+    network_mode: host
+    privileged: true
+    environment:
+      TZ: Asia/Taipei
+    #volumes:
+    #  - ./gfw-defense-data:/etc/gfw-defense
