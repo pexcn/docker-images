@@ -2,9 +2,6 @@
 
 # shellcheck disable=SC2155,SC3043
 
-# WHITELIST=/etc/gfw-defense/whitelist.txt (some-cidr)
-# BLACKLIST=/etc/gfw-defense/blacklist.txt (chnroute exclude some-cidr)
-
 WHITELIST="gfw_defense_whitelist"
 BLACKLIST="gfw_defense_blacklist"
 
@@ -22,12 +19,19 @@ setup_iptables() {
 
   iptables -N GFW_DEFENSE
 
+  # WHITELIST=/etc/gfw-defense/whitelist.txt (some-cidr)
+  # BLACKLIST=/etc/gfw-defense/blacklist.txt (chnroute)
+
   if [ "$BLACKLIST_FIRST" = 1 ]; then
-    iptables -A GFW_DEFENSE -m set --match-set $BLACKLIST src -j "$BLOCKING_POLICY"
+    if [ "$DEFAULT_POLICY" != "$BLOCKING_POLICY" ]; then
+      iptables -A GFW_DEFENSE -m set --match-set $BLACKLIST src -j "$BLOCKING_POLICY"
+    fi
     iptables -A GFW_DEFENSE -m set --match-set $WHITELIST src -j RETURN
   else
     iptables -A GFW_DEFENSE -m set --match-set $WHITELIST src -j RETURN
-    iptables -A GFW_DEFENSE -m set --match-set $BLACKLIST src -j "$BLOCKING_POLICY"
+    if [ "$DEFAULT_POLICY" != "$BLOCKING_POLICY" ]; then
+      iptables -A GFW_DEFENSE -m set --match-set $BLACKLIST src -j "$BLOCKING_POLICY"
+    fi
   fi
 
   iptables -A GFW_DEFENSE -j "$DEFAULT_POLICY"
