@@ -9,5 +9,8 @@ services:
     privileged: true
     environment:
       TZ: Asia/Taipei
+      BLOCKING_POLICY: DROP
+      DEFAULT_POLICY: RETURN
+      BLACKLIST_FIRST: 0
     #volumes:
     #  - ./gfw-defense-data:/etc/gfw-defense
