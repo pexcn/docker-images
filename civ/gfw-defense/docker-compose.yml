@@ -11,6 +11,7 @@ services:
       TZ: Asia/Taipei
       BLOCKING_POLICY: DROP
       DEFAULT_POLICY: RETURN
-      BLACKLIST_FIRST: 0
+      QUICK_MODE: 0
+      PREFER_BLACKLIST: 0
     #volumes:
     #  - ./gfw-defense-data:/etc/gfw-defense
