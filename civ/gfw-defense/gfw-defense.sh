@@ -58,25 +58,36 @@ load_ipsets() {
 }
 
 _quick_mode() {
+  info "use quick mode to match iptables."
   if [ "$PREFER_BLACKLIST" = 1 ]; then
     info "prefer to use blacklist."
     if [ "$DEFAULT_POLICY" != "$BLOCKING_POLICY" ]; then
       iptables -A GFW_DEFENSE -m set --match-set $BLACKLIST src -j "$BLOCKING_POLICY"
+    else
+      warn "??? maybe invalid."
     fi
     if [ "$DEFAULT_POLICY" != "RETURN" ] && [ "$DEFAULT_POLICY" != "ACCEPT" ]; then
       iptables -A GFW_DEFENSE -m set --match-set $WHITELIST src -j RETURN
+    else
+      warn "??? maybe invalid."
     fi
   else
+    info "prefer to use whitelist."
     if [ "$DEFAULT_POLICY" != "RETURN" ] && [ "$DEFAULT_POLICY" != "ACCEPT" ]; then
       iptables -A GFW_DEFENSE -m set --match-set $WHITELIST src -j RETURN
+    else
+      warn "??? maybe invalid."
     fi
     if [ "$DEFAULT_POLICY" != "$BLOCKING_POLICY" ]; then
       iptables -A GFW_DEFENSE -m set --match-set $BLACKLIST src -j "$BLOCKING_POLICY"
+    else
+      warn "??? maybe invalid."
     fi
   fi
 }
 
 _generic_mode() {
+  info "use generic mode to match iptables."
   if [ "$PREFER_BLACKLIST" = 1 ]; then
     info "prefer to use blacklist."
     iptables -A GFW_DEFENSE -m set --match-set $BLACKLIST src -j "$BLOCKING_POLICY"
@@ -91,11 +102,8 @@ _generic_mode() {
 setup_iptables() {
   iptables -N GFW_DEFENSE
   if [ "$QUICK_MODE" = 1 ]; then
-    info "use quick mode to match iptables."
-    warn "xxx may be invalid.?"
     _quick_mode
   else
-    info "use generic mode to match iptables."
     _generic_mode
   fi
   iptables -A GFW_DEFENSE -j "$DEFAULT_POLICY"
