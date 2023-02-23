@@ -11,4 +11,9 @@ RUN apk update \
 
 COPY gfw-defense.sh /usr/local/bin/
 
+ENV BLOCKING_POLICY=DROP
+ENV DEFAULT_POLICY=RETURN
+ENV QUICK_MODE=0
+ENV PREFER_BLACKLIST=0
+
 ENTRYPOINT ["gfw-defense.sh"]
