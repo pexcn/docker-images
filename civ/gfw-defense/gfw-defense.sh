@@ -2,8 +2,8 @@
 
 # shellcheck disable=SC2155,SC3043
 
-WHITELIST="gfw_defense_whitelist"
 BLACKLIST="gfw_defense_blacklist"
+WHITELIST="gfw_defense_whitelist"
 
 # alias ​​settings must be global, and must be defined before the function being called with the alias
 if [ "$USE_IPTABLES_NFT_BACKEND" = 1 ]; then
@@ -38,19 +38,6 @@ _is_exist_ipset() {
 
 # TODO: check ipset create params.
 load_ipsets() {
-  local whitelist_file="/etc/gfw-defense/whitelist.txt"
-  if _is_exist_ipset $WHITELIST; then
-    ipset flush $WHITELIST
-    info "whitelist ipset flushed."
-  else
-    ipset create $WHITELIST hash:net hashsize 64 family inet
-    info "whitelist ipset created."
-  fi
-  ipset restore <<-EOF
-	$(sed "s/^/add $WHITELIST /" <$whitelist_file)
-	EOF
-  info "whitelist loaded into ipset."
-
   local blacklist_file="/etc/gfw-defense/blacklist.txt"
   if _is_exist_ipset $BLACKLIST; then
     ipset flush $BLACKLIST
@@ -63,6 +50,19 @@ load_ipsets() {
 	$(sed "s/^/add $BLACKLIST /" <$blacklist_file)
 	EOF
   info "blacklist loaded into ipset."
+
+  local whitelist_file="/etc/gfw-defense/whitelist.txt"
+  if _is_exist_ipset $WHITELIST; then
+    ipset flush $WHITELIST
+    info "whitelist ipset flushed."
+  else
+    ipset create $WHITELIST hash:net hashsize 64 family inet
+    info "whitelist ipset created."
+  fi
+  ipset restore <<-EOF
+	$(sed "s/^/add $WHITELIST /" <$whitelist_file)
+	EOF
+  info "whitelist loaded into ipset."
 }
 
 _quick_mode() {
@@ -114,7 +114,7 @@ apply_iptables() {
   info "iptables rules applied."
 }
 
-revoke_iptables() {
+_revoke_iptables() {
   iptables-save | grep "GFW_DEFENSE" | while read -r rule; do
     # shellcheck disable=SC3060
     iptables "${rule/-A/-D}" || error "iptables rules revoke failed."
@@ -122,10 +122,19 @@ revoke_iptables() {
   info "iptables rules removed."
 }
 
+_destroy_ipsets() {
+  ipset flush "$BLACKLIST"
+  ipset destroy "$BLACKLIST"
+  info "blacklist ipset destroyed."
+  ipset flush "$WHITELIST"
+  ipset destroy "$WHITELIST"
+  info "whitelist ipset destroyed."
+}
+
 graceful_stop() {
   warn "caught TERM or INT signal, graceful stopping..."
-
-  revoke_iptables
+  _revoke_iptables
+  _destroy_ipsets
 
   exit 0
 }
