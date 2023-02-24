@@ -13,5 +13,5 @@ services:
       DEFAULT_POLICY: RETURN
       QUICK_MODE: 0
       PREFER_BLACKLIST: 0
-    #volumes:
-    #  - ./gfw-defense-data:/etc/gfw-defense
+    volumes:
+      - ./gfw-defense-data:/etc/gfw-defense
