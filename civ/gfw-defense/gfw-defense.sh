@@ -129,11 +129,11 @@ _destroy_ipsets() {
   info "whitelist ipset destroyed."
 }
 
-_exit_session() {
+_stop_container() {
   kill "$(jobs -p)"
-  info "terminate current session."
+  info "terminate container."
 
-  # ensure current session jobs terminate completely, avoid <defunct> processes
+  # ensure child process terminate completely, avoid <defunct> processes
   sleep 1
 }
 
@@ -141,7 +141,7 @@ graceful_stop() {
   warn "caught TERM or INT signal, graceful stopping..."
   _revoke_iptables
   _destroy_ipsets
-  _exit_session
+  _stop_container
   exit 0
 }
 
