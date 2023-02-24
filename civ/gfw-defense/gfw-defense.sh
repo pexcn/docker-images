@@ -132,9 +132,8 @@ _destroy_ipsets() {
 
 graceful_stop() {
   warn "caught TERM or INT signal, graceful stopping..."
-
-  # destroy ipset only when revoke iptables successed
-  _revoke_iptables && _destroy_ipsets
+  _revoke_iptables
+  _destroy_ipsets
 
   exit 0
 }
