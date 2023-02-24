@@ -115,10 +115,9 @@ apply_iptables() {
 }
 
 _revoke_iptables() {
-  iptables-save | grep "GFW_DEFENSE" | while read -r rule; do
-    # shellcheck disable=SC3060
-    iptables "${rule/-A/-D}" || error "iptables rules revoke failed."
-  done
+  iptables -D INPUT -j GFW_DEFENSE || error "revoke iptables chain failed."
+  iptables -F GFW_DEFENSE || error "iptables rules remove failed."
+  iptables -X GFW_DEFENSE || error "iptables chain delete failed."
   info "iptables rules removed."
 }
 
@@ -133,8 +132,9 @@ _destroy_ipsets() {
 
 graceful_stop() {
   warn "caught TERM or INT signal, graceful stopping..."
-  _revoke_iptables
-  _destroy_ipsets
+
+  # destroy ipset only when revoke iptables successed
+  _revoke_iptables && _destroy_ipsets
 
   exit 0
 }
