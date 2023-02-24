@@ -122,7 +122,7 @@ stop_process() {
 }
 
 graceful_stop() {
-  warn "caught SIGTERM or SIGINT signal, graceful stopping..."
+  warn "caught TERM or INT signal, graceful stopping..."
   stop_process
   destroy_ipsets
 
