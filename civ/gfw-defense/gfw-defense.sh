@@ -149,3 +149,5 @@ start_gfw_defense() {
   sleep infinity &
   wait
 }
+
+start_gfw_defense
