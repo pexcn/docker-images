@@ -8,7 +8,6 @@ WHITELIST="gfw_defense_whitelist"
 # alias ​​settings must be global, and must be defined before the function being called with the alias
 if [ "$USE_IPTABLES_NFT_BACKEND" = 1 ]; then
   alias iptables=iptables-nft
-  alias iptables-save=iptables-nft-save
 fi
 
 info() {
@@ -130,11 +129,19 @@ _destroy_ipsets() {
   info "whitelist ipset destroyed."
 }
 
+_exit_session() {
+  kill "$(jobs -p)"
+  info "terminate current session."
+
+  # ensure current session jobs terminate completely, avoid <defunct> processes
+  sleep 1
+}
+
 graceful_stop() {
   warn "caught TERM or INT signal, graceful stopping..."
   _revoke_iptables
   _destroy_ipsets
-
+  _exit_session
   exit 0
 }
 
