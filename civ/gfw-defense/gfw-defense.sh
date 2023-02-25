@@ -49,6 +49,7 @@ _gen_ipset_rules() {
 
   local files="$(echo "$1" | tr ',' ' ')"
   local prefix="$2"
+  # FIXME: optimize.
   # shellcheck disable=SC2086
   # splice content
   cat $files |

@@ -10,7 +10,7 @@ services:
     environment:
       TZ: Asia/Taipei
       BLOCKING_POLICY: DROP
-      PASSING_POLICY: RETURN
+      PASSING_POLICY: ACCEPT
       DEFAULT_POLICY: RETURN
       QUICK_MODE: 0
       PREFER_BLACKLIST: 0
