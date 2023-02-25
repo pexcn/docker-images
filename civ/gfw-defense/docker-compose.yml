@@ -10,8 +10,10 @@ services:
     environment:
       TZ: Asia/Taipei
       BLOCKING_POLICY: DROP
+      PASSING_POLICY: RETURN
       DEFAULT_POLICY: RETURN
       QUICK_MODE: 0
       PREFER_BLACKLIST: 0
+      USE_IPTABLES_NFT_BACKEND: 0
     volumes:
       - ./gfw-defense-data:/etc/gfw-defense
