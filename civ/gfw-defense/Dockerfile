@@ -9,6 +9,10 @@ RUN apk update \
   && apk add --no-cache iptables ip6tables ipset tzdata \
   && rm -rf /var/cache/apk/*
 
+RUN mkdir -p /etc/gfw-defense \
+  && touch /etc/gfw-defense/blacklist.txt \
+  && touch /etc/gfw-defense/whitelist.txt
+
 COPY gfw-defense.sh /usr/local/bin/
 
 ENV BLOCKING_POLICY=DROP
