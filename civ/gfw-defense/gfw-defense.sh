@@ -45,7 +45,7 @@ load_ipsets() {
     ipset create $BLACKLIST hash:net hashsize 64 family inet
     info "blacklist ipset created."
   fi
-  ipset restore <<-EOF
+  ipset -exist restore <<-EOF
 	$(sed "s/^/add $BLACKLIST /" <$blacklist_file)
 	EOF
   info "blacklist loaded into ipset."
@@ -58,7 +58,7 @@ load_ipsets() {
     ipset create $WHITELIST hash:net hashsize 64 family inet
     info "whitelist ipset created."
   fi
-  ipset restore <<-EOF
+  ipset -exist restore <<-EOF
 	$(sed "s/^/add $WHITELIST /" <$whitelist_file)
 	EOF
   info "whitelist loaded into ipset."
@@ -74,12 +74,12 @@ _quick_mode() {
       warn "if the whitelist and blacklist conflict, the blacklist will be invalid."
     fi
     if [ "$DEFAULT_POLICY" != "RETURN" ] && [ "$DEFAULT_POLICY" != "ACCEPT" ]; then
-      iptables -A GFW_DEFENSE -m set --match-set $WHITELIST src -j RETURN || error "iptables whitelist rule add failed."
+      iptables -A GFW_DEFENSE -m set --match-set $WHITELIST src -j "$PASSING_POLICY" || error "iptables whitelist rule add failed."
     fi
   else
     info "prefer to use whitelist."
     if [ "$DEFAULT_POLICY" != "RETURN" ] && [ "$DEFAULT_POLICY" != "ACCEPT" ]; then
-      iptables -A GFW_DEFENSE -m set --match-set $WHITELIST src -j RETURN || error "iptables whitelist rule add failed."
+      iptables -A GFW_DEFENSE -m set --match-set $WHITELIST src -j "$PASSING_POLICY" || error "iptables whitelist rule add failed."
     else
       warn "if the whitelist and blacklist conflict, the whitelist will be invalid."
     fi
@@ -95,10 +95,10 @@ _generic_mode() {
   if [ "$PREFER_BLACKLIST" = 1 ]; then
     info "prefer to use blacklist."
     iptables -A GFW_DEFENSE -m set --match-set $BLACKLIST src -j "$BLOCKING_POLICY" || error "iptables blacklist rule add failed."
-    iptables -A GFW_DEFENSE -m set --match-set $WHITELIST src -j RETURN || error "iptables whitelist rule add failed."
+    iptables -A GFW_DEFENSE -m set --match-set $WHITELIST src -j "$PASSING_POLICY" || error "iptables whitelist rule add failed."
   else
     info "prefer to use whitelist."
-    iptables -A GFW_DEFENSE -m set --match-set $WHITELIST src -j RETURN || error "iptables whitelist rule add failed."
+    iptables -A GFW_DEFENSE -m set --match-set $WHITELIST src -j "$PASSING_POLICY" || error "iptables whitelist rule add failed."
     iptables -A GFW_DEFENSE -m set --match-set $BLACKLIST src -j "$BLOCKING_POLICY" || error "iptables blacklist rule add failed."
   fi
   return 0
