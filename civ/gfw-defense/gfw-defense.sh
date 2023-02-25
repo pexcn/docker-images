@@ -134,6 +134,7 @@ _generic_mode() {
 
 apply_iptables() {
   iptables -N GFW_DEFENSE || error "create iptables chain failed."
+  iptables -A GFW_DEFENSE -m conntrack --ctstate ESTABLISHED,RELATED -j "$PASSING_POLICY" || error "allowing established connections failed."
   # shellcheck disable=SC2015
   [ "$QUICK_MODE" = 1 ] && _quick_mode || _generic_mode
   iptables -A GFW_DEFENSE -j "$DEFAULT_POLICY" || error "iptables default rule add failed."
