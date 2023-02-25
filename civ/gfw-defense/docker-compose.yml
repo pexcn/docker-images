@@ -15,5 +15,7 @@ services:
       QUICK_MODE: 0
       PREFER_BLACKLIST: 0
       USE_IPTABLES_NFT_BACKEND: 0
+      BLACKLIST_FILES: /etc/gfw-defense/blacklist.txt
+      WHITELIST_FILES: /etc/gfw-defense/whitelist.txt
     volumes:
       - ./gfw-defense-data:/etc/gfw-defense

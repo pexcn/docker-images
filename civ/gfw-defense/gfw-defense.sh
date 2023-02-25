@@ -8,6 +8,8 @@ DEFAULT_POLICY="${DEFAULT_POLICY:=RETURN}"
 QUICK_MODE="${QUICK_MODE:=0}"
 PREFER_BLACKLIST="${PREFER_BLACKLIST:=0}"
 USE_IPTABLES_NFT_BACKEND="${USE_IPTABLES_NFT_BACKEND:=0}"
+BLACKLIST_FILES="${BLACKLIST_FILES:=/etc/gfw-defense/blacklist.txt}"
+WHITELIST_FILES="${WHITELIST_FILES:=/etc/gfw-defense/whitelist.txt}"
 BLACKLIST="gfw_defense_blacklist"
 WHITELIST="gfw_defense_whitelist"
 
@@ -41,9 +43,29 @@ _is_exist_ipset() {
   ipset list -n "$1" >/dev/null 2>&1
 }
 
+_gen_ipset_rules() {
+  [ -n "$1" ] || return 0
+  [ -n "$2" ] || return 0
+
+  local files="$(echo "$1" | tr ',' ' ')"
+  local prefix="$2"
+  # shellcheck disable=SC2086
+  # splice content
+  cat $files |
+    # remove empty lines
+    sed '/^[[:space:]]*$/d' |
+    # remove comment lines
+    sed '/^#/d' |
+    # trim lines
+    awk '{$1=$1};1' |
+    # remove duplicates
+    awk '!x[$0]++' |
+    # insert prefix
+    sed "s/^/$prefix/"
+}
+
 # TODO: check ipset create params.
 load_ipsets() {
-  local blacklist_file="/etc/gfw-defense/blacklist.txt"
   if _is_exist_ipset $BLACKLIST; then
     ipset flush $BLACKLIST
     info "blacklist ipset flushed."
@@ -52,11 +74,10 @@ load_ipsets() {
     info "blacklist ipset created."
   fi
   ipset -exist restore <<-EOF
-	$(sed "s/^/add $BLACKLIST /" <$blacklist_file)
+	$(_gen_ipset_rules "$BLACKLIST_FILES" "add $BLACKLIST ")
 	EOF
   info "blacklist loaded into ipset."
 
-  local whitelist_file="/etc/gfw-defense/whitelist.txt"
   if _is_exist_ipset $WHITELIST; then
     ipset flush $WHITELIST
     info "whitelist ipset flushed."
@@ -65,7 +86,7 @@ load_ipsets() {
     info "whitelist ipset created."
   fi
   ipset -exist restore <<-EOF
-	$(sed "s/^/add $WHITELIST /" <$whitelist_file)
+	$(_gen_ipset_rules "$WHITELIST_FILES" "add $WHITELIST ")
 	EOF
   info "whitelist loaded into ipset."
 }
