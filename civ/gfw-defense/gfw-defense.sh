@@ -66,6 +66,7 @@ _gen_ipset_rules() {
     awk '!x[$0]++' |
     # insert prefix
     sed "s/^/$prefix/"
+  # FIXME: the last line must be newline
 }
 
 # TODO: check ipset create params.
