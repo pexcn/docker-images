@@ -6,7 +6,7 @@ FROM alpine
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 RUN apk update \
-  && apk add --no-cache iptables ip6tables ipset tzdata \
+  && apk add --no-cache curl iptables ip6tables ipset tzdata \
   && rm -rf /var/cache/apk/*
 
 RUN mkdir -p /etc/gfw-defense \
