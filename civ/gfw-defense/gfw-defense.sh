@@ -10,6 +10,8 @@ PREFER_BLACKLIST="${PREFER_BLACKLIST:=0}"
 USE_IPTABLES_NFT_BACKEND="${USE_IPTABLES_NFT_BACKEND:=0}"
 BLACKLIST_FILES="${BLACKLIST_FILES:=/etc/gfw-defense/blacklist.txt}"
 WHITELIST_FILES="${WHITELIST_FILES:=/etc/gfw-defense/whitelist.txt}"
+UPDATE_LIST_INTERVAL="${UPDATE_LIST_INTERVAL:=0}"
+UPDATE_LIST_URLS="${UPDATE_LIST_URLS:=}"
 BLACKLIST="gfw_defense_blacklist"
 WHITELIST="gfw_defense_whitelist"
 
@@ -142,6 +144,21 @@ apply_iptables() {
   info "iptables rules applied."
 }
 
+_update_list() {
+  local url="$1"
+  local file="$(basename "$url")"
+  local dir="/etc/gfw-defense"
+  local lines="$(wc -l <"${dir}/${file}")"
+  curl -sSL --create-dirs --output-dir $dir -O "$url" || return 1
+  info "update ${file}: ${lines} -> $(wc -l <"${dir}/${file}")."
+}
+
+update_lists() {
+  for url in $(echo "$UPDATE_LIST_URLS" | tr ',' ' '); do
+    _update_list "$url" || return 1
+  done
+}
+
 _revoke_iptables() {
   iptables -D INPUT -j GFW_DEFENSE || error "revoke iptables chain failed."
   iptables -F GFW_DEFENSE || error "iptables rules remove failed."
@@ -168,9 +185,12 @@ _stop_container() {
 
 graceful_stop() {
   warn "caught TERM or INT signal, graceful stopping..."
+
   _revoke_iptables
   _destroy_ipsets
   _stop_container
+
+  # exit infinite loop
   exit 0
 }
 
@@ -180,9 +200,27 @@ start_gfw_defense() {
   load_ipsets
   apply_iptables
 
-  info "container started."
-  sleep infinity &
-  wait
+  if [ "$UPDATE_LIST_INTERVAL" = 0 ]; then
+    info "container started."
+    sleep infinity &
+    wait
+  else
+    info "container started, update list every $UPDATE_LIST_INTERVAL seconds."
+    while true; do
+      sleep "$UPDATE_LIST_INTERVAL" &
+      wait
+      if [ -z "$UPDATE_LIST_URLS" ]; then
+        warn "UPDATE_LIST_URLS is not set, skip update lists."
+        continue
+      fi
+      if update_lists; then
+        warn "update lists success, reload ipsets..."
+        load_ipsets
+      else
+        error "update lists failed, skip reload ipsets."
+      fi
+    done
+  fi
 }
 
 start_gfw_defense
