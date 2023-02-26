@@ -49,6 +49,7 @@ _gen_ipset_rules() {
   [ -n "$1" ] || return 0
   [ -n "$2" ] || return 0
 
+  # FIXME: check $files exists.
   local files="$(echo "$1" | tr ',' ' ')"
   local prefix="$2"
   # FIXME: optimize.
@@ -148,7 +149,7 @@ _update_list() {
   local url="$1"
   local file="$(basename "$url")"
   local dir="/etc/gfw-defense"
-  local lines="$(wc -l <"${dir}/${file}")"
+  local lines="$(wc -l 2>/dev/null <"${dir}/${file}" || echo 0)"
   curl -sSL --create-dirs --output-dir $dir -O "$url" || return 1
   info "update ${file}: ${lines} -> $(wc -l <"${dir}/${file}")."
 }
