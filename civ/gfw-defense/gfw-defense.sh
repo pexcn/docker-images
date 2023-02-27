@@ -1,12 +1,13 @@
 #!/bin/sh
 
-# shellcheck disable=SC2155,SC3043
+# shellcheck disable=SC2155,SC3043,SC3001
 
 BLOCKING_POLICY="${BLOCKING_POLICY:=DROP}"
 PASSING_POLICY="${PASSING_POLICY:=RETURN}"
 DEFAULT_POLICY="${DEFAULT_POLICY:=RETURN}"
 QUICK_MODE="${QUICK_MODE:=0}"
 PREFER_BLACKLIST="${PREFER_BLACKLIST:=0}"
+ALLOW_RESERVED_ADDRESS="${ALLOW_RESERVED_ADDRESS:=0}"
 USE_IPTABLES_NFT_BACKEND="${USE_IPTABLES_NFT_BACKEND:=0}"
 BLACKLIST_FILES="${BLACKLIST_FILES:=/etc/gfw-defense/blacklist.txt}"
 WHITELIST_FILES="${WHITELIST_FILES:=/etc/gfw-defense/whitelist.txt}"
@@ -39,6 +40,30 @@ error() {
   local clear='\e[0m'
   local time="$(date '+%Y-%m-%d %T')"
   printf "${red}[${time}] [ERROR]: ${clear}%s\n" "$*" >&2
+}
+
+_get_reserved_ips() {
+  cat <<-EOF
+	0.0.0.0/8
+	10.0.0.0/8
+	100.64.0.0/10
+	127.0.0.0/8
+	169.254.0.0/16
+	172.16.0.0/12
+	192.0.0.0/24
+	192.0.2.0/24
+	192.31.196.0/24
+	192.52.193.0/24
+	192.88.99.0/24
+	192.168.0.0/16
+	192.175.48.0/24
+	198.18.0.0/15
+	198.51.100.0/24
+	203.0.113.0/24
+	224.0.0.0/4
+	240.0.0.0/4
+	255.255.255.255
+	EOF
 }
 
 _is_exist_ipset() {
@@ -94,6 +119,13 @@ load_ipsets() {
 	$(_gen_ipset_rules "$WHITELIST_FILES" "add $WHITELIST ")
 	EOF
   info "whitelist loaded into ipset."
+
+  if [ "$ALLOW_RESERVED_ADDRESS" = 1 ]; then
+    ipset -exist restore <<-EOF
+		$(_gen_ipset_rules <(_get_reserved_ips) "add $WHITELIST ")
+		EOF
+    info "reserved ip addresses loaded into whitelist."
+  fi
 }
 
 _quick_mode() {
