@@ -14,6 +14,7 @@ services:
       DEFAULT_POLICY: RETURN
       QUICK_MODE: 0
       PREFER_BLACKLIST: 0
+      ALLOW_RESERVED_ADDRESS: 0
       USE_IPTABLES_NFT_BACKEND: 0
       BLACKLIST_FILES: /etc/gfw-defense/blacklist.txt,/etc/gfw-defense/chnroute.txt
       WHITELIST_FILES: /etc/gfw-defense/whitelist.txt
