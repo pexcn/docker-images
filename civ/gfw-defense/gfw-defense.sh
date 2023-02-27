@@ -76,7 +76,7 @@ _gen_ipset_rules() {
   local files="$(echo "$1" | tr ',' ' ')"
   local prefix="$2"
   for file in $files; do
-    [ -f "$file" ] || continue
+    [ -e "$file" ] || continue
     # remove empty lines
     sed '/^[[:space:]]*$/d' <"$file" |
       # remove comment lines
