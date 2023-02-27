@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# shellcheck disable=SC2155,SC3043,SC3001
+# shellcheck disable=SC2155,SC3043,SC3001,SC1003
 
 BLOCKING_POLICY="${BLOCKING_POLICY:=DROP}"
 PASSING_POLICY="${PASSING_POLICY:=RETURN}"
@@ -72,26 +72,24 @@ _is_exist_ipset() {
 
 _gen_ipset_rules() {
   [ -n "$1" ] || return 0
-  [ -n "$2" ] || return 0
 
-  # FIXME: check $files exists.
   local files="$(echo "$1" | tr ',' ' ')"
   local prefix="$2"
-  # FIXME: optimize.
-  # shellcheck disable=SC2086
-  # splice content
-  cat $files |
+  for file in $files; do
+    [ -f "$file" ] || continue
     # remove empty lines
-    sed '/^[[:space:]]*$/d' |
-    # remove comment lines
-    sed '/^#/d' |
-    # trim lines
-    awk '{$1=$1};1' |
-    # remove duplicates
-    awk '!x[$0]++' |
-    # insert prefix
-    sed "s/^/$prefix/"
-  # FIXME: the last line must be newline
+    sed '/^[[:space:]]*$/d' <"$file" |
+      # remove comment lines
+      sed '/^#/d' |
+      # trim lines
+      awk '{$1=$1};1' |
+      # remove duplicates
+      awk '!x[$0]++' |
+      # insert prefix
+      sed "s/^/$prefix/"
+      # append newline if not present, note: seems unnecessary.
+      #sed '$a\'
+  done
 }
 
 # TODO: check ipset create params.
@@ -124,7 +122,7 @@ load_ipsets() {
     ipset -exist restore <<-EOF
 		$(_gen_ipset_rules <(_get_reserved_ips) "add $WHITELIST ")
 		EOF
-    info "reserved ip addresses loaded into whitelist."
+    info "reserved ip list loaded into whitelist."
   fi
 }
 
