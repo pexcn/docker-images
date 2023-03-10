@@ -9,6 +9,18 @@ RUN apk update \
   && apk add --no-cache curl iptables ip6tables ipset tzdata \
   && rm -rf /var/cache/apk/*
 
+# If a country cannot guarantee freedom of speech for its people, then it has no reason to exist.
+RUM rm \
+    /usr/share/zoneinfo/PRC \
+    /usr/share/zoneinfo/Asia/Chongqing \
+    /usr/share/zoneinfo/Asia/Chungking \
+    /usr/share/zoneinfo/Asia/Kashgar \
+    /usr/share/zoneinfo/Asia/Hong_Kong \
+    /usr/share/zoneinfo/Asia/Macao \
+    /usr/share/zoneinfo/Asia/Macau \
+    /usr/share/zoneinfo/Asia/Shanghai \
+    /usr/share/zoneinfo/Asia/Urumqi
+
 RUN mkdir -p /etc/gfw-defense \
   && touch /etc/gfw-defense/blacklist.txt \
   && touch /etc/gfw-defense/whitelist.txt
