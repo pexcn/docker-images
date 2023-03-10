@@ -9,7 +9,7 @@
 # Server mode
 #
 ssservice server \
-  --server-addr 0.0.0.0:80 \
+  --server-addr [::]:80 \
   --password password \
   --encrypt-method aes-128-gcm \
   --timeout 3600 \
@@ -39,7 +39,7 @@ ssservice server \
 #
 ssservice local \
   #--protocol http \
-  --local-addr 0.0.0.0:1080 \
+  --local-addr [::]:1080 \
   --server-addr 111.222.33.44:80 \
   --password password \
   --encrypt-method aes-128-gcm \
@@ -57,7 +57,7 @@ ssservice local \
 #
 ssservice local \
   --protocol tunnel \
-  --local-addr 0.0.0.0:8123 \
+  --local-addr [::]:8123 \
   --forward-addr 192.168.1.30:8123 \
   --server-addr 111.222.33.44:2077 \
   --password password \
@@ -76,7 +76,7 @@ ssservice local \
 #
 ssservice local \
   --protocol redir \
-  --local-addr 0.0.0.0:1234 \
+  --local-addr [::]:1234 \
   --server-addr 111.222.33.44:2077 \
   --password password \
   --encrypt-method aes-128-gcm \
@@ -108,7 +108,7 @@ ssservice local \
 # Manager mode
 #
 ssservice manager \
-  --manager-address 127.0.0.1:6000 \
+  --manager-address [::1]:6000 \
   --encrypt-method aes-128-gcm \
   --timeout 3600 \
   --udp-timeout 300 \

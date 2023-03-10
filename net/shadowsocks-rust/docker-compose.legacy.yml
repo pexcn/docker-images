@@ -12,7 +12,7 @@ services:
       CHILLING_EFFECT: 0
     command: >
       ssservice server
-        --server-addr 0.0.0.0:1776
+        --server-addr [::]:1776
         --password password
         --encrypt-method aes-128-gcm
         --timeout 3600
@@ -35,7 +35,7 @@ services:
       CHILLING_EFFECT: 0
     command: >
       ssservice server
-        --server-addr 0.0.0.0:1776
+        --server-addr [::]:1776
         --password cGFzc3dvcmRwYXNzd29yZA==
         --encrypt-method 2022-blake3-aes-128-gcm
         --timeout 3600
@@ -58,7 +58,7 @@ services:
       CHILLING_EFFECT: 0
     command: >
       ssservice server
-        --server-addr 0.0.0.0:80
+        --server-addr [::]:80
         --password password
         --encrypt-method aes-128-gcm
         --timeout 3600
@@ -85,7 +85,7 @@ services:
       - ../../utils/acme.sh/acme.sh-data/example.com_ecc:/.acme.sh/example.com
     command: >
       ssservice server
-        --server-addr 0.0.0.0:443
+        --server-addr [::]:443
         --password password
         --encrypt-method chacha20-ietf-poly1305
         --timeout 3600
@@ -112,7 +112,7 @@ services:
       - ../../utils/acme.sh/acme.sh-data/example.com_ecc:/.acme.sh/example.com
     command: >
       ssservice server
-        --server-addr 0.0.0.0:443
+        --server-addr [::]:443
         --password password
         --encrypt-method chacha20-ietf-poly1305
         --timeout 3600
@@ -137,7 +137,7 @@ services:
       CHILLING_EFFECT: 0
     command: >
       ssservice local
-        --local-addr 0.0.0.0:1080
+        --local-addr [::]:1080
         --server-addr 111.222.33.44:80
         --password password
         --encrypt-method aes-128-gcm
@@ -162,7 +162,7 @@ services:
     command: >
       ssservice local
         --protocol tunnel
-        --local-addr 0.0.0.0:8123
+        --local-addr [::]:8123
         --forward-addr 192.168.1.30:8123
         --server-addr 111.222.33.44:2077
         --password password
@@ -188,7 +188,7 @@ services:
     command: >
       ssservice local
         --protocol redir
-        --local-addr 0.0.0.0:1234
+        --local-addr [::]:1234
         --server-addr 111.222.33.44:2077
         --password password
         --encrypt-method aes-128-gcm
@@ -215,7 +215,7 @@ services:
     command: >
       ssservice local
         --protocol redir
-        --local-addr 0.0.0.0:1234
+        --local-addr [::]:1234
         --server-addr 111.222.33.44:2077
         --password password
         --encrypt-method aes-128-gcm
@@ -240,7 +240,7 @@ services:
     command: >
       ssservice local
         --protocol redir
-        --local-addr 0.0.0.0:1234
+        --local-addr [::]:1234
         --server-addr 111.222.33.44:2077
         --password password
         --encrypt-method aes-128-gcm
