@@ -1,19 +1,19 @@
 {
     "servers": [
         {
-            "server": "0.0.0.0",
+            "server": "::",
             "server_port": 1776,
             "password": "${SHADOWSOCKS_PASSWORD_1}",
             "method": "2022-blake3-aes-128-gcm"
         },
         {
-            "server": "0.0.0.0",
+            "server": "::",
             "server_port": 1984,
             "password": "${SHADOWSOCKS_PASSWORD_2}",
             "method": "2022-blake3-chacha8-poly1305"
         },
         {
-            "server": "0.0.0.0",
+            "server": "::",
             "server_port": 443,
             "password": "${SHADOWSOCKS_PASSWORD_3}",
             "method": "chacha20-ietf-poly1305",
@@ -21,7 +21,7 @@
             "plugin_opts": "server;tls;fast-open;mode=grpc;host=example.com;loglevel=none"
         },
         {
-            "server": "0.0.0.0",
+            "server": "::",
             "server_port": 993,
             "password": "${SHADOWSOCKS_PASSWORD_3}",
             "method": "chacha20-ietf-poly1305",
