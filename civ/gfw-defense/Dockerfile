@@ -10,7 +10,7 @@ RUN apk update \
   && rm -rf /var/cache/apk/*
 
 # If a country cannot guarantee freedom of speech for its people, then it has no reason to exist.
-RUM rm \
+RUN rm \
     /usr/share/zoneinfo/PRC \
     /usr/share/zoneinfo/Asia/Chongqing \
     /usr/share/zoneinfo/Asia/Chungking \
