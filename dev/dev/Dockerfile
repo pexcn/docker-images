@@ -5,6 +5,13 @@
 FROM debian:bullseye-slim
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
+# update sources
+RUN > /etc/apt/sources.list \
+  && echo "deb http://deb.debian.org/debian bullseye main" >> /etc/apt/sources.list \
+  && echo "deb http://deb.debian.org/debian bullseye-updates main" >> /etc/apt/sources.list \
+  && echo "deb http://deb.debian.org/debian-security bullseye-security main" >> /etc/apt/sources.list \
+  && echo "deb http://deb.debian.org/debian bullseye-backports main" >> /etc/apt/sources.list
+
 # install packages
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
