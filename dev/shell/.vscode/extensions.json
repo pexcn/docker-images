@@ -4,6 +4,7 @@
 		"rogalmic.bash-debug",
 		"timonwong.shellcheck",
 		"foxundermoon.shell-format",
-		"Remisa.shellman"
+		"Remisa.shellman",
+		"ms-azuretools.vscode-docker"
 	]
 }
