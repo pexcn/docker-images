@@ -1,0 +1,27 @@
+version: '3.9'
+
+services:
+  rustdesk-server:
+    image: rustdesk/rustdesk-server-s6:1.1.7-4
+    container_name: rustdesk-server
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      RELAY: example.com:1117
+      ENCRYPTED_ONLY: 1
+      KEY_PUB: xeKaF5BdVG4MvLCNiUVtHnWmwBWgDIpOLJw8SFeb2uY=
+      KEY_PRIV: aYPIKDhLk5UhQOPJxelcAGsUcCice08EAkT6P9aWBInF4poXkF1Ubgy8sI2JRW0edabAFaAMik4snDxIV5va5g==
+      #ALWAYS_USE_RELAY: N
+      #DB_URL=./db_v2.sqlite3
+      #DOWNGRADE_START_CHECK: 1800
+      #DOWNGRADE_THRESHOLD: 0.66
+      #KEY:
+      LIMIT_SPEED: 30
+      PORT: 1116
+      #RELAY_SERVERS:
+      #RUST_LOG: INFO
+      SINGLE_BANDWIDTH: 30
+      TOTAL_BANDWIDTH: 150
+      RMEM: 8388608
+    volumes:
+      - ./rustdesk-server-data:/data
