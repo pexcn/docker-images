@@ -24,4 +24,5 @@ services:
       TOTAL_BANDWIDTH: 150
       RMEM: 8388608
     volumes:
+      - /etc/localtime:/etc/localtime:ro
       - ./rustdesk-server-data:/data
