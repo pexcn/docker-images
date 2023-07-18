@@ -17,7 +17,7 @@ services:
       - ./nginx-data/conf.d:/etc/nginx/conf.d
       - ./nginx-data/http.d:/etc/nginx/http.d
       - ./nginx-data/stream.d:/etc/nginx/stream.d
-      - ./nginx-data/root:/usr/share/nginx/html
+      - ./nginx-data/html:/usr/share/nginx/html
       - ../../utils/acme.sh/acme.sh-data:/cert
     labels:
       - "me.pexcn.container.name=nginx"
