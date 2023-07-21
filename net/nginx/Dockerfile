@@ -9,6 +9,7 @@ ARG NGINX_VER=1.24.0-r6
 RUN apk update \
   && apk add --no-cache tzdata \
       nginx=$NGINX_VER \
+      nginx-mod-stream=$NGINX_VER \
   && rm -rf /var/cache/apk/*
 
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
