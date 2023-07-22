@@ -53,7 +53,7 @@ RUN apk update \
       --with-stream_ssl_module \
       --with-stream_ssl_preread_module \
       --with-cc-opt='-O3 -flto=auto' \
-      --with-ld-opt='-s -static' \
+      --with-ld-opt='-static -s' \
   && make -j$(nproc) \
   && make install \
   && make clean \
