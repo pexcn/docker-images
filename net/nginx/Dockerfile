@@ -3,7 +3,7 @@
 #
 
 #
-# Build stage
+# Build stage [stable]
 #
 FROM alpine:3.18 AS builder
 
@@ -65,6 +65,67 @@ RUN apk update \
 RUN rm /etc/nginx/*.default
 
 #
+# Build stage [mainline with quic/http3]
+#
+FROM alpine:3.18 AS builder-quic
+
+ARG NGINX_VER=1.25.1
+RUN apk update \
+  && apk add --no-cache --virtual .build-deps \
+      curl make gcc g++ linux-headers pcre2-dev libressl-dev zlib-static \
+  && curl https://nginx.org/download/nginx-${NGINX_VER}.tar.gz | tar zxv \
+  && cd nginx-${NGINX_VER} \
+  && ./configure \
+      --prefix=/etc/nginx \
+      --sbin-path=/usr/sbin/nginx \
+      --modules-path=/usr/lib/nginx/modules \
+      --conf-path=/etc/nginx/nginx.conf \
+      --error-log-path=/var/log/nginx/error.log \
+      --http-log-path=/var/log/nginx/access.log \
+      --pid-path=/var/run/nginx.pid \
+      --lock-path=/var/run/nginx.lock \
+      --http-client-body-temp-path=/var/cache/nginx/client_temp \
+      --http-proxy-temp-path=/var/cache/nginx/proxy_temp \
+      --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp \
+      --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp \
+      --http-scgi-temp-path=/var/cache/nginx/scgi_temp \
+      --user=nginx \
+      --group=nginx \
+      --with-compat \
+      --with-file-aio \
+      --with-threads \
+      --with-http_sub_module \
+      --with-http_addition_module \
+      --with-http_auth_request_module \
+      --with-http_dav_module \
+      --with-http_flv_module \
+      --with-http_gunzip_module \
+      --with-http_gzip_static_module \
+      --with-http_mp4_module \
+      --with-http_random_index_module \
+      --with-http_realip_module \
+      --with-http_secure_link_module \
+      --with-http_slice_module \
+      --with-http_ssl_module \
+      --with-http_stub_status_module \
+      --with-http_sub_module \
+      --with-http_v2_module \
+      --with-http_v3_module \
+      --with-stream \
+      --with-stream_realip_module \
+      --with-stream_ssl_module \
+      --with-stream_ssl_preread_module \
+      --with-cc-opt='-O3 -flto=auto' \
+      --with-ld-opt='-static -s' \
+  && make -j$(nproc) \
+  && make install \
+  && make clean \
+  && cd - \
+  && rm -rf nginx-${NGINX_VER} \
+  && apk del .build-deps \
+  && rm -rf /var/cache/apk/*
+
+#
 # Runtime stage
 #
 FROM alpine:3.18
@@ -91,6 +152,7 @@ RUN mkdir /var/log/nginx \
 COPY --from=builder /usr/sbin/nginx /usr/sbin/nginx
 COPY --from=builder /etc/nginx/ /etc/nginx/
 COPY --from=builder /etc/nginx/html/ /usr/share/nginx/html/
+COPY --from=builder-quic /usr/sbin/nginx /usr/sbin/nginx-quic
 
 STOPSIGNAL SIGQUIT
 
