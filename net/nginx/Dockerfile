@@ -142,7 +142,7 @@ RUN addgroup -g $NGINX_GID -S nginx \
   && adduser -S -D -H -u $NGINX_UID -h /var/cache/nginx -s /sbin/nologin -G nginx -g nginx nginx
 
 # prepare nginx working directory
-RUN mkdir /var/cache/nginx
+RUN mkdir /var/cache/nginx && chown nginx:nginx /var/cache/nginx
 
 # redirect log path to stdout/stderr
 RUN mkdir /var/log/nginx \
