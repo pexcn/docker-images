@@ -53,7 +53,7 @@ RUN apk update \
       --with-stream_ssl_module \
       --with-stream_ssl_preread_module \
       --with-cc-opt='-O3 -flto=auto' \
-      --with-ld-opt='-static -s' \
+      --with-ld-opt='-s -l:libssl.a -l:libcrypto.a -l:libpcre2-8.a -l:libz.a' \
   && make -j$(nproc) \
   && make install \
   && make clean \
@@ -116,7 +116,7 @@ RUN apk update \
       --with-stream_ssl_module \
       --with-stream_ssl_preread_module \
       --with-cc-opt='-O3 -flto=auto' \
-      --with-ld-opt='-static -s' \
+      --with-ld-opt='-s -l:libssl.a -l:libcrypto.a -l:libpcre2-8.a -l:libz.a' \
   && make -j$(nproc) \
   && make install \
   && make clean \
