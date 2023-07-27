@@ -69,10 +69,36 @@ RUN rm /etc/nginx/*.default
 #
 FROM alpine:3.18 AS builder-quic
 
+ARG QUICTLS_VER=openssl-3.0.9-quic1
+RUN apk update \
+  && apk add --no-cache --virtual .build-deps \
+      git perl gcc make musl-dev linux-headers \
+  && git clone https://github.com/quictls/openssl.git --branch $QUICTLS_VER --single-branch --recurse-submodules -j4 quictls-${QUICTLS_VER} \
+  && cd quictls-${QUICTLS_VER} \
+  && case $(apk --print-arch) in \
+       x86_64) extra_args="enable-ec_nistp_64_gcc_128";; \
+       *) extra_args="";; \
+     esac \
+  && ./Configure \
+      --prefix=/usr \
+      --openssldir=/etc/ssl \
+      --libdir=lib \
+      shared \
+      no-weak-ssl-ciphers \
+      enable-ktls \
+      $extra_args \
+  && make -j$(nproc) \
+  && make install_sw \
+  && make clean \
+  && cd - \
+  && rm -rf quictls-${QUICTLS_VER} \
+  && apk del .build-deps \
+  && rm -rf /var/cache/apk/*
+
 ARG NGINX_VER=1.25.1
 RUN apk update \
   && apk add --no-cache --virtual .build-deps \
-      curl make gcc g++ linux-headers pcre2-dev libressl-dev zlib-static \
+      curl make gcc g++ linux-headers pcre2-dev zlib-static \
   && curl https://nginx.org/download/nginx-${NGINX_VER}.tar.gz | tar zxv \
   && cd nginx-${NGINX_VER} \
   && ./configure \
