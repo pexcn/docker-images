@@ -8,10 +8,15 @@
 FROM alpine:3.18 AS builder
 
 ARG NGINX_VER=1.24.0
+ARG NGX_BROTLI_VER=6e975bcb015f62e1f303054897783355e2a877dc
 RUN apk update \
   && apk add --no-cache --virtual .build-deps \
-      curl make gcc g++ linux-headers pcre2-dev openssl-dev openssl-libs-static zlib-static \
+      curl git make gcc g++ linux-headers pcre2-dev openssl-dev openssl-libs-static zlib-static \
   && curl https://nginx.org/download/nginx-${NGINX_VER}.tar.gz | tar zxv \
+  && git clone https://github.com/google/ngx_brotli.git --recurse-submodules \
+  && cd ngx_brotli \
+  && git checkout $NGX_BROTLI_VER \
+  && cd - \
   && cd nginx-${NGINX_VER} \
   && ./configure \
       --prefix=/etc/nginx \
@@ -29,7 +34,6 @@ RUN apk update \
       --http-scgi-temp-path=/var/cache/nginx/scgi_temp \
       --user=nginx \
       --group=nginx \
-      --with-compat \
       --with-file-aio \
       --with-threads \
       --with-http_sub_module \
@@ -54,11 +58,13 @@ RUN apk update \
       --with-stream_ssl_preread_module \
       --with-cc-opt='-O3 -flto=auto' \
       --with-ld-opt='-s -l:libssl.a -l:libcrypto.a -l:libpcre2-8.a -l:libz.a' \
+      --with-compat \
+      --add-dynamic-module=/ngx_brotli \
   && make -j$(nproc) \
   && make install \
   && make clean \
   && cd - \
-  && rm -rf nginx-${NGINX_VER} \
+  && rm -rf nginx-${NGINX_VER} ngx_brotli \
   && apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
@@ -96,10 +102,15 @@ RUN apk update \
   && rm -rf /var/cache/apk/*
 
 ARG NGINX_VER=1.25.1
+ARG NGX_BROTLI_VER=6e975bcb015f62e1f303054897783355e2a877dc
 RUN apk update \
   && apk add --no-cache --virtual .build-deps \
-      curl make gcc g++ linux-headers pcre2-dev zlib-static \
+      curl git make gcc g++ linux-headers pcre2-dev zlib-static \
   && curl https://nginx.org/download/nginx-${NGINX_VER}.tar.gz | tar zxv \
+  && git clone https://github.com/google/ngx_brotli.git --recurse-submodules \
+  && cd ngx_brotli \
+  && git checkout $NGX_BROTLI_VER \
+  && cd - \
   && cd nginx-${NGINX_VER} \
   && ./configure \
       --prefix=/etc/nginx \
@@ -117,7 +128,6 @@ RUN apk update \
       --http-scgi-temp-path=/var/cache/nginx/scgi_temp \
       --user=nginx \
       --group=nginx \
-      --with-compat \
       --with-file-aio \
       --with-threads \
       --with-http_sub_module \
@@ -143,11 +153,13 @@ RUN apk update \
       --with-stream_ssl_preread_module \
       --with-cc-opt='-O3 -flto=auto' \
       --with-ld-opt='-s -l:libssl.a -l:libcrypto.a -l:libpcre2-8.a -l:libz.a' \
+      --with-compat \
+      --add-dynamic-module=/ngx_brotli \
   && make -j$(nproc) \
   && make install \
   && make clean \
   && cd - \
-  && rm -rf nginx-${NGINX_VER} \
+  && rm -rf nginx-${NGINX_VER} ngx_brotli \
   && apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
@@ -175,10 +187,12 @@ RUN mkdir /var/log/nginx \
   && ln -sf /dev/stdout /var/log/nginx/access.log \
   && ln -sf /dev/stderr /var/log/nginx/error.log
 
-COPY --from=builder /usr/sbin/nginx /usr/sbin/nginx
 COPY --from=builder /etc/nginx/ /etc/nginx/
 COPY --from=builder /etc/nginx/html/ /usr/share/nginx/html/
+COPY --from=builder /usr/sbin/nginx /usr/sbin/nginx
+COPY --from=builder /usr/lib/nginx/modules/ /usr/lib/nginx/modules/
 COPY --from=builder-quic /usr/sbin/nginx /usr/sbin/nginx-quic
+COPY --from=builder-quic /usr/lib/nginx/modules/ /usr/lib/nginx/modules-quic/
 
 STOPSIGNAL SIGQUIT
 
