@@ -68,9 +68,6 @@ RUN apk update \
   && apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
-RUN rm /etc/nginx/*.default \
-  && ln -s /usr/lib/nginx/modules /etc/nginx/modules
-
 #
 # Build stage [mainline with quic/http3]
 #
@@ -174,6 +171,13 @@ RUN apk update \
   && apk add --no-cache tzdata \
   && rm -rf /var/cache/apk/*
 
+COPY --from=builder /etc/nginx/ /etc/nginx/
+COPY --from=builder /etc/nginx/html/ /usr/share/nginx/html/
+COPY --from=builder /usr/sbin/nginx /usr/sbin/nginx
+COPY --from=builder /usr/lib/nginx/modules/ /usr/lib/nginx/modules/
+COPY --from=builder-quic /usr/sbin/nginx /usr/sbin/nginx-quic
+COPY --from=builder-quic /usr/lib/nginx/modules/ /usr/lib/nginx/modules-quic/
+
 # create nginx user and group
 ARG NGINX_GID=101
 ARG NGINX_UID=$NGINX_GID
@@ -181,6 +185,7 @@ RUN addgroup -g $NGINX_GID -S nginx \
   && adduser -S -D -H -u $NGINX_UID -h /var/cache/nginx -s /sbin/nologin -G nginx -g nginx nginx
 
 # prepare nginx working directory
+# manually created because the above `adduser` command is to be used as a reference for other dockerfiles
 RUN mkdir /var/cache/nginx
 
 # redirect log path to stdout/stderr
@@ -188,12 +193,10 @@ RUN mkdir /var/log/nginx \
   && ln -sf /dev/stdout /var/log/nginx/access.log \
   && ln -sf /dev/stderr /var/log/nginx/error.log
 
-COPY --from=builder /etc/nginx/ /etc/nginx/
-COPY --from=builder /etc/nginx/html/ /usr/share/nginx/html/
-COPY --from=builder /usr/sbin/nginx /usr/sbin/nginx
-COPY --from=builder /usr/lib/nginx/modules/ /usr/lib/nginx/modules/
-COPY --from=builder-quic /usr/sbin/nginx /usr/sbin/nginx-quic
-COPY --from=builder-quic /usr/lib/nginx/modules/ /usr/lib/nginx/modules-quic/
+# optimize directory structure
+RUN rm /etc/nginx/*.default \
+  && ln -s /usr/lib/nginx/modules /etc/nginx/modules \
+  && ln -s /usr/lib/nginx/modules-quic /etc/nginx/modules-quic
 
 STOPSIGNAL SIGQUIT
 
