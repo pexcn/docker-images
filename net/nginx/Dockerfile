@@ -69,9 +69,9 @@ RUN apk update \
   && rm -rf /var/cache/apk/*
 
 #
-# Build stage [mainline with quic/http3]
+# Build stage [mainline]
 #
-FROM alpine:3.18 AS builder-quic
+FROM alpine:3.18 AS builder-ml
 
 ARG QUICTLS_VER=openssl-3.0.9-quic1
 RUN apk update \
@@ -175,8 +175,8 @@ COPY --from=builder /etc/nginx/ /etc/nginx/
 COPY --from=builder /etc/nginx/html/ /usr/share/nginx/html/
 COPY --from=builder /usr/sbin/nginx /usr/sbin/nginx
 COPY --from=builder /usr/lib/nginx/modules/ /usr/lib/nginx/modules/
-COPY --from=builder-quic /usr/sbin/nginx /usr/sbin/nginx-quic
-COPY --from=builder-quic /usr/lib/nginx/modules/ /usr/lib/nginx/modules-quic/
+COPY --from=builder-ml /usr/sbin/nginx /usr/sbin/nginx-ml
+COPY --from=builder-ml /usr/lib/nginx/modules/ /usr/lib/nginx/modules-ml/
 
 # create nginx user and group
 ARG NGINX_GID=101
@@ -196,7 +196,7 @@ RUN mkdir /var/log/nginx \
 # optimize directory structure
 RUN rm /etc/nginx/*.default \
   && ln -s /usr/lib/nginx/modules /etc/nginx/modules \
-  && ln -s /usr/lib/nginx/modules-quic /etc/nginx/modules-quic
+  && ln -s /usr/lib/nginx/modules-ml /etc/nginx/modules-ml
 
 STOPSIGNAL SIGQUIT
 
