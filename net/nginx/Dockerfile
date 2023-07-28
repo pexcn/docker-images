@@ -68,7 +68,8 @@ RUN apk update \
   && apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
-RUN rm /etc/nginx/*.default
+RUN rm /etc/nginx/*.default \
+  && ln -s /usr/lib/nginx/modules /etc/nginx/modules
 
 #
 # Build stage [mainline with quic/http3]
