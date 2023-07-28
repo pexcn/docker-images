@@ -25,4 +25,4 @@ services:
       - ../../utils/acme.sh/acme.sh-data:/cert
     labels:
       - "me.pexcn.container.name=nginx"
-    command: nginx-quic -g 'daemon off;'
+    command: nginx-ml -g 'daemon off;'
