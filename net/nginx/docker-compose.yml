@@ -14,6 +14,8 @@ services:
       options:
         max-file: 5
         max-size: 20m
+    labels:
+      - "me.pexcn.container.name=nginx"
     environment:
       TZ: Asia/Taipei
     volumes:
@@ -23,6 +25,3 @@ services:
       - ./nginx-data/stream.d:/etc/nginx/stream.d
       - ./nginx-data/html:/usr/share/nginx/html
       - ../../utils/acme.sh/acme.sh-data:/cert
-    labels:
-      - "me.pexcn.container.name=nginx"
-    command: nginx-ml -g 'daemon off;'
