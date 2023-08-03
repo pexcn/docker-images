@@ -41,7 +41,7 @@ RUN apk update \
       curl git patch make gcc g++ linux-headers pcre2-dev zlib-static \
   && curl https://nginx.org/download/nginx-${NGINX_VER}.tar.gz | tar zxv \
   && git clone https://github.com/google/ngx_brotli.git --recurse-submodules \
-  && git clone https://github.com/pexcn/nginx_upstream_check_module.git ngx_upstream_check \
+  && git clone https://github.com/pexcn/ngx_upstream_check.git \
   && cd ngx_brotli \
   && git checkout $NGX_BROTLI_VER \
   && cd - \
