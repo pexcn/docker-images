@@ -35,13 +35,19 @@ RUN apk update \
 
 ARG NGINX_VER=1.25.1
 ARG NGX_BROTLI_VER=6e975bcb015f62e1f303054897783355e2a877dc
+ARG NGX_UPSTREAM_CHECK_VER=3c4f15f265a909d30213694488800991c6ca6ca6
 RUN apk update \
   && apk add --no-cache --virtual .build-deps \
-      curl git make gcc g++ linux-headers pcre2-dev zlib-static \
+      curl git patch make gcc g++ linux-headers pcre2-dev zlib-static \
   && curl https://nginx.org/download/nginx-${NGINX_VER}.tar.gz | tar zxv \
   && git clone https://github.com/google/ngx_brotli.git --recurse-submodules \
+  && git clone https://github.com/pexcn/nginx_upstream_check_module.git ngx_upstream_check \
   && cd ngx_brotli \
   && git checkout $NGX_BROTLI_VER \
+  && cd - \
+  && cd ngx_upstream_check \
+  && git checkout $NGX_UPSTREAM_CHECK_VER \
+  && patch -d ../nginx-${NGINX_VER} -p1 < check_1.20.1+.patch \
   && cd - \
   && cd nginx-${NGINX_VER} \
   && ./configure \
@@ -87,11 +93,12 @@ RUN apk update \
       --with-ld-opt='-s -l:libssl.a -l:libcrypto.a -l:libpcre2-8.a -l:libz.a' \
       --with-compat \
       --add-dynamic-module=/ngx_brotli \
+      --add-dynamic-module=/ngx_upstream_check \
   && make -j$(nproc) \
   && make install \
   && make clean \
   && cd - \
-  && rm -rf nginx-${NGINX_VER} ngx_brotli \
+  && rm -rf nginx-${NGINX_VER} ngx_brotli ngx_upstream_check \
   && apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
