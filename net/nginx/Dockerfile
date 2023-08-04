@@ -41,8 +41,8 @@ RUN apk update \
   && apk add --no-cache --virtual .build-deps \
       curl git patch make gcc g++ linux-headers pcre2-dev zlib-static \
   && curl https://nginx.org/download/nginx-${NGINX_VER}.tar.gz | tar zxv \
-  && git clone https://github.com/google/ngx_brotli.git --recurse-submodules \
-  && git clone https://github.com/pexcn/ngx_upstream_check.git \
+  && git clone https://github.com/google/ngx_brotli.git --recurse-submodules ngx_brotli \
+  && git clone https://github.com/pexcn/ngx_upstream_check.git ngx_upstream_check \
   && git clone https://github.com/yaoweibin/ngx_http_substitutions_filter_module.git ngx_subs_filter \
   && cd ngx_brotli \
   && git checkout $NGX_BROTLI_VER \
@@ -104,7 +104,7 @@ RUN apk update \
   && make install \
   && make clean \
   && cd - \
-  && rm -rf nginx-${NGINX_VER} ngx_brotli ngx_upstream_check \
+  && rm -rf nginx-${NGINX_VER} ngx_brotli ngx_upstream_check ngx_subs_filter \
   && apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
