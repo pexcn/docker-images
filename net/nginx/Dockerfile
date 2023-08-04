@@ -35,7 +35,7 @@ RUN apk update \
 
 ARG NGINX_VER=1.25.1
 ARG NGX_BROTLI_VER=6e975bcb015f62e1f303054897783355e2a877dc
-ARG NGX_UPSTREAM_CHECK_VER=3c4f15f265a909d30213694488800991c6ca6ca6
+ARG NGX_UPSTREAM_CHECK_VER=244e1cd436d496279b1649304b0985ae5621465c
 RUN apk update \
   && apk add --no-cache --virtual .build-deps \
       curl git patch make gcc g++ linux-headers pcre2-dev zlib-static \
