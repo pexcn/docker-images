@@ -36,18 +36,23 @@ RUN apk update \
 ARG NGINX_VER=1.25.1
 ARG NGX_BROTLI_VER=6e975bcb015f62e1f303054897783355e2a877dc
 ARG NGX_UPSTREAM_CHECK_VER=244e1cd436d496279b1649304b0985ae5621465c
+ARG NGX_SUBS_FILTER_VER=e12e965ac1837ca709709f9a26f572a54d83430e
 RUN apk update \
   && apk add --no-cache --virtual .build-deps \
       curl git patch make gcc g++ linux-headers pcre2-dev zlib-static \
   && curl https://nginx.org/download/nginx-${NGINX_VER}.tar.gz | tar zxv \
   && git clone https://github.com/google/ngx_brotli.git --recurse-submodules \
   && git clone https://github.com/pexcn/ngx_upstream_check.git \
+  && git clone https://github.com/yaoweibin/ngx_http_substitutions_filter_module.git ngx_subs_filter \
   && cd ngx_brotli \
   && git checkout $NGX_BROTLI_VER \
   && cd - \
   && cd ngx_upstream_check \
   && git checkout $NGX_UPSTREAM_CHECK_VER \
   && patch -d ../nginx-${NGINX_VER} -p1 < check_1.20.1+.patch \
+  && cd - \
+  && cd ngx_subs_filter \
+  && git checkout $NGX_SUBS_FILTER_VER \
   && cd - \
   && cd nginx-${NGINX_VER} \
   && ./configure \
@@ -94,6 +99,7 @@ RUN apk update \
       --with-compat \
       --add-dynamic-module=/ngx_brotli \
       --add-dynamic-module=/ngx_upstream_check \
+      --add-dynamic-module=/ngx_subs_filter \
   && make -j$(nproc) \
   && make install \
   && make clean \
