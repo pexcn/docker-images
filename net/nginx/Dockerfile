@@ -7,7 +7,7 @@
 #
 FROM alpine:3.18 AS builder
 
-ARG QUICTLS_VER=openssl-3.0.9-quic1
+ARG QUICTLS_VER=openssl-3.1.2-quic1
 RUN apk update \
   && apk add --no-cache --virtual .build-deps \
       git perl gcc make musl-dev linux-headers \
