@@ -37,6 +37,7 @@ ARG NGINX_VER=1.25.1
 ARG NGX_BROTLI_VER=6e975bcb015f62e1f303054897783355e2a877dc
 ARG NGX_UPSTREAM_CHECK_VER=244e1cd436d496279b1649304b0985ae5621465c
 ARG NGX_SUBS_FILTER_VER=e12e965ac1837ca709709f9a26f572a54d83430e
+ARG NGX_GOOGLE_FILTER_VER=bab4e945db9170cb32b49ac928f14b06313893eb
 RUN apk update \
   && apk add --no-cache --virtual .build-deps \
       curl git patch make gcc g++ linux-headers pcre2-dev zlib-static \
@@ -44,6 +45,7 @@ RUN apk update \
   && git clone https://github.com/google/ngx_brotli.git --recurse-submodules ngx_brotli \
   && git clone https://github.com/pexcn/ngx_upstream_check.git ngx_upstream_check \
   && git clone https://github.com/yaoweibin/ngx_http_substitutions_filter_module.git ngx_subs_filter \
+  && git clone https://github.com/GetPageSpeed/ngx_http_google_filter_module.git ngx_google_filter \
   && cd ngx_brotli \
   && git checkout $NGX_BROTLI_VER \
   && cd - \
@@ -53,6 +55,9 @@ RUN apk update \
   && cd - \
   && cd ngx_subs_filter \
   && git checkout $NGX_SUBS_FILTER_VER \
+  && cd - \
+  && cd ngx_google_filter \
+  && git checkout $NGX_GOOGLE_FILTER_VER \
   && cd - \
   && cd nginx-${NGINX_VER} \
   && ./configure \
@@ -100,11 +105,12 @@ RUN apk update \
       --add-dynamic-module=/ngx_brotli \
       --add-dynamic-module=/ngx_upstream_check \
       --add-dynamic-module=/ngx_subs_filter \
+      --add-dynamic-module=/ngx_google_filter \
   && make -j$(nproc) \
   && make install \
   && make clean \
   && cd - \
-  && rm -rf nginx-${NGINX_VER} ngx_brotli ngx_upstream_check ngx_subs_filter \
+  && rm -rf nginx-${NGINX_VER} ngx_brotli ngx_upstream_check ngx_subs_filter ngx_google_filter \
   && apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
