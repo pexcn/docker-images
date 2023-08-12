@@ -1,5 +1,6 @@
-bind_host: 0.0.0.0
-bind_port: 3001
+http:
+  address: 192.168.1.1:3001
+  session_ttl: 720h
 users:
   - name: pexcn
     password: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -9,22 +10,17 @@ http_proxy: ""
 language: zh-cn
 theme: auto
 debug_pprof: false
-web_session_ttl: 720
 dns:
   bind_hosts:
     - 192.168.1.1
   port: 5354
-  statistics_interval: 1
-  querylog_enabled: true
-  querylog_file_enabled: true
-  querylog_interval: 168h
-  querylog_size_memory: 1000
   anonymize_client_ip: false
   protection_enabled: true
   blocking_mode: nxdomain
   blocking_ipv4: ""
   blocking_ipv6: ""
   blocked_response_ttl: 300
+  protection_disabled_until: null
   parental_block_host: family-block.dns.adguard.com
   safebrowsing_block_host: standard-block.dns.adguard.com
   ratelimit: 0
@@ -54,20 +50,31 @@ dns:
   bogus_nxdomain: []
   aaaa_disabled: false
   enable_dnssec: false
-  edns_client_subnet: false
+  edns_client_subnet:
+    custom_ip: ""
+    enabled: false
+    use_custom: false
   max_goroutines: 300
   handle_ddr: true
   ipset: []
   ipset_file: ""
+  bootstrap_prefer_ipv6: false
   filtering_enabled: true
   filters_update_interval: 24
   parental_enabled: false
-  safesearch_enabled: false
   safebrowsing_enabled: false
   safebrowsing_cache_size: 1048576
   safesearch_cache_size: 1048576
   parental_cache_size: 1048576
   cache_time: 30
+  safe_search:
+    enabled: false
+    bing: false
+    duckduckgo: false
+    google: false
+    pixabay: false
+    yandex: false
+    youtube: false
   rewrites:
     - domain: assets1.xboxlive.com
       answer: 192.168.1.10
@@ -85,7 +92,10 @@ dns:
       answer: 192.168.1.10
     - domain: xvcf2.xboxlive.com
       answer: 192.168.1.10
-  blocked_services: []
+  blocked_services:
+    schedule:
+      time_zone: Asia/Taipei
+    ids: []
   upstream_timeout: 10s
   private_networks: []
   use_private_ptr_resolvers: true
@@ -100,7 +110,7 @@ tls:
   force_https: false
   port_https: 443
   port_dns_over_tls: 853
-  port_dns_over_quic: 784
+  port_dns_over_quic: 853
   port_dnscrypt: 0
   dnscrypt_config_file: ""
   allow_unencrypted_doh: false
@@ -109,6 +119,16 @@ tls:
   certificate_path: ""
   private_key_path: ""
   strict_sni_check: false
+querylog:
+  ignored: []
+  interval: 168h
+  size_memory: 1000
+  enabled: true
+  file_enabled: true
+statistics:
+  ignored: []
+  interval: 24h
+  enabled: true
 filters:
   - enabled: true
     url: https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt
@@ -161,15 +181,16 @@ clients:
     dhcp: true
     hosts: true
   persistent: []
-log_file: ""
-log_max_backups: 1
-log_max_size: 100
-log_max_age: 3
-log_compress: true
-log_localtime: true
-verbose: false
+log:
+  file: ""
+  max_backups: 1
+  max_size: 100
+  max_age: 3
+  compress: true
+  local_time: true
+  verbose: false
 os:
   group: ""
   user: ""
   rlimit_nofile: 1048576
-schema_version: 14
+schema_version: 24

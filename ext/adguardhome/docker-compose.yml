@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   adguardhome:
-    image: adguard/adguardhome:v0.107.23
+    image: adguard/adguardhome:v0.107.36
     container_name: adguardhome
     restart: unless-stopped
     network_mode: host
