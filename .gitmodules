@@ -1,3 +1,0 @@
-[submodule "net/nginx/nginx-data/html/r1-control"]
-	path = net/nginx/nginx-data/html/r1-control
-	url = https://github.com/pexcn/r1-control.git
