@@ -135,10 +135,6 @@ filters:
     name: AdGuard DNS filter
     id: 1657671059
   - enabled: true
-    url: https://adaway.org/hosts.txt
-    name: AdAway Default Blocklist
-    id: 1636824661
-  - enabled: true
     url: https://easylist-downloads.adblockplus.org/easylistchina+easylist.txt
     name: EasyList+EasyListChina
     id: 1636824663
