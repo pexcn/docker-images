@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  gost:
+    image: gogost/gost:3.0.0-rc8
+    container_name: gost
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    command: >
+      -L "tcp://:443/example.com:443"
+      -L "udp://:443/example.com:443?keepAlive=true&ttl=300s"
