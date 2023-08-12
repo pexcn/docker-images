@@ -148,13 +148,13 @@ filters:
     id: 1636824666
 whitelist_filters: []
 user_rules:
+  - '# Twitter'
+  - '@@||t.co^$important'
   - '# JIKE-AC/AP'
   - '||ac.cnrouter.com^'
   - '||user.cnrouter.com^'
   - '||reg.cnrouter.com^'
   - '||regx.cnrouter.com^'
-  - '# Twitter'
-  - '@@||t.co^$important'
   - ""
 dhcp:
   enabled: false
