@@ -7,13 +7,13 @@
 #
 FROM alpine AS builder
 
-ARG VERSION=e7c4ebd64af2690a153fb0e16a5f543d185545d6
+ARG VERSION=33e75ed57a8dd152ab67451216384ca1b23b9d66
 RUN apk update \
   && apk add --no-cache --virtual .build-deps build-base linux-headers git \
   && git clone https://github.com/zfl9/chinadns-ng.git \
   && cd chinadns-ng \
   && git checkout $VERSION \
-  && make -j$(nproc) CFLAGS="-std=c99 -Wall -Wextra -O3" \
+  && make -j$(nproc) \
   && make install \
   && make clean \
   && cd - \
