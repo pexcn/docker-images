@@ -1,0 +1,18 @@
+version: '3.9'
+
+services:
+  pptpclient:
+    image: pexcn/docker-images:pptpclient
+    container_name: pptpclient
+    restart: unless-stopped
+    network_mode: host
+    privileged: true
+    environment:
+      TZ: Asia/Taipei
+    volumes:
+      - ./pptpclient-data/options:/etc/ppp/options
+      - ./pptpclient-data/chap-secrets:/etc/ppp/chap-secrets
+      - ./pptpclient-data/tunnel:/etc/ppp/peers/tunnel
+      - ./pptpclient-data/ip-up:/etc/ppp/ip-up
+      #- ./pptpclient-data/ip-down:/etc/ppp/ip-down
+    command: pon tunnel debug dump logfd 2 nodetach

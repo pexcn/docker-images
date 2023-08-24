@@ -1,0 +1,6 @@
+pty "pptp <SERVER> --nolaunchpppd"
+name <USERNAME>
+remotename PPTP
+require-mppe-128
+file /etc/ppp/options
+ipparam <TUNNEL>
