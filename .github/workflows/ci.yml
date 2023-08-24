@@ -91,6 +91,9 @@ jobs:
           # php-proxy
           - BUILD_CONTEXT: net/php-proxy
             TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # pptpclient
+          - BUILD_CONTEXT: net/pptpclient
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # shadowsocks-libev
           - BUILD_CONTEXT: net/shadowsocks-libev
             TARGET_PLATFORMS: linux/amd64,linux/arm64
