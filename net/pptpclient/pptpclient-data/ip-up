@@ -1,3 +1,12 @@
 #!/bin/sh
 
-ip route add 192.168.100.0/24 dev ppp0
+TARGET_ADDR=192.168.100.0/24
+SNAT_ADDR=192.168.1.10
+TUN_DEV=ppp-tunnel
+
+ip route add $TARGET_ADDR dev $TUN_DEV
+
+iptables -A FORWARD -i $TUN_DEV -j ACCEPT
+iptables -A FORWARD -o $TUN_DEV -j ACCEPT
+iptables -t nat -A POSTROUTING -o $TUN_DEV -j SNAT --to-source $SNAT_ADDR
+iptables -t mangle -A POSTROUTING -o $TUN_DEV -p tcp -m tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu
