@@ -77,3 +77,18 @@ DNS setting be only when as a client, and should be set to the DNS of remote pee
 ```sh
 DNS = 192.168.1.1
 ```
+
+### Access Control
+
+If you need access control, you can refer to the following configuration:
+
+```sh
+PostUp = iptables -N WIREGUARD-FILTER
+PostUp = iptables -I FORWARD -j WIREGUARD-FILTER
+PostUp = iptables -A WIREGUARD-FILTER -s <SRC_ADDR> -d <DST_ADDR> -j ACCEPT
+PostUp = iptables -A WIREGUARD-FILTER -s <SRC_ADDR> -j REJECT
+
+PostDown = iptables -D FORWARD -j WIREGUARD-FILTER
+PostDown = iptables -F WIREGUARD-FILTER
+PostDown = iptables -X WIREGUARD-FILTER
+```
