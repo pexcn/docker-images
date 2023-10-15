@@ -10,7 +10,7 @@ RUN apt-get update \
   && apt-get install --no-install-recommends -y \
       build-essential clang flex bison g++ gawk gcc-multilib g++-multilib \
       gettext git libncurses-dev libssl-dev python3-distutils rsync unzip \
-      zlib1g-dev file wget \
+      zlib1g-dev file wget ccache \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
