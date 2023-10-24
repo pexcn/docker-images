@@ -20,7 +20,7 @@ RUN apt-get update \
 
 # set non-root user
 USER builder
-WORKDIR /home/builder
+WORKDIR /builder
 
 # set git configs
 RUN git config --global user.name "OpenWrt Builder" \

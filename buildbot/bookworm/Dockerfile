@@ -29,14 +29,13 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Taipei /etc/localtime
 RUN sed -i '/en_US.UTF-8/s/^# //' /etc/locale.gen && locale-gen
 ENV LANG=en_US.UTF-8
 ENV LC_COLLATE=C
-ENV LC_ALL=C
 
 # preferred use ipv4
 RUN sed -i "s|#precedence ::ffff:0:0/96  100|precedence ::ffff:0:0/96  100|" /etc/gai.conf
 
 # create user
-RUN groupadd builder --gid 1000 \
-  && useradd builder --uid 1000 --gid 1000 --shell /bin/bash --create-home --home-dir /builder
+RUN groupadd builder --gid 1001 \
+  && useradd builder --uid 1001 --gid 1001 --shell /bin/bash --create-home --home-dir /builder
 
 # set builder group run sudo without password
 RUN echo '%builder ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/50-builder
