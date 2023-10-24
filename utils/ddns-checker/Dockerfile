@@ -9,7 +9,7 @@ RUN apk update \
   && apk add tzdata curl \
   && rm -rf /var/cache/apk/*
 
-ARG VER=40f2fc595cd1e27fc31210e57856db73938cb3dd
+ARG VER=ca13abfa0669f2ca427ae0f25e1b37b64dc7a0b7
 RUN curl https://raw.githubusercontent.com/pexcn/ops.sh/${VER}/ddns-checker.sh -O --output-dir /usr/local/bin/ \
   && chmod +x /usr/local/bin/ddns-checker.sh
 
