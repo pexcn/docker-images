@@ -133,6 +133,9 @@ jobs:
           # cron
           - BUILD_CONTEXT: utils/cron
             TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # ddns-checker
+          - BUILD_CONTEXT: utils/ddns-checker
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # rng-tools
           - BUILD_CONTEXT: utils/rng-tools
             TARGET_PLATFORMS: linux/amd64,linux/arm64

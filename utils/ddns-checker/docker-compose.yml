@@ -1,0 +1,17 @@
+version: '3.9'
+
+services:
+  ddns-checker:
+    image: pexcn/docker-images:ddns-checker
+    container_name: ddns-checker
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TZ: Asia/Taipei
+    command: >
+      --domain ddns.example.com
+      --watch 192.168.1.1
+      --dns 119.29.29.29
+      --action "restart-container.sh sstunnel"
+      --retry 15
+      --interval 180
