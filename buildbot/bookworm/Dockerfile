@@ -29,6 +29,7 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Taipei /etc/localtime
 RUN sed -i '/en_US.UTF-8/s/^# //' /etc/locale.gen && locale-gen
 ENV LANG=en_US.UTF-8
 ENV LC_COLLATE=C
+ENV LC_ALL=C
 
 # preferred use ipv4
 RUN sed -i "s|#precedence ::ffff:0:0/96  100|precedence ::ffff:0:0/96  100|" /etc/gai.conf
