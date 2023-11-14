@@ -130,6 +130,9 @@ jobs:
           # acme.sh
           - BUILD_CONTEXT: utils/acme.sh
             TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # coremark
+          - BUILD_CONTEXT: utils/coremark
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # cron
           - BUILD_CONTEXT: utils/cron
             TARGET_PLATFORMS: linux/amd64,linux/arm64
