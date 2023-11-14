@@ -5,11 +5,13 @@
 ```sh
 docker run -it --rm \
   --name coremark \
-  -v /etc/localtime:/etc/localtime:ro \
+  --net host \
   pexcn/docker-images:coremark
 
 docker run -d \
   --name coremark \
-  -v /etc/localtime:/etc/localtime:ro \
+  --net host \
   pexcn/docker-images:coremark
+docker logs coremark
+docker rm coremark
 ```
