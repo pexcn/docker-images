@@ -29,7 +29,7 @@ LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 ARG WIREGUARD_VER=1.0.20210914-r0
 RUN apk update \
-  && apk add --no-cache tzdata \
+  && apk add --no-cache iptables ip6tables tzdata \
       wireguard-tools=$WIREGUARD_VER \
       wireguard-tools-doc=$WIREGUARD_VER \
   && rm -rf /var/cache/apk/*
