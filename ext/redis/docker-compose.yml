@@ -10,5 +10,4 @@ services:
       TZ: Asia/Taipei
     volumes:
       - ./redis-data:/data
-      - /etc/localtime:/etc/localtime:ro
     command: --bind 127.0.0.1 --port 6379 --requirepass password
