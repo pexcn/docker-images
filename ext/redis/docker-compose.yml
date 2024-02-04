@@ -2,11 +2,13 @@ version: '3.9'
 
 services:
   redis:
-    image: redis:6.2.6-alpine
+    image: redis:7.2.4-alpine
     container_name: redis
     restart: unless-stopped
     network_mode: host
+    environment:
+      TZ: Asia/Taipei
     volumes:
       - ./redis-data:/data
       - /etc/localtime:/etc/localtime:ro
-    command: --bind 127.0.0.1
+    command: --bind 127.0.0.1 --port 6379 --requirepass password
