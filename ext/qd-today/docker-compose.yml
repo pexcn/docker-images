@@ -75,7 +75,7 @@ services:
       # - EXTRA_ONNX_NAME=
       # - EXTRA_CHARSETS_NAME=
       - MAIL_SMTP=smtp.example.com
-      - MAIL_PORT=587
+      - MAIL_PORT=465
       - MAIL_SSL=True
       - MAIL_USER=mail@example.com
       - MAIL_PASSWORD=password
