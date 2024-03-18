@@ -7,9 +7,14 @@
 #
 FROM alpine:3.19 AS builder
 
+# patch for linux-headers to fix build
+# waiting for edge to enter the next stable version...
+ARG PATCH=https://github.com/torvalds/linux/commit/e2bca4870fdaf855651ee80b083d892599c5d982.patch
 ARG VERSION=e42f0e573221c5e0146c02fd5d71f32aa93c7221
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git make g++ linux-headers \
+  && apk add --no-cache curl patch \
+  && curl $PATCH | patch /usr/include/linux/if_packet.h || true \
   && git clone https://github.com/wangyu-/udp2raw.git \
   && cd udp2raw \
   && git checkout $VERSION \
