@@ -33,6 +33,11 @@ RUN apk update \
   && apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
+# workaround for compile nginx with ngx_brotli
+# ref: https://github.com/google/brotli/issues/1094#issuecomment-2003004335
+RUN ln -s /usr/lib/libbrotlienc.so.1.1.0 /usr/lib/libbrotlienc.so \
+  && ln -s /usr/lib/libbrotlicommon.so.1.1.0 /usr/lib/libbrotlicommon.so
+
 ARG NGINX_VER=1.25.4
 ARG NGX_BROTLI_VER=a71f9312c2deb28875acc7bacfdd5695a111aa53
 ARG NGX_UPSTREAM_CHECK_VER=244e1cd436d496279b1649304b0985ae5621465c
