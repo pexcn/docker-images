@@ -5,13 +5,13 @@
 #
 # Build stage
 #
-FROM alpine:3.18 AS builder
+FROM alpine:3.19 AS builder
 
-ARG QUICTLS_VER=openssl-3.1.2-quic1
+ARG QUICTLS_VER=openssl-3.1.5-quic1
 RUN apk update \
   && apk add --no-cache --virtual .build-deps \
       git perl gcc make musl-dev linux-headers \
-  && git clone https://github.com/quictls/openssl.git --branch $QUICTLS_VER --single-branch --recurse-submodules -j4 quictls-${QUICTLS_VER} \
+  && git clone https://github.com/quictls/openssl.git --branch $QUICTLS_VER --single-branch --recurse-submodules -j$(nproc) quictls-${QUICTLS_VER} \
   && cd quictls-${QUICTLS_VER} \
   && case $(apk --print-arch) in \
        x86_64) extra_args="enable-ec_nistp_64_gcc_128";; \
@@ -33,8 +33,8 @@ RUN apk update \
   && apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
-ARG NGINX_VER=1.25.2
-ARG NGX_BROTLI_VER=6e975bcb015f62e1f303054897783355e2a877dc
+ARG NGINX_VER=1.25.4
+ARG NGX_BROTLI_VER=a71f9312c2deb28875acc7bacfdd5695a111aa53
 ARG NGX_UPSTREAM_CHECK_VER=244e1cd436d496279b1649304b0985ae5621465c
 ARG NGX_SUBS_FILTER_VER=e12e965ac1837ca709709f9a26f572a54d83430e
 ARG NGX_GOOGLE_FILTER_VER=bab4e945db9170cb32b49ac928f14b06313893eb
@@ -117,7 +117,7 @@ RUN apk update \
 #
 # Runtime stage
 #
-FROM alpine:3.18
+FROM alpine:3.19
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 RUN apk update \
