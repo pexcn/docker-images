@@ -5,9 +5,9 @@
 #
 # Build stage
 #
-FROM alpine AS builder
+FROM alpine:3.19 AS builder
 
-ARG VERSION=8ceaf27edaff70505948fbfaf8b9b864e3a11ee8
+ARG VERSION=e42f0e573221c5e0146c02fd5d71f32aa93c7221
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git make g++ linux-headers \
   && git clone https://github.com/wangyu-/udp2raw.git \
@@ -23,7 +23,9 @@ RUN apk update \
 #
 # Runtime stage
 #
-FROM alpine
+# https://www.alpinelinux.org/posts/Alpine-3.19.0-released.html
+# make the version fixed at 3.18, version 3.19 maybe requires code changes.
+FROM alpine:3.18
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 RUN apk update \
