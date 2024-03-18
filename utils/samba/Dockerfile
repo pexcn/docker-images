@@ -5,7 +5,7 @@
 FROM alpine:3.16
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
-ARG SAMBA_VER=4.15.7-r0
+ARG SAMBA_VER=4.15.13-r0
 RUN apk update \
   && apk add --no-cache samba=$SAMBA_VER \
   && rm -rf /var/cache/apk/*
