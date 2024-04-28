@@ -6,9 +6,6 @@ services:
     container_name: ssserver
     restart: unless-stopped
     network_mode: host
-    logging:
-      options:
-        max-size: 20m
     environment:
       TZ: Asia/Taipei
       CHILLING_EFFECT: 0
@@ -17,7 +14,7 @@ services:
       SHADOWSOCKS_PASSWORD_3: password_3
     volumes:
       - ./shadowsocks-rust-data:/etc/shadowsocks-rust
-      - ../../utils/acme.sh/acme.sh-data/example.com_ecc:/.acme.sh/example.com
+      #- ../../utils/acme.sh/acme.sh-data/example.com_ecc:/.acme.sh/example.com
     command: ssservice server --user nobody --config /etc/shadowsocks-rust/server.json
 
   sslocal:
@@ -25,9 +22,6 @@ services:
     container_name: sslocal
     restart: unless-stopped
     network_mode: host
-    logging:
-      options:
-        max-size: 20m
     environment:
       TZ: Asia/Taipei
       CHILLING_EFFECT: 0
