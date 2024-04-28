@@ -28,6 +28,23 @@
             "server_port": 1984,
             "password": "${SHADOWSOCKS_PASSWORD_2}",
             "method": "2022-blake3-chacha8-poly1305"
+        },
+        {
+            "server": "11.22.33.44",
+            "server_port": 443,
+            "password": "${SHADOWSOCKS_PASSWORD_3}",
+            "method": "chacha20-ietf-poly1305",
+            "plugin": "xray-plugin",
+            "plugin_opts": "tls;fast-open;mode=grpc;host=example.com;loglevel=none"
+        },
+        {
+            "server": "11.22.33.44",
+            "server_port": 993,
+            "password": "${SHADOWSOCKS_PASSWORD_3}",
+            "method": "chacha20-ietf-poly1305",
+            "mode": "tcp_only",
+            "plugin": "xray-plugin",
+            "plugin_opts": "fast-open;mode=quic;host=example.com;loglevel=none"
         }
     ],
 
@@ -37,8 +54,7 @@
     "keep_alive": 300,
     "nofile": 1048576,
     "no_delay": true,
-    //"fast_open": true,
-    "mptcp": true,
+    "fast_open": true,
 
     "balancer": {
         "max_server_rtt": 3,
