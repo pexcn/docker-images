@@ -10,7 +10,7 @@ FROM rust:alpine AS builder-ss
 RUN apk update \
   && apk add --no-cache --virtual .build-deps musl-dev git
 
-ARG SS_VERSION=v1.15.3
+ARG SS_VERSION=v1.16.2
 RUN git clone https://github.com/shadowsocks/shadowsocks-rust.git --branch $SS_VERSION \
   && cd shadowsocks-rust \
   && cargo build --release --features "local-redir local-tun aead-cipher-2022-extra" \
@@ -54,12 +54,12 @@ RUN apk del .build-deps \
 #
 # Build stage [v2ray-plugin & xray-plugin]
 #
-FROM golang:1.19-alpine AS builder-ray
+FROM golang:1.22-alpine AS builder-ray
 
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git
 
-ARG V2RAY_VERSION=v5.2.0
+ARG V2RAY_VERSION=v5.15.1
 RUN git clone https://github.com/teddysun/v2ray-plugin.git --branch $V2RAY_VERSION \
   && cd v2ray-plugin \
   && env CGO_ENABLED=0 go build -v -trimpath -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w -buildid=" -o v2ray-plugin \
@@ -67,7 +67,7 @@ RUN git clone https://github.com/teddysun/v2ray-plugin.git --branch $V2RAY_VERSI
   && cd - \
   && rm -r v2ray-plugin
 
-ARG XRAY_VERSION=v1.7.2
+ARG XRAY_VERSION=v1.8.11
 RUN git clone https://github.com/teddysun/xray-plugin.git --branch $XRAY_VERSION \
   && cd xray-plugin \
   && env CGO_ENABLED=0 go build -v -trimpath -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w -buildid=" -o xray-plugin \
@@ -100,7 +100,7 @@ RUN apk update \
 #
 # Runtime stage
 #
-FROM alpine
+FROM alpine:3.19
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 RUN apk update \
