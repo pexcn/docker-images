@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   vaultwarden:
     image: vaultwarden/server:1.25.0-alpine

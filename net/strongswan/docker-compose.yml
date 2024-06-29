@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   strongswan:
     image: pexcn/docker-images:strongswan

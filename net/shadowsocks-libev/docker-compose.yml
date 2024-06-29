@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   ss-server-aes:
     image: pexcn/docker-images:shadowsocks-libev

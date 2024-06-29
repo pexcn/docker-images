@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   gfw-defense:
     image: pexcn/docker-images:gfw-defense

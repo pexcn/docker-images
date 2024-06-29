@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   gost:
     image: gogost/gost:3.0.0-rc8

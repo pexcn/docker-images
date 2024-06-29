@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   chinadns-ng:
     image: pexcn/docker-images:chinadns-ng

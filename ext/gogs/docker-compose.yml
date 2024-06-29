@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   gogs:
     image: gogs/gogs:0.12.9
