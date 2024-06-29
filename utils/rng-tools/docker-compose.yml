@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   rng-tools:
     image: pexcn/docker-images:rng-tools

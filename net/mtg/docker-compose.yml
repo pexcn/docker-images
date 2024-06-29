@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   mtg:
     image: pexcn/docker-images:mtg

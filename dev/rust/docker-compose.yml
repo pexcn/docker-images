@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   rust:
     image: pexcn/docker-images:rust

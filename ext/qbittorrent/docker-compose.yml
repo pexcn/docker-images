@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   qbittorrent:
     image: linuxserver/qbittorrent:4.5.0

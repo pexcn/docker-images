@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   trojan-server:
     image: pexcn/docker-images:trojan

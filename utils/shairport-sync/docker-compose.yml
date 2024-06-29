@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   shairport-sync:
     image: pexcn/docker-images:shairport-sync

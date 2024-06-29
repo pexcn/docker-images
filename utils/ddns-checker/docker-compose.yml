@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   ddns-checker:
     image: pexcn/docker-images:ddns-checker

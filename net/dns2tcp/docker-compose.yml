@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   dns2tcp:
     image: pexcn/docker-images:dns2tcp

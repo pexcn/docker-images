@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   qd-today:
     image: qdtoday/qd:lite-20230821

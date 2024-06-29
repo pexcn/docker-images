@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   vlmcsd:
     image: pexcn/docker-images:vlmcsd

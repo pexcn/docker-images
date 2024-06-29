@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   kcptun-libev-server:
     image: pexcn/docker-images:kcptun-libev

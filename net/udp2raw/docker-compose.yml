@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   udp2raw:
     image: pexcn/docker-images:udp2raw

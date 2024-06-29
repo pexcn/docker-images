@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   pcap2socks:
     image: pexcn/docker-images:pcap2socks

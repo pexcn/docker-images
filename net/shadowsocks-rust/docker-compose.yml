@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   ssserver:
     image: pexcn/docker-images:shadowsocks-rust

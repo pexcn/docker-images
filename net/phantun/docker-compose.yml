@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   phantun-server:
     image: pexcn/docker-images:phantun
