@@ -5,7 +5,7 @@
 #
 # Build stage
 #
-FROM alpine AS builder
+FROM alpine:3.20 AS builder
 
 ARG VERSION=057b71f28d7c41ee220804cead976ec60c7fd5c8
 RUN apk update \
@@ -23,11 +23,11 @@ RUN apk update \
 #
 # Runtime stage
 #
-FROM alpine
+FROM alpine:3.20
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 RUN apk update \
-  && apk add --no-cache iptables tzdata \
+  && apk add --no-cache iptables iptables-legacy tzdata \
   && rm -rf /var/cache/apk/*
 
 COPY --from=builder /usr/local/bin/tinyfecvpn /usr/local/bin/

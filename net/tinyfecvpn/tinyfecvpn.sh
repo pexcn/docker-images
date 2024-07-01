@@ -4,6 +4,9 @@
 if [ "$USE_IPTABLES_NFT_BACKEND" = 1 ]; then
   alias iptables=iptables-nft
   alias iptables-save=iptables-nft-save
+else
+  alias iptables=iptables-legacy
+  alias iptables-save=iptables-legacy-save
 fi
 
 info() {
