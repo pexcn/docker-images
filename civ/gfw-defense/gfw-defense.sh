@@ -19,6 +19,8 @@ WHITELIST="gfw_defense_whitelist"
 # alias ​​settings must be global, and must be defined before the function being called with the alias
 if [ "$USE_IPTABLES_NFT_BACKEND" = 1 ]; then
   alias iptables=iptables-nft
+else
+  alias iptables=iptables-legacy
 fi
 
 info() {
