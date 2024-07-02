@@ -11,7 +11,7 @@ services:
       TZ: Asia/Taipei
       USE_IPTABLES_NFT_BACKEND: 0
     command: >
-      -s -l 0.0.0.0:1024 -k password
+      -s -l 0.0.0.0:1024
       --tun-dev tinyfecvpn-server --sub-net 10.1.1.0
       -f10:6 --timeout 3 --log-level 3 --mssfix 0 --disable-obscure --disable-checksum
 
@@ -27,6 +27,6 @@ services:
       TZ: Asia/Taipei
       USE_IPTABLES_NFT_BACKEND: 0
     command: >
-      -c -r 11.22.33.44:1024 -k password
+      -c -r 11.22.33.44:1024
       --tun-dev tinyfecvpn-client --sub-net 10.1.1.0 --keep-reconnect
       -f10:6 --timeout 3 --log-level 3 --mssfix 0 --disable-obscure --disable-checksum
