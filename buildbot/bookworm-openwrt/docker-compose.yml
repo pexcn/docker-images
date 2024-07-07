@@ -1,0 +1,13 @@
+services:
+  bookworm-openwrt:
+    image: pexcn/docker-images:bookworm-openwrt
+    container_name: bookworm-openwrt
+    restart: unless-stopped
+    network_mode: host
+    ulimits:
+      nofile:
+        soft: 8192
+        hard: 8192
+    volumes:
+      - ./bookworm-openwrt-data:/builder/openwrt
+    command: sleep infinity
