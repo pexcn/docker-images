@@ -43,7 +43,7 @@
     "keep_alive": 300,
     "nofile": 1048576,
     "no_delay": true,
-    //"fast_open": true,
+    "fast_open": true,
     "mptcp": true,
 
     "balancer": {
