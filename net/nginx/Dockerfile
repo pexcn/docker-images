@@ -5,7 +5,7 @@
 #
 # Build stage
 #
-FROM alpine:3.19 AS builder
+FROM alpine:3.20 AS builder
 
 ARG QUICTLS_VER=openssl-3.1.5-quic1
 RUN apk update \
@@ -33,19 +33,14 @@ RUN apk update \
   && apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
-# workaround for compile nginx with ngx_brotli
-# ref: https://github.com/google/brotli/issues/1094#issuecomment-2003004335
-RUN ln -s /usr/lib/libbrotlienc.so.1.1.0 /usr/lib/libbrotlienc.so \
-  && ln -s /usr/lib/libbrotlicommon.so.1.1.0 /usr/lib/libbrotlicommon.so
-
-ARG NGINX_VER=1.25.4
+ARG NGINX_VER=1.26.1
 ARG NGX_BROTLI_VER=a71f9312c2deb28875acc7bacfdd5695a111aa53
 ARG NGX_UPSTREAM_CHECK_VER=244e1cd436d496279b1649304b0985ae5621465c
 ARG NGX_SUBS_FILTER_VER=e12e965ac1837ca709709f9a26f572a54d83430e
 ARG NGX_GOOGLE_FILTER_VER=bab4e945db9170cb32b49ac928f14b06313893eb
 RUN apk update \
   && apk add --no-cache --virtual .build-deps \
-      curl git patch make gcc g++ linux-headers pcre2-dev zlib-static \
+      curl git patch make gcc g++ linux-headers pcre2-dev brotli-static zlib-static \
   && curl https://nginx.org/download/nginx-${NGINX_VER}.tar.gz | tar zxv \
   && git clone https://github.com/google/ngx_brotli.git --recurse-submodules ngx_brotli \
   && git clone https://github.com/pexcn/ngx_upstream_check.git ngx_upstream_check \
@@ -105,7 +100,7 @@ RUN apk update \
       --with-stream_ssl_module \
       --with-stream_ssl_preread_module \
       --with-cc-opt='-O3 -flto=auto' \
-      --with-ld-opt='-s -l:libssl.a -l:libcrypto.a -l:libpcre2-8.a -l:libz.a' \
+      --with-ld-opt='-s -l:libpcre2-8.a -l:libssl.a -l:libcrypto.a -l:libz.a' \
       --with-compat \
       --add-dynamic-module=/ngx_brotli \
       --add-dynamic-module=/ngx_upstream_check \
@@ -122,7 +117,7 @@ RUN apk update \
 #
 # Runtime stage
 #
-FROM alpine:3.19
+FROM alpine:3.20
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 RUN apk update \
