@@ -29,18 +29,6 @@ jobs:
           # bookworm-openwrt
           - BUILD_CONTEXT: buildbot/bookworm-openwrt
             TARGET_PLATFORMS: linux/amd64
-          # buster
-          - BUILD_CONTEXT: buildbot/buster
-            TARGET_PLATFORMS: linux/amd64
-          # buster-android
-          - BUILD_CONTEXT: buildbot/buster-android
-            TARGET_PLATFORMS: linux/amd64
-          # buster-openwrt
-          - BUILD_CONTEXT: buildbot/buster-openwrt
-            TARGET_PLATFORMS: linux/amd64
-          # buster-padavan
-          - BUILD_CONTEXT: buildbot/buster-padavan
-            TARGET_PLATFORMS: linux/amd64
           # gfw-defense
           - BUILD_CONTEXT: civ/gfw-defense
             TARGET_PLATFORMS: linux/amd64,linux/arm64
