@@ -13,7 +13,7 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 # shellcheck
-ARG SHELLCHECK_VER=v0.9.0
+ARG SHELLCHECK_VER=v0.10.0
 RUN case "$(dpkg --print-architecture)" in \
        amd64) arch="x86_64";; \
        *) arch="aarch64";; \
