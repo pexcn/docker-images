@@ -53,6 +53,9 @@ jobs:
           # dev
           - BUILD_CONTEXT: dev/dev
             TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # go
+          - BUILD_CONTEXT: dev/go
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # python
           - BUILD_CONTEXT: dev/python
             TARGET_PLATFORMS: linux/amd64,linux/arm64

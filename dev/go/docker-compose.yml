@@ -1,0 +1,24 @@
+services:
+  go:
+    image: pexcn/docker-images:go
+    container_name: go
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      GIT_USER: username
+      GIT_EMAIL: mail@example.com
+      ENABLE_SSHD: 1
+      SSH_PORT: 6666
+    volumes:
+      - go-data:/vscode
+      - /root/.ssh/authorized_keys:/root/.ssh/authorized_keys:ro
+      - /etc/ssh/ssh_host_ed25519_key:/etc/ssh/ssh_host_ed25519_key:ro
+      - /etc/ssh/ssh_host_ed25519_key.pub:/etc/ssh/ssh_host_ed25519_key.pub:ro
+
+volumes:
+  go-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/go-data
