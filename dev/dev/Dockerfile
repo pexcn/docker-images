@@ -2,15 +2,15 @@
 # Dockerfile for development base environment
 #
 
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 # update sources
 RUN > /etc/apt/sources.list \
-  && echo "deb http://deb.debian.org/debian bullseye main" >> /etc/apt/sources.list \
-  && echo "deb http://deb.debian.org/debian bullseye-updates main" >> /etc/apt/sources.list \
-  && echo "deb http://deb.debian.org/debian-security bullseye-security main" >> /etc/apt/sources.list \
-  && echo "deb http://deb.debian.org/debian bullseye-backports main" >> /etc/apt/sources.list
+  && echo "deb http://deb.debian.org/debian bookworm main" >> /etc/apt/sources.list \
+  && echo "deb http://deb.debian.org/debian bookworm-updates main" >> /etc/apt/sources.list \
+  && echo "deb http://deb.debian.org/debian bookworm-backports main" >> /etc/apt/sources.list \
+  && echo "deb http://security.debian.org/debian-security/ bookworm-security main" >> /etc/apt/sources.list
 
 # install packages
 RUN apt-get update \
