@@ -26,6 +26,9 @@ jobs:
           # bookworm
           - BUILD_CONTEXT: buildbot/bookworm
             TARGET_PLATFORMS: linux/amd64
+          # bookworm-android
+          - BUILD_CONTEXT: buildbot/bookworm-android
+            TARGET_PLATFORMS: linux/amd64
           # bookworm-openwrt
           - BUILD_CONTEXT: buildbot/bookworm-openwrt
             TARGET_PLATFORMS: linux/amd64
