@@ -1,0 +1,9 @@
+services:
+  bookworm-android:
+    image: pexcn/docker-images:bookworm-android
+    container_name: bookworm-android
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./bookworm-android-data:/builder/android
+    command: sleep infinity
