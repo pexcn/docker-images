@@ -13,9 +13,13 @@ RUN apt-get update \
       libx11-dev lib32z1-dev libgl1-mesa-dev libxml2-utils \
       xsltproc unzip fontconfig \
   && apt-get install --no-install-recommends -y \
-    ccache repo \
+    ccache \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
+
+# setup repo
+RUN curl https://storage.googleapis.com/git-repo-downloads/repo > /usr/local/bin/repo \
+  && chmod a+x /usr/local/bin/repo
 
 # set non-root user
 USER builder
