@@ -13,7 +13,7 @@ RUN apt-get update \
       libx11-dev lib32z1-dev libgl1-mesa-dev libxml2-utils \
       xsltproc unzip fontconfig \
   && apt-get install --no-install-recommends -y \
-    ccache bc libssl-dev cpio \
+    ccache bc libssl-dev cpio python3 \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
