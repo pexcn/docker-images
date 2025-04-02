@@ -25,3 +25,9 @@ RUN wget https://dl.google.com/android/repository/commandlinetools-linux-${CMDLI
 # build-tools
 RUN yes | sdkmanager --sdk_root=$ANDROID_HOME --licenses \
   && sdkmanager --sdk_root=$ANDROID_HOME --install "build-tools;$BUILD_TOOLS_VER"
+
+# apktool
+ARG APKTOOL_VER=2.11.1
+RUN wget https://github.com/iBotPeaches/Apktool/releases/download/v${APKTOOL_VER}/apktool_${APKTOOL_VER}.jar -O /usr/local/bin/apktool.jar \
+  && wget https://github.com/iBotPeaches/Apktool/raw/refs/heads/master/scripts/linux/apktool -O /usr/local/bin/apktool \
+  && chmod +x /usr/local/bin/apktool
