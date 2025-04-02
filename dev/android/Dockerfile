@@ -11,7 +11,7 @@ ENV ANDROID_HOME=/opt/android-sdk
 ENV PATH=/opt/cmdline-tools/bin:${ANDROID_HOME}/build-tools/${BUILD_TOOLS_VER}:$PATH
 
 # cmdline-tools
-RUN wget https://dl.google.com/android/repository/commandlinetools-linux-${CMDLINE_TOOLS_VER}_latest.zip -o cmdline-tools.zip \
+RUN wget https://dl.google.com/android/repository/commandlinetools-linux-${CMDLINE_TOOLS_VER}_latest.zip -O cmdline-tools.zip \
   && unzip cmdline-tools.zip -d /opt \
   && rm cmdline-tools.zip
 
