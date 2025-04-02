@@ -10,6 +10,13 @@ ARG BUILD_TOOLS_VER=35.0.1
 ENV ANDROID_HOME=/opt/android-sdk
 ENV PATH=/opt/cmdline-tools/bin:${ANDROID_HOME}/build-tools/${BUILD_TOOLS_VER}:$PATH
 
+# install depends
+RUN apt-get update \
+  && apt-get install --no-install-recommends -y \
+      openjdk-17-jdk \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
 # cmdline-tools
 RUN wget https://dl.google.com/android/repository/commandlinetools-linux-${CMDLINE_TOOLS_VER}_latest.zip -O cmdline-tools.zip \
   && unzip cmdline-tools.zip -d /opt \
