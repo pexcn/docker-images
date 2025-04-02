@@ -19,7 +19,6 @@ jobs:
     runs-on: ubuntu-22.04
     env:
       TZ: Asia/Taipei
-    if: contains(github.event.head_commit.modified, matrix.BUILD_CONTEXT)
     strategy:
       fail-fast: false
       matrix:
