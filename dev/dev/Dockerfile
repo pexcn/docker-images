@@ -18,7 +18,7 @@ RUN apt-get update \
       apt-utils dialog \
   && apt-get install --no-install-recommends -y \
       bash-completion ca-certificates curl wget net-tools \
-      git locales procps psmisc nano tree file \
+      git locales procps psmisc nano tree file unzip \
   && apt-get install --no-install-recommends -y \
       openssh-server \
   && apt-get clean \

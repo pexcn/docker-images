@@ -38,6 +38,9 @@ jobs:
           # motd
           - BUILD_CONTEXT: civ/motd
             TARGET_PLATFORMS: linux/amd64,linux/arm64
+          # android
+          - BUILD_CONTEXT: dev/android
+            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # c
           - BUILD_CONTEXT: dev/c
             TARGET_PLATFORMS: linux/amd64,linux/arm64
