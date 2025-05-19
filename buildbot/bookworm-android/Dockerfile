@@ -19,7 +19,7 @@ RUN apt-get update \
       imagemagick protobuf-compiler python3-protobuf \
       lib32readline-dev libdw-dev libelf-dev libncurses5 \
       libncurses5-dev lz4 libsdl1.2-dev libssl-dev libxml2 \
-      lzop pngcrush rsync schedtool squashfs-tools
+      lzop pngcrush rsync schedtool squashfs-tools \
   && apt-get install --no-install-recommends -y \
       cpio python3 python-is-python3 \
   && apt-get clean \
