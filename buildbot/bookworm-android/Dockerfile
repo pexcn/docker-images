@@ -21,7 +21,7 @@ RUN apt-get update \
       libncurses5-dev lz4 libsdl1.2-dev libssl-dev libxml2 \
       lzop pngcrush rsync schedtool squashfs-tools \
   && apt-get install --no-install-recommends -y \
-      cpio openssh-client python3 python-is-python3 \
+      cpio less openssh-client python3 python-is-python3 \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
