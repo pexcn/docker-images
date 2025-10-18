@@ -112,6 +112,8 @@ whitelist_filters: []
 user_rules:
   - '# Twitter'
   - '@@||t.co^$important'
+  - '# Block CNAME redirect to 8.8.4.4'
+  - '||passport.csdn.net^'
   - ""
 dhcp:
   enabled: false
