@@ -1,4 +1,7 @@
 http:
+  pprof:
+    port: 6060
+    enabled: false
   address: 192.168.1.1:3001
   session_ttl: 720h
 users:
@@ -9,21 +12,14 @@ block_auth_min: 15
 http_proxy: ""
 language: zh-cn
 theme: auto
-debug_pprof: false
 dns:
   bind_hosts:
     - 192.168.1.1
   port: 5354
   anonymize_client_ip: false
-  protection_enabled: true
-  blocking_mode: nxdomain
-  blocking_ipv4: ""
-  blocking_ipv6: ""
-  blocked_response_ttl: 300
-  protection_disabled_until: null
-  parental_block_host: family-block.dns.adguard.com
-  safebrowsing_block_host: standard-block.dns.adguard.com
   ratelimit: 0
+  ratelimit_subnet_len_ipv4: 24
+  ratelimit_subnet_len_ipv6: 56
   ratelimit_whitelist: []
   refuse_any: false
   upstream_dns:
@@ -31,8 +27,8 @@ dns:
   upstream_dns_file: ""
   bootstrap_dns:
     - 192.168.1.1
-  all_servers: false
-  fastest_addr: false
+  fallback_dns: []
+  upstream_mode: load_balance
   fastest_timeout: 1s
   allowed_clients:
     - 192.168.1.0/24
@@ -43,6 +39,7 @@ dns:
   trusted_proxies:
     - 127.0.0.0/8
     - ::1/128
+  cache_enabled: true
   cache_size: 4194304
   cache_ttl_min: 300
   cache_ttl_max: 86400
@@ -59,43 +56,6 @@ dns:
   ipset: []
   ipset_file: ""
   bootstrap_prefer_ipv6: false
-  filtering_enabled: true
-  filters_update_interval: 24
-  parental_enabled: false
-  safebrowsing_enabled: false
-  safebrowsing_cache_size: 1048576
-  safesearch_cache_size: 1048576
-  parental_cache_size: 1048576
-  cache_time: 30
-  safe_search:
-    enabled: false
-    bing: false
-    duckduckgo: false
-    google: false
-    pixabay: false
-    yandex: false
-    youtube: false
-  rewrites:
-    - domain: assets1.xboxlive.com
-      answer: 192.168.1.10
-    - domain: assets2.xboxlive.com
-      answer: 192.168.1.10
-    - domain: dlassets.xboxlive.com
-      answer: 192.168.1.10
-    - domain: dlassets2.xboxlive.com
-      answer: 192.168.1.10
-    - domain: d1.xboxlive.com
-      answer: 192.168.1.10
-    - domain: d2.xboxlive.com
-      answer: 192.168.1.10
-    - domain: xvcf1.xboxlive.com
-      answer: 192.168.1.10
-    - domain: xvcf2.xboxlive.com
-      answer: 192.168.1.10
-  blocked_services:
-    schedule:
-      time_zone: Asia/Taipei
-    ids: []
   upstream_timeout: 10s
   private_networks: []
   use_private_ptr_resolvers: true
@@ -104,6 +64,10 @@ dns:
   dns64_prefixes: []
   serve_http3: false
   use_http3_upstreams: false
+  serve_plain_dns: true
+  hostsfile_enabled: true
+  pending_requests:
+    enabled: true
 tls:
   enabled: false
   server_name: ""
@@ -120,12 +84,14 @@ tls:
   private_key_path: ""
   strict_sni_check: false
 querylog:
+  dir_path: ""
   ignored: []
   interval: 168h
   size_memory: 1000
   enabled: true
   file_enabled: true
 statistics:
+  dir_path: ""
   ignored: []
   interval: 24h
   enabled: true
@@ -146,11 +112,6 @@ whitelist_filters: []
 user_rules:
   - '# Twitter'
   - '@@||t.co^$important'
-  - '# JIKE-AC/AP'
-  - '||ac.cnrouter.com^'
-  - '||user.cnrouter.com^'
-  - '||reg.cnrouter.com^'
-  - '||regx.cnrouter.com^'
   - ""
 dhcp:
   enabled: false
@@ -169,6 +130,55 @@ dhcp:
     lease_duration: 86400
     ra_slaac_only: false
     ra_allow_slaac: false
+filtering:
+  blocking_ipv4: ""
+  blocking_ipv6: ""
+  blocked_services:
+    schedule:
+      time_zone: Asia/Taipei
+    ids: []
+  protection_disabled_until: null
+  safe_search:
+    enabled: false
+    bing: false
+    duckduckgo: false
+    ecosia: false
+    google: false
+    pixabay: false
+    yandex: false
+    youtube: false
+  blocking_mode: nxdomain
+  parental_block_host: family-block.dns.adguard.com
+  safebrowsing_block_host: standard-block.dns.adguard.com
+  rewrites:
+    - domain: assets1.xboxlive.com
+      answer: 192.168.1.10
+    - domain: assets2.xboxlive.com
+      answer: 192.168.1.10
+    - domain: dlassets.xboxlive.com
+      answer: 192.168.1.10
+    - domain: dlassets2.xboxlive.com
+      answer: 192.168.1.10
+    - domain: d1.xboxlive.com
+      answer: 192.168.1.10
+    - domain: d2.xboxlive.com
+      answer: 192.168.1.10
+    - domain: xvcf1.xboxlive.com
+      answer: 192.168.1.10
+    - domain: xvcf2.xboxlive.com
+      answer: 192.168.1.10
+  safe_fs_patterns:
+    - /opt/adguardhome/work/userfilters/*
+  safebrowsing_cache_size: 1048576
+  safesearch_cache_size: 1048576
+  parental_cache_size: 1048576
+  cache_time: 30
+  filters_update_interval: 24
+  blocked_response_ttl: 300
+  filtering_enabled: true
+  parental_enabled: false
+  safebrowsing_enabled: false
+  protection_enabled: true
 clients:
   runtime_sources:
     whois: true
@@ -178,6 +188,7 @@ clients:
     hosts: true
   persistent: []
 log:
+  enabled: true
   file: ""
   max_backups: 1
   max_size: 100
@@ -189,4 +200,4 @@ os:
   group: ""
   user: ""
   rlimit_nofile: 1048576
-schema_version: 24
+schema_version: 30
