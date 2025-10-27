@@ -8,12 +8,13 @@
 FROM rust:alpine AS builder-ss
 
 RUN apk update \
-  && apk add --no-cache --virtual .build-deps musl-dev git
+  && apk add --no-cache --virtual .build-deps musl-dev git clang20 clang20-dev g++ linux-headers rust-bindgen
 
-ARG SS_VERSION=v1.18.3
+ARG SS_VERSION=v1.23.5
 RUN git clone https://github.com/shadowsocks/shadowsocks-rust.git --branch $SS_VERSION \
   && cd shadowsocks-rust \
-  && cargo build --release --features "local-redir local-tun aead-cipher-2022-extra security-replay-attack-detect" \
+  && export RUSTFLAGS="-C target-feature=-crt-static" \
+  && cargo build --release --features "full-extra" \
   && install target/release/ssservice target/release/ssserver target/release/sslocal target/release/ssmanager target/release/ssurl /usr/local/bin/ \
   && cd - \
   && rm -r /shadowsocks-rust
