@@ -77,17 +77,11 @@ jobs:
           # kcptun-libev
           - BUILD_CONTEXT: net/kcptun-libev
             TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # mtg
-          - BUILD_CONTEXT: net/mtg
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # netspeeder
           - BUILD_CONTEXT: net/netspeeder
             TARGET_PLATFORMS: linux/amd64,linux/arm64
           # nginx
           - BUILD_CONTEXT: net/nginx
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # pcap2socks
-          - BUILD_CONTEXT: net/pcap2socks
             TARGET_PLATFORMS: linux/amd64,linux/arm64
           # phantun
           - BUILD_CONTEXT: net/phantun
@@ -98,20 +92,8 @@ jobs:
           # shadowsocks-rust
           - BUILD_CONTEXT: net/shadowsocks-rust
             TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # smartdns
-          - BUILD_CONTEXT: net/smartdns
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # strongswan
-          - BUILD_CONTEXT: net/strongswan
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
           # tinyfecvpn
           - BUILD_CONTEXT: net/tinyfecvpn
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # tor
-          - BUILD_CONTEXT: net/tor
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # trojan
-          - BUILD_CONTEXT: net/trojan
             TARGET_PLATFORMS: linux/amd64,linux/arm64
           # udp2raw
           - BUILD_CONTEXT: net/udp2raw
@@ -124,9 +106,6 @@ jobs:
             TARGET_PLATFORMS: linux/amd64,linux/arm64
           # acme.sh
           - BUILD_CONTEXT: utils/acme.sh
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # coremark
-          - BUILD_CONTEXT: utils/coremark
             TARGET_PLATFORMS: linux/amd64,linux/arm64
           # cron
           - BUILD_CONTEXT: utils/cron
@@ -154,9 +133,6 @@ jobs:
             TARGET_PLATFORMS: linux/amd64,linux/arm64
           # transproxy
           - BUILD_CONTEXT: utils/transproxy
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # unixbench
-          - BUILD_CONTEXT: utils/unixbench
             TARGET_PLATFORMS: linux/amd64,linux/arm64
           # vlmcsd
           - BUILD_CONTEXT: utils/vlmcsd
