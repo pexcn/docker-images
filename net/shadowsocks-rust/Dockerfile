@@ -100,7 +100,7 @@ RUN apk update \
 #
 # Runtime stage
 #
-FROM alpine:3.19
+FROM alpine:3.22
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 RUN apk update \
