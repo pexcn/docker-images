@@ -105,7 +105,7 @@ FROM alpine:3.19
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 RUN apk update \
-  && apk add --no-cache tzdata \
+  && apk add --no-cache tzdata libgcc libstdc++ \
   && rm -rf /var/cache/apk/*
 
 COPY --from=builder-ss /usr/local/bin/ /usr/local/bin/
