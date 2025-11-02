@@ -24,7 +24,8 @@ ssservice server \
 #
 # Plugin options
 #
-# --plugin "obfs-server" --plugin-opts "obfs=tls;fast-open"
+# --plugin "obfs-server" --plugin-opts "obfs=http;fast-open;mptcp"
+# --plugin "obfs-server" --plugin-opts "obfs=tls;fast-open;mptcp"
 # --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;mode=websocket;host=example.com;path=/ws;loglevel=none"
 # --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;mode=grpc;host=example.com;loglevel=none"
 # --plugin "xray-plugin" --plugin-opts "server;fast-open;mode=quic;host=example.com;loglevel=none"
@@ -94,14 +95,15 @@ ssservice local \
 #
 # Plugin options
 #
-# --plugin "obfs-local" --plugin-opts "obfs=tls;obfs-host=www.bing.com;fast-open"
+# --plugin "obfs-local" --plugin-opts "obfs=http;obfs-host=cloudfront.com;fast-open;mptcp"
+# --plugin "obfs-local" --plugin-opts "obfs=tls;obfs-host=cloudfront.com;fast-open;mptcp"
 # --plugin "xray-plugin" --plugin-opts "tls;fast-open;mode=websocket;host=example.com;path=/ws?ed=2560;mux=4;loglevel=none"
 # --plugin "xray-plugin" --plugin-opts "tls;fast-open;mode=grpc;host=example.com;loglevel=none"
 # --plugin "xray-plugin" --plugin-opts "fast-open;mode=quic;host=example.com;loglevel=none"
 # --plugin "qtun-client" --plugin-opts "host=example.com"
 ```
 
-### Others
+### Manager
 
 ```sh
 #
