@@ -95,7 +95,7 @@ services:
         --tcp-no-delay
         -U
         --plugin "xray-plugin"
-        --plugin-opts "server;tls;fast-open;host=example.com;path=/ws"
+        --plugin-opts "server;tls;fast-open;mode=websocket;host=example.com;path=/ws"
 
   # ssserver-grpc
   ssserver-grpc:
