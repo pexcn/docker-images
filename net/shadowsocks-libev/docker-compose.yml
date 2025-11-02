@@ -1,7 +1,7 @@
 services:
-  ss-server-aes:
+  ss-server:
     image: pexcn/docker-images:shadowsocks-libev
-    container_name: ss-server-aes
+    container_name: ss-server
     restart: unless-stopped
     network_mode: host
     environment:
@@ -12,26 +12,6 @@ services:
         -p 1776
         -k password
         -m aes-256-gcm
-        -t 3600
-        -n 1048576
-        -u
-        --reuse-port
-        --fast-open
-        --no-delay
-
-  ss-server-chacha20:
-    image: pexcn/docker-images:shadowsocks-libev
-    container_name: ss-server-chacha20
-    restart: unless-stopped
-    network_mode: host
-    environment:
-      TZ: Asia/Taipei
-    command: >
-      ss-server
-        -s 0.0.0.0
-        -p 1984
-        -k password
-        -m chacha20-ietf-poly1305
         -t 3600
         -n 1048576
         -u
@@ -51,7 +31,7 @@ services:
         -s 0.0.0.0
         -p 80
         -k password
-        -m chacha20-ietf-poly1305
+        -m aes-256-gcm
         -t 3600
         -n 1048576
         -u
