@@ -83,7 +83,7 @@ services:
         --fast-open
         --no-delay
         --plugin "xray-plugin"
-        --plugin-opts "server;tls;fast-open;host=example.com;path=/ws"
+        --plugin-opts "server;tls;fast-open;mode=websocket;host=example.com;path=/ws"
 
   ss-server-grpc:
     image: pexcn/docker-images:shadowsocks-libev
