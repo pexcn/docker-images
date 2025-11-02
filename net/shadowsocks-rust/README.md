@@ -95,7 +95,7 @@ ssservice local \
 # Plugin options
 #
 # --plugin "obfs-local" --plugin-opts "obfs=tls;obfs-host=www.bing.com;fast-open"
-# --plugin "xray-plugin" --plugin-opts "tls;fast-open;host=example.com;path=/ws?ed=2048;mux=5;loglevel=none"
+# --plugin "xray-plugin" --plugin-opts "tls;fast-open;host=example.com;path=/ws?ed=2560;mux=5;loglevel=none"
 # --plugin "xray-plugin" --plugin-opts "tls;fast-open;mode=grpc;host=example.com;loglevel=none"
 # --plugin "xray-plugin" --plugin-opts "fast-open;mode=quic;host=example.com;loglevel=none"
 # --plugin "qtun-client" --plugin-opts "host=example.com"
