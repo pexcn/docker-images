@@ -27,10 +27,7 @@ ss-server \
 #
 # Plugin options
 #
-# --plugin "obfs-server" --plugin-opts "obfs=tls;fast-open"
-# --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;mode=websocket;host=example.com;path=/ws;loglevel=none"
-# --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;mode=grpc;host=example.com;loglevel=none"
-# --plugin "xray-plugin" --plugin-opts "server;fast-open;mode=quic;host=example.com;loglevel=none"
+# See net/shadowsocks-rust/README.md
 ```
 
 ### Client
@@ -56,13 +53,10 @@ ss-local \
 #
 # Plugin options
 #
-# --plugin "obfs-local" --plugin-opts "obfs=tls;obfs-host=www.bing.com;fast-open"
-# --plugin "xray-plugin" --plugin-opts "tls;fast-open;mode=websocket;host=example.com;path=/ws?ed=2560;mux=4;loglevel=none"
-# --plugin "xray-plugin" --plugin-opts "tls;fast-open;mode=grpc;host=example.com;loglevel=none"
-# --plugin "xray-plugin" --plugin-opts "fast-open;mode=quic;host=example.com;loglevel=none"
+# See net/shadowsocks-rust/README.md
 ```
 
-### Others
+### Manager
 
 ```sh
 #
