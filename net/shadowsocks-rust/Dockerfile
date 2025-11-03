@@ -12,15 +12,18 @@ RUN apt-get update \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
-ARG TOOLCHAIN_VERSION=20250929
 ARG SS_VERSION=v1.23.5
 SHELL ["/bin/bash", "-c"]
 RUN case "$(dpkg --print-architecture)" in \
-      amd64) RUST_TARGET='x86_64-unknown-linux-musl';; \
-      arm64) RUST_TARGET='aarch64-unknown-linux-musl';; \
+      amd64) \
+        RUST_TARGET='x86_64-unknown-linux-musl' \
+        && curl -L https://github.com/cross-tools/musl-cross/releases/download/20250929/${RUST_TARGET}.tar.xz | tar -xJf - -C /opt/ \
+        ;; \
+      arm64) \
+        RUST_TARGET='aarch64-unknown-linux-musl' \
+        && curl -L https://github.com/pexcn/docker-images/releases/download/rust-cross/aarch64_${RUST_TARGET}.tar.xz | tar -xJf - -C /opt/ \
+        ;; \
     esac \
-  && curl -L https://github.com/cross-tools/musl-cross/releases/download/${TOOLCHAIN_VERSION}/${RUST_TARGET}.tar.xz | \
-      tar -xJf - -C /opt/ \
   && PATH="/opt/${RUST_TARGET}/bin:$PATH" \
   && export CC_"${RUST_TARGET//-/_}"=${RUST_TARGET}-gcc \
   && export CXX_"${RUST_TARGET//-/_}"=${RUST_TARGET}-g++ \
