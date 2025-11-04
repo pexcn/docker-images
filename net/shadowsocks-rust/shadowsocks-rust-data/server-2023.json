@@ -18,6 +18,7 @@
             "password": "${SHADOWSOCKS_PASSWORD_3}",
             "method": "chacha20-ietf-poly1305",
             "plugin": "xray-plugin",
+            "plugin_mode": "tcp_only",
             "plugin_opts": "server;tls;fast-open;mode=grpc;host=example.com;loglevel=none"
         },
         {
@@ -27,6 +28,7 @@
             "method": "chacha20-ietf-poly1305",
             "mode": "tcp_only",
             "plugin": "xray-plugin",
+            "plugin_mode": "tcp_only",
             "plugin_opts": "server;fast-open;mode=quic;host=example.com;loglevel=none"
         }
     ],
