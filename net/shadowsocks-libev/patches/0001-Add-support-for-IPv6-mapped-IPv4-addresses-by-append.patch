@@ -1,0 +1,30 @@
+From bbfa0c5bc141fd78f585353229658bec54c16e01 Mon Sep 17 00:00:00 2001
+From: hao <unnamed.hao@gmail.com>
+Date: Thu, 8 Jun 2023 15:01:21 +0800
+Subject: [PATCH] Add support for IPv6 mapped IPv4 addresses by appending
+ "0.0.0.0" to "::" in ss_remote_host string
+
+---
+ src/server.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/src/server.c b/src/server.c
+index 7e330a2..72a2210 100644
+--- a/src/server.c
++++ b/src/server.c
+@@ -1177,6 +1177,15 @@ main(int argc, char **argv)
+ 
+     if (ss_remote_host != NULL) {
+         ss_remote_host = strdup(ss_remote_host);
++        if (0 == strcmp(ss_remote_host, "::")) {
++            char *append_host = "0.0.0.0";
++            char *new_server = calloc(strlen(ss_remote_host)+strlen(append_host) + 16, 1);
++            strcat(new_server, ss_remote_host);
++            strcat(new_server, "|");
++            strcat(new_server, append_host);
++            free(ss_remote_host);
++            ss_remote_host = new_server;
++        }
+         char *delim = "|";
+         char *p = strtok(ss_remote_host, delim);
+         do {
