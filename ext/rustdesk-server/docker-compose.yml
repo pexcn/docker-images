@@ -1,6 +1,6 @@
 services:
   rustdesk-server:
-    image: rustdesk/rustdesk-server-s6:1.1.7-4
+    image: rustdesk/rustdesk-server-s6:1.1.12
     container_name: rustdesk-server
     restart: unless-stopped
     network_mode: host
