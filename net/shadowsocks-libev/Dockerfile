@@ -30,10 +30,12 @@ RUN git clone https://github.com/shadowsocks/shadowsocks-libev.git --recurse-sub
   && cd - \
   && rm -r shadowsocks-libev
 
+COPY patches/simple-obfs/*.patch /patches/
 ARG OBFS_VERSION=486bebd9208539058e57e23a12f23103016e09b4
-RUN git clone https://github.com/shadowsocks/simple-obfs.git --recurse-submodules -j2 \
+RUN git clone https://github.com/shadowsocks/simple-obfs.git --recurse-submodules -j$(nproc) \
   && cd simple-obfs \
   && git checkout $OBFS_VERSION \
+  && for p in /patches/*.patch; do git apply -v "$p"; done \
   && ./autogen.sh \
   && ./configure \
       --disable-documentation \
