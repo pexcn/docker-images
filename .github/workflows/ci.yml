@@ -8,14 +8,93 @@ on:
       - '**/docker-compose.yml'
   workflow_dispatch:
     inputs:
+      global:
+        description: 'Whether to build globally'
+        required: false
+        type: boolean
+        default: false
       deploy:
         description: 'Whether to deploy DockerHub and GHCR'
         required: true
         default: '0'
 
 jobs:
+  generate-matrix:
+    name: Generate matrix
+    runs-on: ubuntu-24.04
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    env:
+      TZ: Asia/Taipei
+    outputs:
+      matrix: ${{ steps.create-matrix.outputs.matrix_json }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Detect changes
+        id: detect-changes
+        uses: tj-actions/changed-files@v47
+        with:
+          files_ignore: |
+            _deprecated/**
+            ext/**
+            **.md
+            **/docker-compose.yml
+            *
+          dir_names: true
+          dir_names_max_depth: 2
+          matrix: true
+
+      - name: Create matrix
+        id: create-matrix
+        run: |
+          changed_files='${{ steps.detect-changes.outputs.all_changed_files }}'
+          global_build=${{ github.event.inputs.global == true }}
+
+          # override as global build
+          if jq -e 'any(startswith(".github/"))' <<< "$changed_files" >/dev/null \
+            || [ "$global_build" = true ]; then
+            changed_files=$(
+              # find build context dirs
+              find . -mindepth 2 -maxdepth 2 -type d ! -path './.*' -prune -printf '%P\n' |
+                # convert to json array
+                jq -Rs 'split("\n")[:-1]' |
+                # remove unused dirs
+                jq '[.[] | select(startswith("_deprecated/") or startswith("ext/") | not)]'
+              )
+          fi
+
+          matrix_json=$(jq -c -n --argjson ctxs "$changed_files" '
+            {
+              include: [
+                $ctxs[] | . as $ctx | {
+                  BUILD_CONTEXT: $ctx,
+                  TARGET_PLATFORMS: (
+                    if (
+                      [
+                        "buildbot/bookworm",
+                        "buildbot/bookworm-android",
+                        "buildbot/bookworm-openwrt"
+                      ] | index($ctx)
+                    ) != null
+                    then
+                      "linux/amd64"
+                    else
+                      "linux/amd64,linux/arm64"
+                    end
+                  )
+                }
+              ]
+            }
+          ')
+          echo "matrix_json=$matrix_json" >> $GITHUB_OUTPUT
+
   build-and-push:
-    #if: "!contains(github.event.head_commit.message, 'do-not-build')"
+    needs: generate-matrix
     runs-on: ubuntu-24.04
     concurrency:
       group: ${{ matrix.BUILD_CONTEXT }}
@@ -24,122 +103,7 @@ jobs:
       TZ: Asia/Taipei
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          # bookworm
-          - BUILD_CONTEXT: buildbot/bookworm
-            TARGET_PLATFORMS: linux/amd64
-          # bookworm-android
-          - BUILD_CONTEXT: buildbot/bookworm-android
-            TARGET_PLATFORMS: linux/amd64
-          # bookworm-openwrt
-          - BUILD_CONTEXT: buildbot/bookworm-openwrt
-            TARGET_PLATFORMS: linux/amd64
-          # gfw-defense
-          - BUILD_CONTEXT: civ/gfw-defense
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # motd
-          - BUILD_CONTEXT: civ/motd
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # android
-          - BUILD_CONTEXT: dev/android
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # c
-          - BUILD_CONTEXT: dev/c
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # dev
-          - BUILD_CONTEXT: dev/dev
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # go
-          - BUILD_CONTEXT: dev/go
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # python
-          - BUILD_CONTEXT: dev/python
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # rust
-          - BUILD_CONTEXT: dev/rust
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # shell
-          - BUILD_CONTEXT: dev/shell
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # chinadns-ng
-          - BUILD_CONTEXT: net/chinadns-ng
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # dns2tcp
-          - BUILD_CONTEXT: net/dns2tcp
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # finalspeed
-          - BUILD_CONTEXT: net/finalspeed
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # ipt2socks
-          - BUILD_CONTEXT: net/ipt2socks
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # kcptun-libev
-          - BUILD_CONTEXT: net/kcptun-libev
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # netspeeder
-          - BUILD_CONTEXT: net/netspeeder
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # nginx
-          - BUILD_CONTEXT: net/nginx
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # phantun
-          - BUILD_CONTEXT: net/phantun
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # shadowsocks-libev
-          - BUILD_CONTEXT: net/shadowsocks-libev
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # shadowsocks-rust
-          - BUILD_CONTEXT: net/shadowsocks-rust
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # tinyfecvpn
-          - BUILD_CONTEXT: net/tinyfecvpn
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # udp2raw
-          - BUILD_CONTEXT: net/udp2raw
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # udpspeeder
-          - BUILD_CONTEXT: net/udpspeeder
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # wireguard
-          - BUILD_CONTEXT: net/wireguard
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # acme.sh
-          - BUILD_CONTEXT: utils/acme.sh
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # cron
-          - BUILD_CONTEXT: utils/cron
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # ddns-checker
-          - BUILD_CONTEXT: utils/ddns-checker
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # rng-tools
-          - BUILD_CONTEXT: utils/rng-tools
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # rsync
-          - BUILD_CONTEXT: utils/rsync
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # samba
-          - BUILD_CONTEXT: utils/samba
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # shairport-sync
-          - BUILD_CONTEXT: utils/shairport-sync
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # smartmontools
-          - BUILD_CONTEXT: utils/smartmontools
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # speedtest-go
-          - BUILD_CONTEXT: utils/speedtest-go
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # transproxy
-          - BUILD_CONTEXT: utils/transproxy
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # vlmcsd
-          - BUILD_CONTEXT: utils/vlmcsd
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
-          # webdav
-          - BUILD_CONTEXT: utils/webdav
-            TARGET_PLATFORMS: linux/amd64,linux/arm64
+      matrix: ${{ fromJSON(needs.generate-matrix.outputs.matrix) }}
     steps:
       # prepare
       - name: Checkout
