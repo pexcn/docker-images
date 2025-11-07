@@ -3,9 +3,11 @@ name: Build
 on:
   push:
     paths-ignore:
+      - '_deprecated/**'
       - 'ext/**'
       - '**.md'
       - '**/docker-compose.yml'
+      - '*'
   workflow_dispatch:
     inputs:
       global:
@@ -18,6 +20,9 @@ on:
         required: true
         default: '0'
 
+env:
+  TZ: Asia/Taipei
+
 jobs:
   generate-matrix:
     name: Generate matrix
@@ -25,8 +30,6 @@ jobs:
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
-    env:
-      TZ: Asia/Taipei
     outputs:
       matrix: ${{ steps.create-matrix.outputs.matrix_json }}
     steps:
@@ -94,53 +97,52 @@ jobs:
           echo "matrix_json=$matrix_json" >> $GITHUB_OUTPUT
 
   build-and-push:
+    name: Build image
     needs: generate-matrix
     runs-on: ubuntu-24.04
     concurrency:
       group: ${{ matrix.BUILD_CONTEXT }}
       cancel-in-progress: true
-    env:
-      TZ: Asia/Taipei
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.generate-matrix.outputs.matrix) }}
     steps:
-      # prepare
       - name: Checkout
-        uses: actions/checkout@v4
-      - name: Set up QEMU
+        uses: actions/checkout@v5
+
+      - name: Setup QEMU
         uses: docker/setup-qemu-action@v3
         with:
           platforms: ${{ matrix.TARGET_PLATFORMS }}
-      - name: Set up Docker Buildx
+
+      - name: Setup docker buildx
         uses: docker/setup-buildx-action@v3
-      - name: Set environment variables
+
+      - name: Setup environment variables
         run: |
           echo "BUILD_TAG=$(basename ${{ matrix.BUILD_CONTEXT }})" >> $GITHUB_ENV
 
-      # login
       - name: Login to DockerHub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Login to GitHub Container Registry
+
+      - name: Login to GHCR
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # cache
-      - name: Cache Docker layers
+      - name: Cache docker layers
         uses: actions/cache@v4
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-${{ env.BUILD_TAG }}-buildx-${{ github.sha }}
           restore-keys: ${{ runner.os }}-${{ env.BUILD_TAG }}-buildx-
 
-      # build & push
-      - name: Build image and Push to Container Registries
+      - name: Build and push image
         uses: docker/build-push-action@v5
         if: ${{ github.event_name == 'push' || github.event.inputs.deploy == '1' }}
         with:
@@ -157,8 +159,6 @@ jobs:
     if: always()
     needs: build-and-push
     runs-on: ubuntu-24.04
-    env:
-      TZ: Asia/Taipei
     steps:
       - name: Cleanup untagged images
         # use actions/delete-package-versions instead?
