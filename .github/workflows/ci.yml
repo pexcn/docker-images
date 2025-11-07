@@ -92,6 +92,9 @@ jobs:
           ')
           echo "matrix_json=$matrix_json" >> $GITHUB_OUTPUT
 
+      - name: Show matrix
+        run: echo '${{ steps.create-matrix.outputs.matrix_json }}' | jq
+
   build-and-push:
     name: Build image
     needs: generate-matrix
