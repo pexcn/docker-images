@@ -15,10 +15,6 @@ on:
         required: false
         type: boolean
         default: false
-      deploy:
-        description: 'Whether to deploy DockerHub and GHCR'
-        required: true
-        default: '0'
 
 env:
   TZ: Asia/Taipei
@@ -144,7 +140,7 @@ jobs:
 
       - name: Build and push image
         uses: docker/build-push-action@v5
-        if: ${{ github.event_name == 'push' || github.event.inputs.deploy == '1' }}
+        if: ${{ github.event_name == 'push' }}
         with:
           context: ${{ matrix.BUILD_CONTEXT }}
           tags: |
