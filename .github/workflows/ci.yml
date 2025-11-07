@@ -56,7 +56,7 @@ jobs:
         id: create-matrix
         run: |
           changed_files='${{ steps.detect-changes.outputs.all_changed_files }}'
-          global_build=${{ github.event.inputs.global == true }}
+          global_build=${{ github.event.inputs.global == 'true' }}
 
           # override as global build
           if jq -e 'any(startswith(".github/"))' <<< "$changed_files" >/dev/null \
