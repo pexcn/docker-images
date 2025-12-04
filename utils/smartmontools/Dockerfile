@@ -16,7 +16,7 @@ RUN apk update \
   && rm -rf /var/cache/apk/*
 
 # make msmtp as sendmail alias
-RUN ln -s /usr/bin/msmtp /usr/sbin/sendmail
+RUN ln -sf /usr/bin/msmtp /usr/sbin/sendmail
 
 COPY smartmontools.sh /usr/local/bin/
 COPY smartd_warning_zh.sh /etc/
