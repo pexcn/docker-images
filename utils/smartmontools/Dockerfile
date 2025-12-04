@@ -2,12 +2,12 @@
 # Dockerfile for smartmontools
 #
 
-FROM alpine:3.14
+FROM alpine:3.22
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
-ARG SMARTMONTOOLS_VERSION=7.2-r1
-ARG MSMTP_VERSION=1.8.15-r0
-ARG S_NAIL_VERSION=14.9.20-r0
+ARG SMARTMONTOOLS_VERSION=7.5-r0
+ARG MSMTP_VERSION=1.8.28-r0
+ARG S_NAIL_VERSION=14.9.25-r0
 RUN apk update \
   && apk add --no-cache \
       smartmontools=$SMARTMONTOOLS_VERSION \
@@ -16,13 +16,12 @@ RUN apk update \
   && rm -rf /var/cache/apk/*
 
 # make msmtp as sendmail alias
-RUN ln -sf /usr/bin/msmtp /usr/sbin/sendmail
+RUN ln -s /usr/bin/msmtp /usr/sbin/sendmail
 
-COPY entrypoint.sh /app/
+COPY smartmontools.sh /usr/local/bin/
 COPY smartd_warning_zh.sh /etc/
 
 ENV SMARTD_CONFIG="DEVICESCAN"
 ENV SMTP_CONFIG="mail@example.com#user:pass@smtp.example.com:587"
 
-USER root
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["smartmontools.sh"]

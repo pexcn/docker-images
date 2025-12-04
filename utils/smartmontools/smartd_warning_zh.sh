@@ -2,21 +2,22 @@
 #
 # smartd warning script
 #
-# Home page of code is: http://www.smartmontools.org
+# Home page of code is: https://www.smartmontools.org
 #
-# Copyright (C) 2012-16 Christian Franke
+# Copyright (C) 2012-22 Christian Franke
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
 #
-# $Id: smartd_warning.sh.in 4839 2018-11-27 18:26:08Z chrfranke $
+# $Id: smartd_warning.sh.in 5597 2024-01-24 10:30:14Z chrfranke $
 #
 
 set -e
 
 # Set by config.status
 export PATH="/usr/local/bin:/usr/bin:/bin"
+# shellcheck disable=SC2034
 PACKAGE="smartmontools"
-VERSION="7.2"
+VERSION="7.5"
 prefix="/usr"
 sysconfdir="/etc"
 smartdscriptdir="${sysconfdir}"
@@ -26,6 +27,12 @@ os_mailer="mail"
 
 # Plugin directory (disabled if empty)
 plugindir="${smartdscriptdir}/smartd_warning.d"
+
+# Detect accidental use of '-M exec /path/to/smartd_warning.sh'.
+if [ -n "$SMARTD_SUBJECT" ]; then
+  echo "$0: SMARTD_SUBJECT is already set - possible recursion" >&2
+  exit 1
+fi
 
 # Parse options
 dryrun=
@@ -61,6 +68,7 @@ if [ -z "${SMARTD_ADDRESS}${SMARTD_MAILER}" ]; then
 fi
 
 # Get host and domain names
+# shellcheck disable=SC2041
 for cmd in 'hostname' 'uname -n' 'echo "[Unknown]"'; do
   hostname=`eval $cmd 2>/dev/null` || continue
   test -n "$hostname" || continue
@@ -72,6 +80,7 @@ if [ "$dnsdomain" != "$hostname" ]; then
   # hostname command printed FQDN
   hostname=${hostname%%.*}
 else
+  # shellcheck disable=SC2041
   for cmd in 'dnsdomainname' 'hostname -d' 'echo'; do
     dnsdomain=`eval $cmd 2>/dev/null` || continue
     break
@@ -79,6 +88,7 @@ else
   test "$dnsdomain" != "(none)" || dnsdomain=
 fi
 
+# shellcheck disable=SC2041
 for cmd in 'nisdomainname' 'hostname -y' 'domainname' 'echo'; do
   nisdomain=`eval $cmd 2>/dev/null` || continue
   break
@@ -112,70 +122,89 @@ fullmessage=`
       echo "关于此问题的原始消息发送于 ${SMARTD_TFIRST-[SMARTD_TFIRST]}"
     case $SMARTD_NEXTDAYS in
       '') echo "即使问题仍然存在，也不会继续发送有关此问题的消息。" ;;
-      1)  echo "如果问题仍然存在，将在 24 小时内发送另一条消息。" ;;
-      *)  echo "如果问题仍然存在，将在 $SMARTD_NEXTDAYS 天内发送另一条消息。" ;;
+      0)  echo "如果问题仍然存在，将在下次检查时发送另一条消息。" ;;
+      1)  echo "如果问题仍然存在，将在 24 小时后发送另一条消息。" ;;
+      *)  echo "如果问题仍然存在，将在 $SMARTD_NEXTDAYS 天后发送另一条消息。" ;;
     esac
   fi
 `
+
+# Check whether a message line begins with the default 'mail' command escape char '~'.
+# Heuristically detect dangerous command escapes for possible other escape characters.
+esc=`echo "$fullmessage" | sed -n -e '/^~/p' -e '/^[^ 0-9A-Za-z][[:space:]]*[!:<r|][[:space:]]/p'`
+if [ -n "$esc" ]; then
+  echo "$0: Security: Message contains possible 'mail' command escape" >&2
+  exit 1
+fi
 
 # Export message with trailing newline
 export SMARTD_FULLMESSAGE="$fullmessage
 "
 
 # Run plugin scripts if requested
-if test -n "$plugindir"; then
- case " $SMARTD_ADDRESS" in
+unset SMARTD_ADDRESS_ORIG
+case " $SMARTD_ADDRESS" in
   *\ @*)
-    if [ -n "$dryrun" ]; then
-      echo "export SMARTD_SUBJECT='$SMARTD_SUBJECT'"
-      echo "export SMARTD_FULLMESSAGE='$SMARTD_FULLMESSAGE'"
-    fi
-
-    # Run ALL scripts if requested
-    case " $SMARTD_ADDRESS " in
-      *\ @ALL\ *)
-        for cmd in "$plugindir"/*; do
-          if [ -f "$cmd" ] && [ -x "$cmd" ]; then
-            if [ -n "$dryrun" ]; then
-              echo "$cmd </dev/null"
-            else
-              "$cmd" </dev/null
-            fi
-          fi
-        done
-        ;;
-    esac
-
-    # Run selected scripts
-    addrs=$SMARTD_ADDRESS
+    # Collect and remove plugin names from SMARTD_ADDRESS
+    export SMARTD_ADDRESS_ORIG=$SMARTD_ADDRESS
     SMARTD_ADDRESS=
-    for ad in $addrs; do
+    plugins=
+    for ad in $SMARTD_ADDRESS_ORIG; do
       case $ad in
         @ALL)
+          if [ -n "$plugindir" ]; then
+            for cmd in "$plugindir"/*; do
+              if [ -f "$cmd" ] && [ -x "$cmd" ]; then
+                plugins="${plugins}${plugins:+ }${cmd##*/}"
+              fi
+            done
+          fi
           ;;
         @?*)
-          cmd="$plugindir/${ad#@}"
-          if [ -f "$cmd" ] && [ -x "$cmd" ]; then
-            if [ -n "$dryrun" ]; then
-              echo "$cmd </dev/null"
-            else
-              "$cmd" </dev/null
-            fi
-          elif [ ! -e "$cmd" ]; then
-            echo "$cmd: Not found" >&2
+          if [ -n "$plugindir" ]; then
+            plugins="${plugins}${plugins:+ }${ad#@}"
           fi
           ;;
         *)
-          SMARTD_ADDRESS="${SMARTD_ADDRESS:+ }$ad"
+          SMARTD_ADDRESS="${SMARTD_ADDRESS}${SMARTD_ADDRESS:+ }$ad"
           ;;
       esac
     done
 
+    # Run all scripts
+    if [ -n "$plugins" ]; then
+      if [ -n "$dryrun" ]; then
+        echo "export SMARTD_ADDRESS='$SMARTD_ADDRESS'"
+        echo "export SMARTD_ADDRESS_ORIG='$SMARTD_ADDRESS_ORIG'"
+        echo "export SMARTD_SUBJECT='$SMARTD_SUBJECT'"
+        echo "export SMARTD_FULLMESSAGE='$SMARTD_FULLMESSAGE'"
+      fi
+      for p in $plugins; do
+        cmd="$plugindir/$p"
+        if [ -f "$cmd" ]; then
+          if [ -x "$cmd" ]; then
+            if [ -n "$dryrun" ]; then
+              echo "$cmd </dev/null"
+            else
+              rc=0
+              "$cmd" </dev/null || rc=$?
+              if [ $rc != 0 ]; then
+                echo "$cmd: exit $rc" >&2
+                exit $rc
+              fi
+            fi
+          fi
+        else
+          echo "$cmd: not found" >&2
+          exit 1
+        fi
+      done
+    fi
+
     # Send email to remaining addresses
     test -n "$SMARTD_ADDRESS" || exit 0
     ;;
- esac
-fi
+esac
 
 # Send mail or run command
 if [ -n "$SMARTD_ADDRESS" ]; then

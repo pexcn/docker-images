@@ -6,7 +6,6 @@ services:
     network_mode: host
     privileged: true
     environment:
-      SMARTD_CONFIG: "DEVICESCAN -a -s (S/../../7/19|L/../15/./20) -W 0,0,45 -m pexcn97@gmail.com -M diminishing"
+      TZ: Asia/Taipei
+      SMARTD_CONFIG: "DEVICESCAN -a -s (S/../19/./01:001|L/(01|04|07|10)/05/./06:006-018) -W 0,0,45 -m pexcn97@gmail.com -M diminishing"
       SMTP_CONFIG: "mail@example.com#user:pass@smtp.example.com:587"
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
