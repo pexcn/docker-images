@@ -9,7 +9,7 @@ ARG SMARTMONTOOLS_VERSION=7.5-r0
 ARG MSMTP_VERSION=1.8.28-r0
 ARG S_NAIL_VERSION=14.9.25-r0
 RUN apk update \
-  && apk add --no-cache \
+  && apk add --no-cache tzdata \
       smartmontools=$SMARTMONTOOLS_VERSION \
       msmtp=$MSMTP_VERSION \
       s-nail=$S_NAIL_VERSION \
