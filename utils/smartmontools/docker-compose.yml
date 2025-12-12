@@ -7,5 +7,5 @@ services:
     privileged: true
     environment:
       TZ: Asia/Taipei
-      SMARTD_CONFIG: "DEVICESCAN -a -s (S/../19/./01:001|L/(01|04|07|10)/05/./06:006-018) -W 0,0,45 -m pexcn97@gmail.com -M diminishing"
+      SMARTD_CONFIG: "DEVICESCAN -a -s (S/../19/./01:001|L/(01|04|07|10)/05/./06:006-018) -W 0,0,46 -m pexcn97@gmail.com -M diminishing"
       SMTP_CONFIG: "mail@example.com#user:pass@smtp.example.com:587"
