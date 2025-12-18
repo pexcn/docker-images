@@ -2,6 +2,30 @@
 # Dockerfile for gfw-defense
 #
 
+#
+# Build stage
+#
+FROM debian:bookworm-slim AS builder-util
+
+RUN apt-get update \
+  && apt-get install --no-install-recommends -y curl ca-certificates gcc make libc6-dev \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
+ARG UTIL_VERSION=2.41.2
+RUN curl https://www.kernel.org/pub/linux/utils/util-linux/v$(echo "$UTIL_VERSION" | cut -d'.' -f1-2)/util-linux-${UTIL_VERSION}.tar.gz | tar zxv \
+  && cd util-linux-${UTIL_VERSION} \
+  && ./configure \
+      --without-python \
+      --disable-liblastlog2 \
+      CFLAGS="-O3 -pipe" \
+      LDFLAGS="-Wl,--build-id=none -Wl,-static -static -static-libgcc -no-pie -Wl,-s" \
+  && make -j$(nproc) last \
+  && install last /usr/local/bin/ \
+  && ln -s last /usr/local/bin/lastb \
+  && cd - \
+  && rm -r util-linux-${UTIL_VERSION}
+
 FROM alpine:3.20
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
@@ -25,6 +49,8 @@ RUN mkdir -p /etc/gfw-defense \
   && touch /etc/gfw-defense/blacklist.txt \
   && touch /etc/gfw-defense/whitelist.txt
 
+COPY --from=builder-util /usr/local/bin/last /usr/local/bin/
+COPY --from=builder-util /usr/local/bin/lastb /usr/local/bin/
 COPY gfw-defense.sh /usr/local/bin/
 
 ENV BLOCKING_POLICY=DROP
@@ -36,6 +62,7 @@ ENV ALLOW_RESERVED_ADDRESS=0
 ENV USE_IPTABLES_NFT_BACKEND=0
 ENV BLACKLIST_FILES=/etc/gfw-defense/blacklist.txt
 ENV WHITELIST_FILES=/etc/gfw-defense/whitelist.txt
+ENV AUTO_BLOCK_INTERVAL=0
 ENV UPDATE_LIST_INTERVAL=0
 ENV UPDATE_LIST_URLS=
 
