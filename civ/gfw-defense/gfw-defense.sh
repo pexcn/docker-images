@@ -85,6 +85,10 @@ _is_exist_ipset() {
   ipset list -n "$1" >/dev/null 2>&1
 }
 
+_get_ipset_count() {
+  ipset list -t "$1" | grep "Number of entries" | awk '{print $4}'
+}
+
 _gen_ipset_rules() {
   [ -n "$1" ] || return 0
 
@@ -109,6 +113,7 @@ _gen_ipset_rules() {
 
 # TODO: check ipset create params.
 load_ipsets() {
+  local prev next
   if _is_exist_ipset $BLACKLIST; then
     ipset flush $BLACKLIST
     info "blacklist ipset flushed."
@@ -116,10 +121,12 @@ load_ipsets() {
     ipset create $BLACKLIST hash:net hashsize 64 family inet
     info "blacklist ipset created."
   fi
+  prev="$(_get_ipset_count $BLACKLIST)"
   ipset -exist restore <<-EOF
 	$(_gen_ipset_rules "$BLACKLIST_FILES" "add $BLACKLIST ")
 	EOF
-  info "blacklist loaded into ipset."
+  next="$(_get_ipset_count $BLACKLIST)"
+  info "blacklist loaded into ipset ($prev -> $next)."
 
   if _is_exist_ipset $WHITELIST; then
     ipset flush $WHITELIST
@@ -128,23 +135,32 @@ load_ipsets() {
     ipset create $WHITELIST hash:net hashsize 64 family inet
     info "whitelist ipset created."
   fi
+  prev="$(_get_ipset_count $WHITELIST)"
   ipset -exist restore <<-EOF
 	$(_gen_ipset_rules "$WHITELIST_FILES" "add $WHITELIST ")
 	EOF
-  info "whitelist loaded into ipset."
+  next="$(_get_ipset_count $WHITELIST)"
+  info "whitelist loaded into ipset ($prev -> $next)."
 
   if [ "$ALLOW_RESERVED_ADDRESS" = 1 ]; then
+    prev="$(_get_ipset_count $WHITELIST)"
     ipset -exist restore <<-EOF
 		$(_gen_ipset_rules <(_get_reserved_ips) "add $WHITELIST ")
 		EOF
-    info "reserved ip list loaded into whitelist."
+    next="$(_get_ipset_count $WHITELIST)"
+    info "reserved ip list loaded into whitelist ($prev -> $next)."
   fi
 
   if [ "$AUTO_BLOCK_INTERVAL" != 0 ]; then
+    prev="$(_get_ipset_count $BLACKLIST)"
     ipset -exist restore <<-EOF
 		$(_get_loginfail_ips "1 month ago" | sed "s/^/add $BLACKLIST /")
 		EOF
+    next="$(_get_ipset_count $BLACKLIST)"
+    info "blocklist loaded into blacklist ($prev -> $next)."
   fi
+
+  info "ipset entries: blacklist ($(_get_ipset_count $BLACKLIST)), whitelist ($(_get_ipset_count $WHITELIST))."
 }
 
 _quick_mode() {
@@ -203,7 +219,7 @@ _update_list() {
   local dir="/etc/gfw-defense"
   local lines="$(wc -l 2>/dev/null <"${dir}/${file}" || echo 0)"
   curl -sSL --create-dirs --output-dir $dir -O "$url" || return 1
-  info "update ${file}: ${lines} -> $(wc -l <"${dir}/${file}")."
+  info "update ${file} (${lines} -> $(wc -l <"${dir}/${file}"))."
 }
 
 update_lists() {
@@ -255,18 +271,20 @@ start_gfw_defense() {
 
   [ "$AUTO_BLOCK_INTERVAL" = 0 ] || (
     AUTO_BLOCK_INTERVAL_INNER=$((AUTO_BLOCK_INTERVAL < 3600 ? 3600 : AUTO_BLOCK_INTERVAL))
-    [ "$AUTO_BLOCK_INTERVAL" = "$AUTO_BLOCK_INTERVAL_INNER" ] || warn "auto block interval ($AUTO_BLOCK_INTERVAL) too small, force set to 3600."
-    info "auto block enabled, update blocklist every $AUTO_BLOCK_INTERVAL_INNER seconds."
+    [ "$AUTO_BLOCK_INTERVAL" = "$AUTO_BLOCK_INTERVAL_INNER" ] || warn "autoblock interval ($AUTO_BLOCK_INTERVAL) too small, force set to 3600."
+    info "autoblock enabled, update blocklist every $AUTO_BLOCK_INTERVAL_INNER seconds."
 
     while true; do
       sleep "$AUTO_BLOCK_INTERVAL_INNER"
 
       # shellcheck disable=SC2004
       SINCE="$(date -d "@$(($(date +%s) - $AUTO_BLOCK_INTERVAL_INNER))" '+%Y-%m-%d %H:%M:%S')"
+      PREV="$(_get_ipset_count $BLACKLIST)"
       ipset -exist restore <<-EOF
 			$(_get_loginfail_ips "$SINCE" | sed "s/^/add $BLACKLIST /")
 			EOF
-      info "blocklist appended into blacklist."
+      NEXT="$(_get_ipset_count $BLACKLIST)"
+      info "blocklist appended into blacklist ($PREV -> $NEXT)."
     done
   ) &
 
