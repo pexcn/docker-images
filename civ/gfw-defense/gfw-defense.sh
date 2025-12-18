@@ -245,7 +245,7 @@ _destroy_ipsets() {
 }
 
 _stop_container() {
-  kill "$(jobs -p)"
+  jobs -p | xargs kill
   info "terminate container."
 
   # ensure child process terminate completely, avoid <defunct> processes
