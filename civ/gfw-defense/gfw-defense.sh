@@ -253,7 +253,8 @@ start_gfw_defense() {
     info "auto block enabled, update blocklist every $AUTO_BLOCK_INTERVAL_INNER seconds."
 
     while true; do
-      SINCE="$(date -d "@$(($(date +%s) - "$AUTO_BLOCK_INTERVAL_INNER"))" '+%Y-%m-%d %H:%M:%S')"
+      # shellcheck disable=SC2004
+      SINCE="$(date -d "@$(($(date +%s) - $AUTO_BLOCK_INTERVAL_INNER))" '+%Y-%m-%d %H:%M:%S')"
       ipset -exist restore <<-EOF
 			$(_get_loginfail_ips "$SINCE" | sed "s/^/add $BLACKLIST /")
 			EOF
