@@ -22,11 +22,13 @@ RUN curl https://www.kernel.org/pub/linux/utils/util-linux/v$(echo "$UTIL_VERSIO
       LDFLAGS="-Wl,--build-id=none -Wl,-static -static -static-libgcc -no-pie -Wl,-s" \
   && make -j$(nproc) last \
   && install last /usr/local/bin/ \
-  && ln -s last /usr/local/bin/lastb \
   && cd - \
   && rm -r util-linux-${UTIL_VERSION}
 
-FROM alpine:3.20
+#
+# Runtime stage
+#
+FROM alpine:3.23
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 RUN apk update \
@@ -50,7 +52,7 @@ RUN mkdir -p /etc/gfw-defense \
   && touch /etc/gfw-defense/whitelist.txt
 
 COPY --from=builder-util /usr/local/bin/last /usr/local/bin/
-COPY --from=builder-util /usr/local/bin/lastb /usr/local/bin/
+RUN ln -s last /usr/local/bin/lastb
 COPY gfw-defense.sh /usr/local/bin/
 
 ENV BLOCKING_POLICY=DROP
