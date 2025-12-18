@@ -139,6 +139,12 @@ load_ipsets() {
 		EOF
     info "reserved ip list loaded into whitelist."
   fi
+
+  if [ "$AUTO_BLOCK_INTERVAL" != 0 ]; then
+    ipset -exist restore <<-EOF
+		$(_get_loginfail_ips "1 month ago" | sed "s/^/add $BLACKLIST /")
+		EOF
+  fi
 }
 
 _quick_mode() {
@@ -253,14 +259,14 @@ start_gfw_defense() {
     info "auto block enabled, update blocklist every $AUTO_BLOCK_INTERVAL_INNER seconds."
 
     while true; do
+      sleep "$AUTO_BLOCK_INTERVAL_INNER"
+
       # shellcheck disable=SC2004
       SINCE="$(date -d "@$(($(date +%s) - $AUTO_BLOCK_INTERVAL_INNER))" '+%Y-%m-%d %H:%M:%S')"
       ipset -exist restore <<-EOF
 			$(_get_loginfail_ips "$SINCE" | sed "s/^/add $BLACKLIST /")
 			EOF
       info "blocklist appended into blacklist."
-
-      sleep "$AUTO_BLOCK_INTERVAL_INNER"
     done
   ) &
 
@@ -280,11 +286,6 @@ start_gfw_defense() {
       if update_lists; then
         warn "update lists success, reload ipsets..."
         load_ipsets
-        if [ "$AUTO_BLOCK_INTERVAL" != 0 ]; then
-          ipset -exist restore <<-EOF
-					$(_get_loginfail_ips "1 month ago" | sed "s/^/add $BLACKLIST /")
-					EOF
-        fi
       else
         error "update lists failed, skip reload ipsets."
       fi
