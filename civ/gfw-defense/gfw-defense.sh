@@ -1,5 +1,4 @@
 #!/bin/sh
-
 # shellcheck disable=SC2155,SC3043,SC3001,SC1003
 
 BLOCKING_POLICY="${BLOCKING_POLICY:=DROP}"
@@ -11,6 +10,7 @@ ALLOW_RESERVED_ADDRESS="${ALLOW_RESERVED_ADDRESS:=0}"
 USE_IPTABLES_NFT_BACKEND="${USE_IPTABLES_NFT_BACKEND:=0}"
 BLACKLIST_FILES="${BLACKLIST_FILES:=/etc/gfw-defense/blacklist.txt}"
 WHITELIST_FILES="${WHITELIST_FILES:=/etc/gfw-defense/whitelist.txt}"
+AUTO_BLOCK_INTERVAL="${AUTO_BLOCK_INTERVAL:=0}"
 UPDATE_LIST_INTERVAL="${UPDATE_LIST_INTERVAL:=0}"
 UPDATE_LIST_URLS="${UPDATE_LIST_URLS:=}"
 BLACKLIST="gfw_defense_blacklist"
@@ -66,6 +66,19 @@ _get_reserved_ips() {
 	240.0.0.0/4
 	255.255.255.255
 	EOF
+}
+
+_get_loginfail_ips() {
+  local since="$1"
+  lastb -i -s "$since" |
+    # get ip list
+    awk '{print $3}' |
+    # filter valid ip list
+    grep -E '^[1-9][0-9]*\.' |
+    # remove duplicates, sort by count
+    sort | uniq -c | sort -rn |
+    # output more than 5 times
+    awk '$1 > 5 {print $2}'
 }
 
 _is_exist_ipset() {
@@ -234,6 +247,22 @@ start_gfw_defense() {
   load_ipsets
   apply_iptables
 
+  [ "$AUTO_BLOCK_INTERVAL" = 0 ] || (
+    AUTO_BLOCK_INTERVAL_INNER=$((AUTO_BLOCK_INTERVAL < 3600 ? 3600 : AUTO_BLOCK_INTERVAL))
+    [ "$AUTO_BLOCK_INTERVAL" = "$AUTO_BLOCK_INTERVAL_INNER" ] || warn "auto block interval ($AUTO_BLOCK_INTERVAL) too small, force set to 3600."
+    info "auto block enabled, update blocklist every $AUTO_BLOCK_INTERVAL_INNER seconds."
+
+    while true; do
+      SINCE="$(date -d "@$(($(date +%s) - "$AUTO_BLOCK_INTERVAL_INNER"))" '+%Y-%m-%d %H:%M:%S')"
+      ipset -exist restore <<-EOF
+			$(_get_loginfail_ips "$SINCE" | sed "s/^/add $BLACKLIST /")
+			EOF
+      info "blocklist appended into blacklist."
+
+      sleep "$AUTO_BLOCK_INTERVAL_INNER"
+    done
+  ) &
+
   if [ "$UPDATE_LIST_INTERVAL" = 0 ]; then
     info "container started."
     sleep infinity &
@@ -250,6 +279,11 @@ start_gfw_defense() {
       if update_lists; then
         warn "update lists success, reload ipsets..."
         load_ipsets
+        if [ "$AUTO_BLOCK_INTERVAL" != 0 ]; then
+          ipset -exist restore <<-EOF
+					$(_get_loginfail_ips "1 month ago" | sed "s/^/add $BLACKLIST /")
+					EOF
+        fi
       else
         error "update lists failed, skip reload ipsets."
       fi
