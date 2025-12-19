@@ -291,12 +291,12 @@ start_gfw_defense() {
   if [ "$UPDATE_LIST_INTERVAL" = 0 ]; then
     info "container started."
     sleep infinity &
-    wait
+    wait $!
   else
     info "container started, update list every $UPDATE_LIST_INTERVAL seconds."
     while true; do
       sleep "$UPDATE_LIST_INTERVAL" &
-      wait
+      wait $!
       if [ -z "$UPDATE_LIST_URLS" ]; then
         warn "UPDATE_LIST_URLS is not set, skip update lists."
         continue
