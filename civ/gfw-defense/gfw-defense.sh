@@ -77,8 +77,8 @@ _get_loginfail_ips() {
     grep -E '^[1-9][0-9]*\.' |
     # remove duplicates, sort by count
     sort | uniq -c | sort -rn |
-    # output more than 5 times
-    awk '$1 > 5 {print $2}'
+    # output more than 3 times
+    awk '$1 > 3 {print $2}'
 }
 
 _is_exist_ipset() {
@@ -278,7 +278,7 @@ start_gfw_defense() {
       sleep "$AUTO_BLOCK_INTERVAL_INNER"
 
       # shellcheck disable=SC2004
-      SINCE="$(date -d "@$(($(date +%s) - $AUTO_BLOCK_INTERVAL_INNER))" '+%Y-%m-%d %H:%M:%S')"
+      SINCE="$(date -d "@$(($(date +%s) - $AUTO_BLOCK_INTERVAL_INNER * 4))" '+%Y-%m-%d %H:%M:%S')"
       PREV="$(_get_ipset_count $BLACKLIST)"
       ipset -exist restore <<-EOF
 			$(_get_loginfail_ips "$SINCE" | sed "s/^/add $BLACKLIST /")
