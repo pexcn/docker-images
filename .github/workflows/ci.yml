@@ -77,7 +77,8 @@ jobs:
                       [
                         "buildbot/bookworm",
                         "buildbot/bookworm-android",
-                        "buildbot/bookworm-openwrt"
+                        "buildbot/bookworm-openwrt",
+                        "civ/gfw-defense"
                       ] | index($ctx)
                     ) != null
                     then
