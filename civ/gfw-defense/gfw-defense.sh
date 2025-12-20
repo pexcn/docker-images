@@ -228,6 +228,27 @@ update_lists() {
   done
 }
 
+auto_block() {
+  [ "$AUTO_BLOCK_INTERVAL" = 0 ] || (
+    AUTO_BLOCK_INTERVAL_INNER=$((AUTO_BLOCK_INTERVAL < 3600 ? 3600 : AUTO_BLOCK_INTERVAL))
+    [ "$AUTO_BLOCK_INTERVAL" = "$AUTO_BLOCK_INTERVAL_INNER" ] || warn "autoblock interval ($AUTO_BLOCK_INTERVAL) too small, force set to 3600."
+    info "autoblock enabled, update blocklist every $AUTO_BLOCK_INTERVAL_INNER seconds."
+
+    while true; do
+      sleep "$AUTO_BLOCK_INTERVAL_INNER"
+
+      # shellcheck disable=SC2004
+      SINCE="$(date -d "@$(($(date +%s) - $AUTO_BLOCK_INTERVAL_INNER * 4))" '+%Y-%m-%d %H:%M:%S')"
+      PREV="$(_get_ipset_count $BLACKLIST)"
+      ipset -exist restore <<-EOF
+			$(_get_loginfail_ips "$SINCE" | sed "s/^/add $BLACKLIST /")
+			EOF
+      NEXT="$(_get_ipset_count $BLACKLIST)"
+      info "blocklist appended into blacklist ($PREV -> $NEXT)."
+    done
+  ) &
+}
+
 _revoke_iptables() {
   iptables -D INPUT -j GFW_DEFENSE || error "revoke iptables chain failed."
   iptables -F GFW_DEFENSE || error "iptables rules remove failed."
@@ -269,24 +290,7 @@ start_gfw_defense() {
   load_ipsets
   apply_iptables
 
-  [ "$AUTO_BLOCK_INTERVAL" = 0 ] || (
-    AUTO_BLOCK_INTERVAL_INNER=$((AUTO_BLOCK_INTERVAL < 3600 ? 3600 : AUTO_BLOCK_INTERVAL))
-    [ "$AUTO_BLOCK_INTERVAL" = "$AUTO_BLOCK_INTERVAL_INNER" ] || warn "autoblock interval ($AUTO_BLOCK_INTERVAL) too small, force set to 3600."
-    info "autoblock enabled, update blocklist every $AUTO_BLOCK_INTERVAL_INNER seconds."
-
-    while true; do
-      sleep "$AUTO_BLOCK_INTERVAL_INNER"
-
-      # shellcheck disable=SC2004
-      SINCE="$(date -d "@$(($(date +%s) - $AUTO_BLOCK_INTERVAL_INNER * 4))" '+%Y-%m-%d %H:%M:%S')"
-      PREV="$(_get_ipset_count $BLACKLIST)"
-      ipset -exist restore <<-EOF
-			$(_get_loginfail_ips "$SINCE" | sed "s/^/add $BLACKLIST /")
-			EOF
-      NEXT="$(_get_ipset_count $BLACKLIST)"
-      info "blocklist appended into blacklist ($PREV -> $NEXT)."
-    done
-  ) &
+  auto_block
 
   if [ "$UPDATE_LIST_INTERVAL" = 0 ]; then
     info "container started."
