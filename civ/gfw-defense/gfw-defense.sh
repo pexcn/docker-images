@@ -10,6 +10,7 @@ ALLOW_RESERVED_ADDRESS="${ALLOW_RESERVED_ADDRESS:=0}"
 USE_IPTABLES_NFT_BACKEND="${USE_IPTABLES_NFT_BACKEND:=0}"
 BLACKLIST_FILES="${BLACKLIST_FILES:=/etc/gfw-defense/blacklist.txt}"
 WHITELIST_FILES="${WHITELIST_FILES:=/etc/gfw-defense/whitelist.txt}"
+AUTO_BLOCK="${AUTO_BLOCK:=0}"
 AUTO_BLOCK_INTERVAL="${AUTO_BLOCK_INTERVAL:=0}"
 UPDATE_LIST_INTERVAL="${UPDATE_LIST_INTERVAL:=0}"
 UPDATE_LIST_URLS="${UPDATE_LIST_URLS:=}"
@@ -151,10 +152,10 @@ load_ipsets() {
     info "reserved ip list loaded into whitelist ($prev -> $next)."
   fi
 
-  if [ "$AUTO_BLOCK_INTERVAL" != 0 ]; then
+  if [ "$AUTO_BLOCK" = 1 ] || [ "$AUTO_BLOCK_INTERVAL" != 0 ]; then
     prev="$(_get_ipset_count $BLACKLIST)"
     ipset -exist restore <<-EOF
-		$(_get_loginfail_ips "1 month ago" | sed "s/^/add $BLACKLIST /")
+		$(_get_loginfail_ips "-1month" | sed "s/^/add $BLACKLIST /")
 		EOF
     next="$(_get_ipset_count $BLACKLIST)"
     info "blocklist loaded into blacklist ($prev -> $next)."
@@ -229,10 +230,36 @@ update_lists() {
 }
 
 auto_block() {
+  if [ "$AUTO_BLOCK" = 1 ]; then
+    info "triggered autoblock enabled."
+    [ "$AUTO_BLOCK_INTERVAL" = 0 ] || {
+      AUTO_BLOCK_INTERVAL=0
+      warn "polling autoblock automatically disabled."
+    }
+
+    (
+      inotifyd - /var/log/btmp:c | while read -r _; do
+        (
+          exec 9>/var/log/btmp.lock
+          flock -n 9 || exit 0
+
+          PREV="$(_get_ipset_count $BLACKLIST)"
+          ipset -exist restore <<-EOF
+			$(_get_loginfail_ips "-1day" | sed "s/^/add $BLACKLIST /")
+			EOF
+          NEXT="$(_get_ipset_count $BLACKLIST)"
+          info "autoblock has been triggered ($PREV -> $NEXT)."
+
+          sleep 10
+        ) &
+      done
+    ) &
+  fi
+
   [ "$AUTO_BLOCK_INTERVAL" = 0 ] || (
     AUTO_BLOCK_INTERVAL_INNER=$((AUTO_BLOCK_INTERVAL < 3600 ? 3600 : AUTO_BLOCK_INTERVAL))
-    [ "$AUTO_BLOCK_INTERVAL" = "$AUTO_BLOCK_INTERVAL_INNER" ] || warn "autoblock interval ($AUTO_BLOCK_INTERVAL) too small, force set to 3600."
-    info "autoblock enabled, update blocklist every $AUTO_BLOCK_INTERVAL_INNER seconds."
+    [ "$AUTO_BLOCK_INTERVAL" = "$AUTO_BLOCK_INTERVAL_INNER" ] || warn "polling autoblock interval ($AUTO_BLOCK_INTERVAL) too small, force set to 3600."
+    info "polling autoblock enabled, update blocklist every $AUTO_BLOCK_INTERVAL_INNER seconds."
 
     while true; do
       sleep "$AUTO_BLOCK_INTERVAL_INNER"
@@ -241,8 +268,8 @@ auto_block() {
       SINCE="$(date -d "@$(($(date +%s) - $AUTO_BLOCK_INTERVAL_INNER * 4))" '+%Y-%m-%d %H:%M:%S')"
       PREV="$(_get_ipset_count $BLACKLIST)"
       ipset -exist restore <<-EOF
-			$(_get_loginfail_ips "$SINCE" | sed "s/^/add $BLACKLIST /")
-			EOF
+		$(_get_loginfail_ips "$SINCE" | sed "s/^/add $BLACKLIST /")
+		EOF
       NEXT="$(_get_ipset_count $BLACKLIST)"
       info "blocklist appended into blacklist ($PREV -> $NEXT)."
     done
