@@ -11,13 +11,13 @@ RUN apk update \
   && apk add --no-cache --virtual .build-deps \
       build-base git libnet-dev libnet-static libpcap-dev
 
-ARG VERSION=ca7a81387dfe3e7a0985e3efc8895ece46228e34
+ARG VERSION=a3009b5945aede38a8afe188f71a6956033b1432
 RUN git clone https://github.com/pexcn/netspeeder.git \
   && cd netspeeder \
   && git checkout $VERSION \
   && make static \
-  && make install DESTDIR="/app" \
-  && cd .. \
+  && make install \
+  && cd - \
   && rm -r netspeeder
 
 RUN apk del .build-deps \
@@ -29,8 +29,8 @@ RUN apk del .build-deps \
 FROM alpine
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
-COPY --from=builder /app/bin/netspeeder /usr/local/bin/
-COPY entrypoint.sh /usr/local/bin/
+COPY --from=builder /usr/local/bin/netspeeder /usr/local/bin/
+COPY netspeeder.sh /usr/local/bin/
 
 USER root
-ENTRYPOINT ["entrypoint.sh"]
+ENTRYPOINT ["netspeeder.sh"]
