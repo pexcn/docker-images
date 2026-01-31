@@ -7,14 +7,14 @@
 #
 FROM rust:alpine AS builder
 
+COPY patches/*.patch /patches/
 ARG VERSION=07dcd66fd8d9f51d24bac383e9f9c0b0d6a1ad83
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git musl-dev \
   && git clone https://github.com/zhxie/pcap2socks.git \
   && cd pcap2socks \
   && git checkout $VERSION \
-  # workaround for compile
-  && sed -i 's/^.*interfaces.*$/interfaces = "0.0.8"/' Cargo.toml \
+  && for p in /patches/*.patch; do git apply -v "$p"; done \
   && cargo build --release \
   && strip target/release/pcap2socks \
   && install target/release/pcap2socks /usr/local/bin/pcap2socks \
