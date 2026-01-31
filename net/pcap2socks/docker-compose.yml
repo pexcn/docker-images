@@ -7,5 +7,5 @@ services:
     command: >
       --interface eth0
       --source 192.168.1.50
-      --publish 192.168.1.11
+      --publish 192.168.1.250
       --destination 127.0.0.1:1080
