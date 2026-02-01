@@ -4,6 +4,7 @@ services:
     container_name: pcap2socks
     restart: unless-stopped
     network_mode: host
+    init: true
     command: >
       --interface eth0
       --source 192.168.1.50
