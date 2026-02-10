@@ -30,13 +30,11 @@ RUN apk update \
 #
 # Runtime stage
 #
-# https://www.alpinelinux.org/posts/Alpine-3.19.0-released.html
-# make the version fixed at 3.18, version 3.19 maybe requires code changes.
-FROM alpine:3.18
+FROM alpine:3.23
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 RUN apk update \
-  && apk add --no-cache iptables ip6tables tzdata \
+  && apk add --no-cache iptables iptables-legacy tzdata \
   && rm -rf /var/cache/apk/*
 
 COPY --from=builder /usr/local/bin/udp2raw /usr/local/bin/
