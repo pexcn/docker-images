@@ -5,15 +5,16 @@
 #
 # Build stage
 #
-FROM alpine:3.20 AS builder
+FROM alpine:3.23 AS builder
 
-ARG VERSION=057b71f28d7c41ee220804cead976ec60c7fd5c8
+ARG VERSION=cbdf9beed3d03558b70d54e712453293f1d824f0
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git make g++ linux-headers \
   && git clone https://github.com/wangyu-/tinyfecVPN.git tinyfecvpn --recursive \
   && cd tinyfecvpn \
   && git checkout $VERSION \
-  && make OPT="-s" \
+  # also usable on arm64
+  && make OPT="-DNOLIMIT -s" amd64 \
   && install tinyvpn /usr/local/bin/tinyfecvpn \
   && cd - \
   && rm -r tinyfecvpn \
@@ -23,7 +24,7 @@ RUN apk update \
 #
 # Runtime stage
 #
-FROM alpine:3.20
+FROM alpine:3.23
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 RUN apk update \
