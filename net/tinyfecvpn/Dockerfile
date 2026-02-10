@@ -13,9 +13,9 @@ RUN apk update \
   && git clone https://github.com/wangyu-/tinyfecVPN.git tinyfecvpn --recursive \
   && cd tinyfecvpn \
   && git checkout $VERSION \
-  # also usable on arm64
+  # also available on arm64
   && make OPT="-DNOLIMIT -s" amd64 \
-  && install tinyvpn /usr/local/bin/tinyfecvpn \
+  && install tinyvpn_amd64 /usr/local/bin/tinyfecvpn \
   && cd - \
   && rm -r tinyfecvpn \
   && apk del .build-deps \
