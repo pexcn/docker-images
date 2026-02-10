@@ -59,8 +59,8 @@
     "fast_open": true,
 
     "balancer": {
-        "max_server_rtt": 3,
-        "check_interval": 30,
-        "check_best_interval": 15
+        "max_server_rtt": 5,
+        "check_interval": 20,
+        "check_best_interval": 10
     }
 }
