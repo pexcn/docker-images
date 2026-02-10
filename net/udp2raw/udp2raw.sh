@@ -13,4 +13,8 @@ setup_iptables() {
 }
 
 setup_iptables
-exec udp2raw "$@"
+if [ "$USE_AES_VARIANT" = 1 ]; then
+  exec udp2raw-aes "$@"
+else
+  exec udp2raw "$@"
+fi

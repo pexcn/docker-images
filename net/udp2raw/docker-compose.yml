@@ -10,6 +10,7 @@ services:
     environment:
       TZ: Asia/Taipei
       USE_IPTABLES_NFT_BACKEND: 0
+      USE_AES_VARIANT: 1
     command: >
       -s -l 0.0.0.0:1501 -r 127.0.0.1:1500
       --raw-mode faketcp --cipher-mode none --auth-mode none -a
