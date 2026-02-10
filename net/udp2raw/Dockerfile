@@ -42,6 +42,7 @@ COPY --from=builder /usr/local/bin/udp2raw-aes /usr/local/bin/
 COPY udp2raw.sh /usr/local/bin/
 
 ENV USE_IPTABLES_NFT_BACKEND=0
+ENV USE_AES_VARIANT=1
 
 ENTRYPOINT ["udp2raw.sh"]
 CMD ["--help"]
