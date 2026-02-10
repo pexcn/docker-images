@@ -14,7 +14,7 @@ RUN apk update \
   && cd tinyfecvpn \
   && git checkout $VERSION \
   # also available on arm64
-  && make OPT="-DNOLIMIT -s" amd64 \
+  && make OPT="-DNOLIMIT -no-pie -Wl,--build-id=none -s" amd64 \
   && install tinyvpn_amd64 /usr/local/bin/tinyfecvpn \
   && cd - \
   && rm -r tinyfecvpn \
