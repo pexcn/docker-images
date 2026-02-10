@@ -5,21 +5,23 @@
 #
 # Build stage
 #
-FROM alpine:3.19 AS builder
+FROM alpine:3.23 AS builder
 
-# patch for linux-headers to fix build
-# waiting for edge to enter the next stable version...
-ARG PATCH=https://github.com/torvalds/linux/commit/e2bca4870fdaf855651ee80b083d892599c5d982.patch
-ARG VERSION=e42f0e573221c5e0146c02fd5d71f32aa93c7221
+COPY patches/*.patch /patches/
+ARG VERSION=4208db6e27c46f3ccec8b98722af7ec23bc62e73
 RUN apk update \
-  && apk add --no-cache --virtual .build-deps git make g++ linux-headers \
-  && apk add --no-cache curl patch \
-  && curl $PATCH | patch /usr/include/linux/if_packet.h || true \
+  && apk add --no-cache --virtual .build-deps git make g++ linux-headers patch \
   && git clone https://github.com/wangyu-/udp2raw.git \
   && cd udp2raw \
   && git checkout $VERSION \
-  && make OPT="-s -pipe -Wl,--build-id=none" \
-  && install udp2raw /usr/local/bin/udp2raw \
+  && for p in /patches/*.patch; do git apply -v "$p"; done \
+  && case $(apk --print-arch) in \
+       x86_64) variant="amd64";; \
+       aarch64) variant="arm64";; \
+     esac \
+  && make OPT="-no-pie -Wl,--build-id=none -s" ${variant} ${variant}_hw_aes \
+  && install udp2raw_${variant} /usr/local/bin/udp2raw \
+  && install udp2raw_${variant}_hw_aes /usr/local/bin/udp2raw-aes \
   && cd - \
   && rm -r udp2raw \
   && apk del .build-deps \
@@ -38,6 +40,7 @@ RUN apk update \
   && rm -rf /var/cache/apk/*
 
 COPY --from=builder /usr/local/bin/udp2raw /usr/local/bin/
+COPY --from=builder /usr/local/bin/udp2raw-aes /usr/local/bin/
 COPY udp2raw.sh /usr/local/bin/
 
 ENV USE_IPTABLES_NFT_BACKEND=0
