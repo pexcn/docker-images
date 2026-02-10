@@ -93,7 +93,8 @@ revoke_iptables() {
   local comment="tinyfecvpn_${tundev}_${port}"
 
   iptables-save -t nat | grep "${comment}" | while read -r rule; do
-    iptables -w 10 -t nat "${rule/-A POSTROUTING/-D POSTROUTING}" || error "iptables rule remove failed."
+    # shellcheck disable=SC2086
+    iptables -w 10 -t nat ${rule/-A POSTROUTING/-D POSTROUTING} || error "iptables rule remove failed."
   done
   info "iptables SNAT rule removed: [${comment}]."
 }
