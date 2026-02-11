@@ -1,8 +1,8 @@
 {
     // 服务器地址
-    "server_address": "1.2.3.4",
+    "server_address": "11.22.33.44",
     // 服务器端口
-    "server_port": 150,
+    "server_port": 1500,
     // 协议
     "protocal": "udp",
     // 上传速度 [byte/s]

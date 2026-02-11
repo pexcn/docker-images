@@ -4,13 +4,13 @@
             // 备注名
             "name": "shadowsocks",
             // 目标端口
-            "dst_port": 1234,
+            "dst_port": 1776,
             // 本地端口
-            "listen_port": 1234
+            "listen_port": 1776
         },
         {
             "name": "ssh",
-            "dst_port": 22,
+            "dst_port": 2222,
             "listen_port": 2222
         }
     ]
