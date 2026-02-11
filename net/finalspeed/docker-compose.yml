@@ -11,6 +11,7 @@ services:
           memory: 512M
     environment:
       TZ: Asia/Taipei
+      USE_IPTABLES_NFT_BACKEND: 0
       # `-XX:+UseSerialGC` for lowendbox
       JAVA_OPTS: "-XX:InitialRAMPercentage=75.0 -XX:MinRAMPercentage=75.0 -XX:MaxRAMPercentage=75.0 -Xss256k -XX:+ExitOnOutOfMemoryError"
     command: server 1500
@@ -27,6 +28,7 @@ services:
           memory: 512M
     environment:
       TZ: Asia/Taipei
+      USE_IPTABLES_NFT_BACKEND: 0
       JAVA_OPTS: "-XX:InitialRAMPercentage=75.0 -XX:MinRAMPercentage=75.0 -XX:MaxRAMPercentage=75.0 -Xss256k -XX:+ExitOnOutOfMemoryError"
     volumes:
       - ./finalspeed-data/client_config.json:/fs/client_config.json:ro
