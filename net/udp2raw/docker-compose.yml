@@ -13,7 +13,7 @@ services:
       USE_AES_VARIANT: 1
     command: >
       -s -l 11.22.33.44:1024 -r 127.0.0.1:1024
-      --raw-mode faketcp --key password --cipher-mode none --auth-mode none -a
+      --raw-mode faketcp --cipher-mode none --auth-mode none -a
       --dev eth0
       --sock-buf 4096
       --log-level 3
@@ -35,8 +35,7 @@ services:
       USE_AES_VARIANT: 1
     command: >
       -c -l 127.0.0.1:1024 -r 11.22.33.44:1024
-      --raw-mode faketcp --key password --cipher-mode none --auth-mode none -a
-      --dev lo
+      --raw-mode faketcp --cipher-mode none --auth-mode none -a
       --sock-buf 4096
       --log-level 3
       --hb-mode 0
