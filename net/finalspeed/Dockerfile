@@ -26,13 +26,14 @@ FROM alpine:3.23
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 RUN apk update \
-  && apk add --no-cache openjdk8 libpcap iptables openrc xvfb-run tzdata \
+  && apk add --no-cache openjdk8 libpcap iptables iptables-legacy openrc xvfb-run tzdata \
   && rm -rf /var/cache/apk/*
 
 COPY --from=builder /finalspeed/ /fs/
 COPY *.json /fs/
 COPY finalspeed.sh /usr/local/bin/
 
+ENV USE_IPTABLES_NFT_BACKEND=0
 ENV JAVA_OPTS=
 
 WORKDIR /fs
