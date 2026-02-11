@@ -5,15 +5,15 @@
 #
 # Build stage
 #
-FROM alpine AS builder
+FROM alpine:3.23 AS builder
 
-ARG VERSION=61b24a369700c3d8248dd18fa9a524b778741454
+ARG VERSION=67bf9fba43fa76e06c778fdb9d3cf50c64399fff
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git make g++ \
-  && git clone https://github.com/wangyu-/UDPspeeder.git udpspeeder \
+  && git clone https://github.com/docker-images-source/udpspeeder.git udpspeeder \
   && cd udpspeeder \
   && git checkout $VERSION \
-  && make OPT="-s" \
+  && make OPT="-no-pie -Wl,--build-id=none -s" \
   && install speederv2 /usr/local/bin/udpspeeder \
   && cd - \
   && rm -r udpspeeder \
