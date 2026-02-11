@@ -8,11 +8,13 @@
 FROM alpine:3.23 AS builder
 
 ARG VERSION=cbdf9beed3d03558b70d54e712453293f1d824f0
+ARG SUB_VERSION=038e47cd6ecd61d4cd9b2a6970ca263388cf00b8
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git make g++ linux-headers \
   && git clone https://github.com/wangyu-/tinyfecVPN.git tinyfecvpn --recursive \
   && cd tinyfecvpn \
   && git checkout $VERSION \
+  && cd UDPspeeder && git checkout $SUB_VERSION && cd .. \
   # also available on arm64
   && make OPT="-DNOLIMIT -no-pie -Wl,--build-id=none -s" amd64 \
   && install tinyvpn_amd64 /usr/local/bin/tinyfecvpn \
