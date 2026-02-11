@@ -7,9 +7,9 @@
 #
 FROM alpine:3.23 AS builder
 
-ARG VERSION=4968786892be6013f84a83ae8030fe6ca94a92c0
+ARG VERSION=835c1fb2c0dfb44bde65637c55fdea1847999604
 RUN apk update \
-  && apk add --no-cache --virtual .build-deps git make g++ linux-headers patch \
+  && apk add --no-cache --virtual .build-deps git make g++ linux-headers \
   && git clone https://github.com/docker-images-source/udp2raw.git \
   && cd udp2raw \
   && git checkout $VERSION \

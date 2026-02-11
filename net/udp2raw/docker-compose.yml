@@ -1,21 +1,44 @@
 services:
-  udp2raw:
+  udp2raw-server:
     image: pexcn/docker-images:udp2raw
-    container_name: udp2raw
+    container_name: udp2raw-server
     restart: unless-stopped
     network_mode: host
     privileged: true
     #depends_on:
-    #  - udp2raw-0
+    #  - udp2raw-server-0
     environment:
       TZ: Asia/Taipei
       USE_IPTABLES_NFT_BACKEND: 0
       USE_AES_VARIANT: 1
     command: >
-      -s -l 0.0.0.0:1501 -r 127.0.0.1:1500
-      --raw-mode faketcp --cipher-mode none --auth-mode none -a
+      -s -l 11.22.33.44:1024 -r 127.0.0.1:1024
+      --raw-mode faketcp --key "password" --cipher-mode none --auth-mode none -a
       --dev eth0
-      --log-level 3
-      --mtu-warn 1375
-      --hb-mode 0
+      --sock-buf 4096
       --wait-lock
+      --log-level 3
+      --hb-mode 0
+      --fix-gro
+
+  udp2raw-client:
+    image: pexcn/docker-images:udp2raw
+    container_name: udp2raw-client
+    restart: unless-stopped
+    network_mode: host
+    privileged: true
+    #depends_on:
+    #  - udp2raw-client-0
+    environment:
+      TZ: Asia/Taipei
+      USE_IPTABLES_NFT_BACKEND: 0
+      USE_AES_VARIANT: 1
+    command: >
+      -c -l 127.0.0.1:1024 -r 11.22.33.44:1024
+      --raw-mode faketcp --key "password" --cipher-mode none --auth-mode none -a
+      --dev eth0
+      --sock-buf 4096
+      --wait-lock
+      --log-level 3
+      --hb-mode 0
+      --fix-gro
