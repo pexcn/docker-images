@@ -23,7 +23,7 @@ error() {
 }
 
 _remove_rules() {
-  eval "$(iptables-save | grep 'finalspeed_' | sed 's/-A INPUT/iptables -D INPUT/')"
+  eval "$(iptables-save | grep 'finalspeed_' | sed 's/-A /iptables -D /')"
   info "iptables rules removed."
 }
 
