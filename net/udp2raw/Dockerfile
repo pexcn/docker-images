@@ -7,14 +7,12 @@
 #
 FROM alpine:3.23 AS builder
 
-COPY patches/*.patch /patches/
-ARG VERSION=4208db6e27c46f3ccec8b98722af7ec23bc62e73
+ARG VERSION=4968786892be6013f84a83ae8030fe6ca94a92c0
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git make g++ linux-headers patch \
-  && git clone https://github.com/wangyu-/udp2raw.git \
+  && git clone https://github.com/docker-images-source/udp2raw.git \
   && cd udp2raw \
   && git checkout $VERSION \
-  && for p in /patches/*.patch; do git apply -v "$p"; done \
   && case $(apk --print-arch) in \
        x86_64) variant="amd64";; \
        aarch64) variant="arm64";; \
