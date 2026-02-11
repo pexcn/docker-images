@@ -5,9 +5,9 @@
 #
 # Build stage
 #
-FROM alpine AS builder
+FROM alpine:3.23 AS builder
 
-ARG VERSION=20221004
+ARG VERSION=20260211
 RUN apk update \
   && apk add --no-cache --virtual .build-deps curl \
   && mkdir finalspeed \
@@ -22,7 +22,7 @@ RUN apk update \
 #
 # Runtime stage
 #
-FROM alpine:3.16
+FROM alpine:3.23
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 RUN apk update \

@@ -1,39 +1,40 @@
 #!/bin/sh
+# shellcheck disable=SC2155,SC3043,SC3048
 
 info() {
   local green='\e[0;32m'
   local clear='\e[0m'
-  local time=$(date '+%Y-%m-%d %T')
+  local time="$(date '+%Y-%m-%d %T')"
   printf "${green}[${time}] [INFO]: ${clear}%s\n" "$*"
 }
 
 warn() {
   local yellow='\e[1;33m'
   local clear='\e[0m'
-  local time=$(date '+%Y-%m-%d %T')
+  local time="$(date '+%Y-%m-%d %T')"
   printf "${yellow}[${time}] [WARN]: ${clear}%s\n" "$*" >&2
 }
 
 error() {
   local red='\e[0;31m'
   local clear='\e[0m'
-  local time=$(date '+%Y-%m-%d %T')
+  local time="$(date '+%Y-%m-%d %T')"
   printf "${red}[${time}] [ERROR]: ${clear}%s\n" "$*" >&2
 }
 
-_clean_rules() {
-  info "clean iptables rules."
-  eval "$(iptables-save | grep 'tun_fs' | sed 's/-A/iptables -D/')"
+_remove_rules() {
+  eval "$(iptables-save | grep 'tun_fs' | sed 's/-A INPUT/iptables -D INPUT/')"
+  info "iptables rules removed."
 }
 
-_clean_dir() {
-  ! [ -d /fs/cnf ] || { info "clean /fs/cnf directory."; rm -r /fs/cnf; }
+_remove_cnf() {
+  ! [ -d /fs/cnf ] || rm -r /fs/cnf
 }
 
 _graceful_stop() {
   warn "Caught SIGTERM or SIGINT signal, graceful stopping..."
-  _clean_rules
-  _clean_dir
+  _remove_rules
+  _remove_cnf
 }
 
 _custom_server_port() {
@@ -43,16 +44,16 @@ _custom_server_port() {
 }
 
 start_server() {
-  info "start finalspeed server."
+  info "start finalspeed server..."
   [ -z "$1" ] || _custom_server_port "$1"
-  java $JAVA_OPTS -jar /fs/fss.jar &
-  wait
+  java "$JAVA_OPTS" -jar /fs/fss.jar &
+  wait $!
 }
 
 start_client() {
-  info "start finalspeed client."
-  xvfb-run -s "-screen 0 320x240x8" java $JAVA_OPTS -jar /fs/fsc.jar -b &
-  wait
+  info "start finalspeed client..."
+  xvfb-run -s "-screen 0 320x240x8" java "$JAVA_OPTS" -jar /fs/fsc.jar -b &
+  wait $!
 }
 
 main() {
