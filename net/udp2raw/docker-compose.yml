@@ -36,7 +36,7 @@ services:
     command: >
       -c -l 127.0.0.1:1024 -r 11.22.33.44:1024
       --raw-mode faketcp --key "password" --cipher-mode none --auth-mode none -a
-      --dev eth0
+      --dev lo
       --sock-buf 4096
       --wait-lock
       --log-level 3
