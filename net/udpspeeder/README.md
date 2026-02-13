@@ -1,3 +1,3 @@
-# udpspeeder
+# UDPSpeeder
 
-Refer to [tinyfecvpn](../tinyfecvpn/README.md).
+Refer to [TinyFECVPN](../tinyfecvpn/README.md).

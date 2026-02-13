@@ -13,7 +13,8 @@ services:
     command: >
       -s -l 0.0.0.0:1024
       --tun-dev tinyfecvpn-server --sub-net 10.1.1.0
-      -f10:6 --timeout 3 --log-level 3 --mssfix 0 --disable-obscure --disable-checksum
+      -f1:3,2:4,8:6,20:10 --timeout 8
+      --sock-buf 2048 --log-level 3 --disable-obscure --disable-checksum
 
   tinyfecvpn-client:
     image: pexcn/docker-images:tinyfecvpn
@@ -29,4 +30,5 @@ services:
     command: >
       -c -r 11.22.33.44:1024
       --tun-dev tinyfecvpn-client --sub-net 10.1.1.0 --keep-reconnect
-      -f10:6 --timeout 3 --log-level 3 --mssfix 0 --disable-obscure --disable-checksum
+      -f1:3,2:4,8:6,20:10 --timeout 8
+      --sock-buf 2048 --log-level 3 --disable-obscure --disable-checksum
