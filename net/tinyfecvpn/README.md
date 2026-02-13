@@ -1,15 +1,25 @@
-# tinyfecvpn
+# TinyFECVPN
 
-## Usage
+## FEC Params
 
 ```sh
+#
 # generic
-# also can try `-f20:10 --timeout 8`
-tinyfecvpn -s -l 0.0.0.0:1024 --tun-dev tinyfecvpn-server --sub-net 10.1.1.0 -f10:6 --timeout 3 --log-level 3 --mssfix 0 --disable-obscure --disable-checksum
-tinyfecvpn -c -r 11.22.33.44:1024 --tun-dev tinyfecvpn-client --sub-net 10.1.1.0 --keep-reconnect -f10:6 --timeout 3 --log-level 3 --mssfix 0 --disable-obscure --disable-checksum
+#
+# 1% loss
+-f1:2,2:2,8:3,20:4 --timeout 8
+# 10% loss
+-f1:3,2:4,8:6,20:10 --timeout 8
 
+#
 # game
-# also can try `-f2:4 --timeout 0`
-tinyfecvpn -s -l 0.0.0.0:2048 --tun-dev tinyfecvpn-server-game --sub-net 10.1.2.0 -f2:4 --timeout 1 --log-level 3 --mssfix 0 --disable-obscure --disable-checksum
-tinyfecvpn -c -r 11.22.33.44:2048 --tun-dev tinyfecvpn-client-game --sub-net 10.1.2.0 --keep-reconnect -f2:4 --timeout 1 --log-level 3 --mssfix 0 --disable-obscure --disable-checksum
+#
+# 1% loss
+-f2:2 --timeout 1
+# 10% loss
+-f2:4 --timeout 1
 ```
+
+## About `mode`
+
+For advanced users, `--mode 1` can be used, but the MTU needs to be adjusted. I still need to run more tests on this option.
