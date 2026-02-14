@@ -133,55 +133,55 @@ static void sleep_for_seconds(int seconds) {
     }
 }
 
-/* Busy-loop for approximately percent% of one second (single thread) */
-static void burn_cpu_for_one_second(int percent) {
-    const long long ONE_SEC_NS = 1000000000LL;
-
-    if (percent <= 0) {
-        sleep_for_seconds(1);
-        return;
+/* Monotonic time in nanoseconds */
+static long long now_ns(void) {
+    struct timespec ts;
+    if (clock_gettime(CLOCK_MONOTONIC, &ts) == -1) {
+        die("clock_gettime");
     }
-    if (percent >= 100) {
-        struct timespec start, now;
-        if (clock_gettime(CLOCK_MONOTONIC, &start) == -1) die("clock_gettime");
-        while (!g_stop) {
-            if (clock_gettime(CLOCK_MONOTONIC, &now) == -1) die("clock_gettime");
-            long long elapsed =
-                (now.tv_sec - start.tv_sec) * ONE_SEC_NS +
-                (now.tv_nsec - start.tv_nsec);
-            if (elapsed >= ONE_SEC_NS) break;
-        }
-        return;
-    }
+    return (long long)ts.tv_sec * 1000000000LL + ts.tv_nsec;
+}
 
-    long long busy_ns = (ONE_SEC_NS * percent) / 100;
-    struct timespec start, now;
+/* Sleep until an absolute MONOTONIC deadline (nanoseconds). */
+static void sleep_until_ns(long long deadline_ns) {
+    struct timespec ts;
+    ts.tv_sec  = (time_t)(deadline_ns / 1000000000LL);
+    ts.tv_nsec = (long)(deadline_ns % 1000000000LL);
 
-    if (clock_gettime(CLOCK_MONOTONIC, &start) == -1) die("clock_gettime");
-
-    /* Busy phase */
     while (!g_stop) {
-        if (clock_gettime(CLOCK_MONOTONIC, &now) == -1) die("clock_gettime");
-        long long elapsed =
-            (now.tv_sec - start.tv_sec) * ONE_SEC_NS +
-            (now.tv_nsec - start.tv_nsec);
-        if (elapsed >= busy_ns) break;
+        int rc = clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &ts, NULL);
+        if (rc == 0) return;
+        if (rc == EINTR) continue;
+        errno = rc;
+        die("clock_nanosleep");
+    }
+}
+
+/* Busy-loop for approximately percent% of one second (single thread).
+ * This uses a 100 ms interval algorithm similar to the older load.c:
+ * each interval consists of a busy phase followed by an idle phase.
+ */
+static void burn_cpu_for_one_second(int percent) {
+    if (percent < 0) percent = 0;
+    if (percent > 100) percent = 100;
+
+    const long long ONE_SEC = 1000000000LL;
+    long long start   = now_ns();
+    long long sec_end = start + ONE_SEC;
+
+    if (percent == 0) {
+        sleep_until_ns(sec_end);
+        return;
     }
 
-    /* Idle phase */
-    if (clock_gettime(CLOCK_MONOTONIC, &now) == -1) die("clock_gettime");
-    long long elapsed =
-        (now.tv_sec - start.tv_sec) * ONE_SEC_NS +
-        (now.tv_nsec - start.tv_nsec);
+    long long busy_end = start + (ONE_SEC * (long long)percent) / 100LL;
 
-    if (!g_stop && elapsed < ONE_SEC_NS) {
-        long long remain = ONE_SEC_NS - elapsed;
-        struct timespec ts;
-        ts.tv_sec  = remain / ONE_SEC_NS;
-        ts.tv_nsec = remain % ONE_SEC_NS;
-        while (!g_stop && nanosleep(&ts, &ts) == -1 && errno == EINTR) {
-            /* continue sleeping while interrupted and not stopping */
-        }
+    while (!g_stop && now_ns() < busy_end) {
+        /* busy loop */
+    }
+
+    if (!g_stop) {
+        sleep_until_ns(sec_end);
     }
 }
 
