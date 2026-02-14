@@ -38,7 +38,7 @@
 static int g_start_sec = 0;
 static int g_end_sec = 0;
 static int g_window_len = 0;
-static int g_total_active_seconds = 0;
+static int g_active_seconds = 0;
 static int g_min_percent = 0;
 static int g_max_percent = 0;
 
@@ -270,7 +270,7 @@ static void scheduler_loop(void) {
                 free(g_active_pattern);
                 g_active_pattern = NULL;
             }
-            g_active_pattern = generate_active_pattern(g_window_len, g_total_active_seconds);
+            g_active_pattern = generate_active_pattern(g_window_len, g_active_seconds);
             g_pattern_yday = yday;
 
             fprintf(stdout, "New day (yday=%d), generated new random active pattern.\n", yday);
@@ -316,13 +316,15 @@ static void scheduler_loop(void) {
 int main(int argc, char *argv[]) {
     if (argc != 4) {
         fprintf(stderr,
-                "Usage: %s <time_range> <total_active_seconds> <cpu_percent_range>\n"
-                "Example: %s 00:00-06:00 3600 30:60\n"
+                "Usage:\n"
+                "  %s <time_range> <active_seconds> <percent_range>\n"
+                "\n"
+                "Example:\n"
+                "  %s 00:30-06:30 7200 40:60\n"
+                "\n"
                 "Meaning:\n"
-                "  Every day between 00:00 and 06:00, there will be a total of 3600 seconds\n"
-                "  with CPU load, randomly distributed in that window.\n"
-                "  During those active seconds, overall CPU usage (averaged across cores)\n"
-                "  will fluctuate randomly between 30%% and 60%%.\n",
+                "  Every day between 00:30 and 06:30, there will be a total of 7200 seconds with CPU load, randomly distributed in that window.\n"
+                "  During those active seconds, overall CPU usage (averaged across cores) will fluctuate randomly between 40%% and 60%%.\n",
                 argv[0], argv[0]);
         return EXIT_FAILURE;
     }
@@ -330,17 +332,17 @@ int main(int argc, char *argv[]) {
     parse_time_range(argv[1], &g_start_sec, &g_end_sec);
     g_window_len = g_end_sec - g_start_sec;
 
-    g_total_active_seconds = atoi(argv[2]);
-    if (g_total_active_seconds <= 0) {
-        fprintf(stderr, "total_active_seconds must be a positive integer\n");
+    g_active_seconds = atoi(argv[2]);
+    if (g_active_seconds <= 0) {
+        fprintf(stderr, "active_seconds must be a positive integer\n");
         return EXIT_FAILURE;
     }
-    if (g_total_active_seconds > g_window_len) {
+    if (g_active_seconds > g_window_len) {
         fprintf(stderr,
-                "Warning: total_active_seconds (%d) is greater than window length (%d), "
+                "Warning: active_seconds (%d) is greater than window length (%d), "
                 "clamping to window length.\n",
-                g_total_active_seconds, g_window_len);
-        g_total_active_seconds = g_window_len;
+                g_active_seconds, g_window_len);
+        g_active_seconds = g_window_len;
     }
 
     parse_percent_range(argv[3], &g_min_percent, &g_max_percent);
@@ -374,7 +376,7 @@ int main(int argc, char *argv[]) {
             "  Worker threads : %d (logical CPUs)\n",
             g_start_sec / 3600, (g_start_sec / 60) % 60,
             g_end_sec   / 3600, (g_end_sec   / 60) % 60,
-            g_window_len, g_total_active_seconds,
+            g_window_len, g_active_seconds,
             g_min_percent, g_max_percent,
             worker_count);
     fflush(stdout);
@@ -382,7 +384,7 @@ int main(int argc, char *argv[]) {
     /* Generate today's pattern */
     int yday;
     seconds_since_midnight(&yday);
-    g_active_pattern = generate_active_pattern(g_window_len, g_total_active_seconds);
+    g_active_pattern = generate_active_pattern(g_window_len, g_active_seconds);
     g_pattern_yday = yday;
 
     /* Start worker threads */
