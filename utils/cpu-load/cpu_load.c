@@ -30,6 +30,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <pthread.h>
+#include <signal.h>
 
 #define DAY_SECONDS (24 * 3600)
 
@@ -49,6 +50,10 @@ static int g_pattern_yday = -1;
 static int g_current_percent = 0;
 static unsigned long long g_tick_counter = 0;
 
+/* Stop flag set by signal handler */
+static volatile sig_atomic_t g_stop = 0;
+
+/* Mutex + condition variable for per-second ticks */
 static pthread_mutex_t g_tick_mutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t  g_tick_cond  = PTHREAD_COND_INITIALIZER;
 
@@ -115,14 +120,16 @@ static int seconds_since_midnight(int *out_yday) {
     return lt.tm_hour * 3600 + lt.tm_min * 60 + lt.tm_sec;
 }
 
-/* Sleep with EINTR handling */
+/* Sleep with EINTR handling and stop flag awareness */
 static void sleep_for_seconds(int seconds) {
     if (seconds <= 0) return;
+
     struct timespec ts;
     ts.tv_sec  = seconds;
     ts.tv_nsec = 0;
-    while (nanosleep(&ts, &ts) == -1 && errno == EINTR) {
-        /* continue sleeping for remaining time */
+
+    while (!g_stop && nanosleep(&ts, &ts) == -1 && errno == EINTR) {
+        /* continue sleeping while interrupted and not stopping */
     }
 }
 
@@ -137,7 +144,7 @@ static void burn_cpu_for_one_second(int percent) {
     if (percent >= 100) {
         struct timespec start, now;
         if (clock_gettime(CLOCK_MONOTONIC, &start) == -1) die("clock_gettime");
-        while (1) {
+        while (!g_stop) {
             if (clock_gettime(CLOCK_MONOTONIC, &now) == -1) die("clock_gettime");
             long long elapsed =
                 (now.tv_sec - start.tv_sec) * ONE_SEC_NS +
@@ -153,7 +160,7 @@ static void burn_cpu_for_one_second(int percent) {
     if (clock_gettime(CLOCK_MONOTONIC, &start) == -1) die("clock_gettime");
 
     /* Busy phase */
-    while (1) {
+    while (!g_stop) {
         if (clock_gettime(CLOCK_MONOTONIC, &now) == -1) die("clock_gettime");
         long long elapsed =
             (now.tv_sec - start.tv_sec) * ONE_SEC_NS +
@@ -167,13 +174,13 @@ static void burn_cpu_for_one_second(int percent) {
         (now.tv_sec - start.tv_sec) * ONE_SEC_NS +
         (now.tv_nsec - start.tv_nsec);
 
-    if (elapsed < ONE_SEC_NS) {
+    if (!g_stop && elapsed < ONE_SEC_NS) {
         long long remain = ONE_SEC_NS - elapsed;
         struct timespec ts;
         ts.tv_sec  = remain / ONE_SEC_NS;
         ts.tv_nsec = remain % ONE_SEC_NS;
-        while (nanosleep(&ts, &ts) == -1 && errno == EINTR) {
-            /* continue sleeping for remaining time */
+        while (!g_stop && nanosleep(&ts, &ts) == -1 && errno == EINTR) {
+            /* continue sleeping while interrupted and not stopping */
         }
     }
 }
@@ -207,17 +214,31 @@ static int *generate_active_pattern(int window_len, int active_seconds) {
     return active;
 }
 
+/* Signal handler: just set stop flag */
+static void handle_signal(int signo) {
+    (void)signo;
+    g_stop = 1;
+}
+
 /* Worker thread: follow scheduler's per-second instruction */
 static void *worker_thread(void *arg) {
     (void)arg;
     unsigned long long seen_tick = 0;
 
     for (;;) {
+        if (g_stop) {
+            break;
+        }
+
         int percent;
 
         pthread_mutex_lock(&g_tick_mutex);
-        while (seen_tick == g_tick_counter) {
+        while (!g_stop && seen_tick == g_tick_counter) {
             pthread_cond_wait(&g_tick_cond, &g_tick_mutex);
+        }
+        if (g_stop) {
+            pthread_mutex_unlock(&g_tick_mutex);
+            break;
         }
         seen_tick = g_tick_counter;
         percent = g_current_percent;
@@ -229,12 +250,17 @@ static void *worker_thread(void *arg) {
             sleep_for_seconds(1);
         }
     }
+
     return NULL;
 }
 
 /* Scheduler: decide each second whether we should load CPU and at what percent */
 static void scheduler_loop(void) {
     for (;;) {
+        if (g_stop) {
+            break;
+        }
+
         int yday;
         int sec_today = seconds_since_midnight(&yday);
 
@@ -278,6 +304,13 @@ static void scheduler_loop(void) {
         /* Keep scheduler on a 1-second cadence */
         sleep_for_seconds(1);
     }
+
+    /* Leaving scheduler: set percent=0, wake everyone so that workers can exit quickly */
+    pthread_mutex_lock(&g_tick_mutex);
+    g_current_percent = 0;
+    g_tick_counter++;
+    pthread_cond_broadcast(&g_tick_cond);
+    pthread_mutex_unlock(&g_tick_mutex);
 }
 
 int main(int argc, char *argv[]) {
@@ -319,6 +352,19 @@ int main(int argc, char *argv[]) {
     if (nprocs < 1) nprocs = 1;
     int worker_count = (int)nprocs;
 
+    /* Install signal handlers BEFORE creating threads */
+    struct sigaction sa;
+    memset(&sa, 0, sizeof(sa));
+    sa.sa_handler = handle_signal;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+    if (sigaction(SIGINT, &sa, NULL) == -1) {
+        die("sigaction(SIGINT)");
+    }
+    if (sigaction(SIGTERM, &sa, NULL) == -1) {
+        die("sigaction(SIGTERM)");
+    }
+
     fprintf(stdout,
             "cpu-load started:\n"
             "  Time range     : %02d:%02d-%02d:%02d\n"
@@ -358,5 +404,6 @@ int main(int argc, char *argv[]) {
     }
     free(threads);
     free(g_active_pattern);
+
     return EXIT_SUCCESS;
 }
