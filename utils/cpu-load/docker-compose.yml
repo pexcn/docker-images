@@ -4,7 +4,6 @@ services:
     container_name: cpu-load
     restart: unless-stopped
     network_mode: none
-    init: true
     environment:
       TZ: Asia/Taipei
       TIME_RANGE: "00:30-06:30"
