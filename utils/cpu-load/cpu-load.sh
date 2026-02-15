@@ -1,7 +1,7 @@
 #!/bin/sh
 
+: "${PERCENT_RANGE:=40:60}"
 : "${TIME_RANGE:=00:30-06:30}"
 : "${ACTIVE_SECONDS:=7200}"
-: "${PERCENT_RANGE:=40:60}"
 
-exec cpu-load "$TIME_RANGE" "$ACTIVE_SECONDS" "$PERCENT_RANGE"
+exec cpu-load "$PERCENT_RANGE" "$TIME_RANGE" "$ACTIVE_SECONDS"
