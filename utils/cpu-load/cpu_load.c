@@ -33,6 +33,7 @@
 #include <stdatomic.h>
 #include <sched.h>
 #include <signal.h>
+#include <getopt.h>
 
 // Length of one control slice in milliseconds (default: 10 ms)
 #define SLICE_MILLIS 10
@@ -445,44 +446,76 @@ static int get_available_cpus(void) {
     return (int)sysconf(_SC_NPROCESSORS_ONLN);
 }
 
+// Show help message
+static void usage(const char *prog_name, int status)
+{
+    FILE *stream = (status == EXIT_SUCCESS) ? stdout : stderr;
+    fprintf(stream,
+            "Usage:\n"
+            "  %s -p <percent_range> -t <time_range> -d <active_seconds>\n"
+            "\n"
+            "Example:\n"
+            "  %s -p 40:60 -t 00:30-06:30 -d 7200\n"
+            "\n"
+            "Meaning:\n"
+            "  Every day between 00:30 and 06:30, there will be a total of 7200 seconds with CPU load, randomly distributed in that window.\n"
+            "  During those active seconds, overall CPU usage (averaged across cores) will fluctuate randomly between 40%% and 60%%.\n",
+            prog_name, prog_name);
+    exit(status);
+}
+
 int main(int argc, char *argv[])
 {
-    if (argc != 4) {
-        fprintf(stderr,
-                "Usage:\n"
-                "  %s <time_range> <active_seconds> <percent_range>\n"
-                "\n"
-                "Example:\n"
-                "  %s 00:30-06:30 7200 40:60\n"
-                "\n"
-                "Meaning:\n"
-                "  Every day between 00:30 and 06:30, there will be a total of 7200 seconds with CPU load, randomly distributed in that window.\n"
-                "  During those active seconds, overall CPU usage (averaged across cores) will fluctuate randomly between 40%% and 60%%.\n",
-                argv[0], argv[0]);
-        return EXIT_FAILURE;
+    const char *opt_percent_range = NULL;
+    const char *opt_time_range = NULL;
+    const char *opt_active_seconds = NULL;
+
+    int opt;
+    while ((opt = getopt(argc, argv, "p:t:d:h")) != -1) {
+        switch (opt) {
+        case 'p':
+            opt_percent_range = optarg;
+            break;
+        case 't':
+            opt_time_range = optarg;
+            break;
+        case 'd':
+            opt_active_seconds = optarg;
+            break;
+        case 'h':
+            usage(argv[0], EXIT_SUCCESS);
+            break;
+        default:
+            usage(argv[0], EXIT_FAILURE);
+            break;
+        }
+    }
+
+    if (!opt_percent_range || !opt_time_range || !opt_active_seconds || optind != argc) {
+        usage(argv[0], EXIT_FAILURE);
     }
 
     // Parse percent range
     int min_percent, max_percent;
-    if (parse_percent_range(argv[1], &min_percent, &max_percent) != 0) {
+    if (parse_percent_range(opt_percent_range, &min_percent, &max_percent) != 0) {
         fprintf(stderr,
                 "Invalid CPU percent range: %s, expected min:max, e.g. 40:60\n",
-                argv[1]);
+                opt_percent_range);
         return EXIT_FAILURE;
     }
 
     // Parse time window
     int window_start_sec, window_end_sec;
-    if (parse_time_window(argv[2], &window_start_sec, &window_end_sec) != 0) {
+    if (parse_time_window(opt_time_range, &window_start_sec, &window_end_sec) != 0) {
         fprintf(stderr,
                 "Invalid time window: %s, expected HH:MM-HH:MM, e.g. 00:30-06:30\n",
-                argv[2]);
+                opt_time_range);
         return EXIT_FAILURE;
     }
     int window_length = window_end_sec - window_start_sec;
 
     // Parse active seconds
-    long active_seconds = strtol(argv[3], NULL, 10);
+    long active_seconds = strtol(opt_active_seconds, NULL, 10);
     if (active_seconds <= 0) {
         fprintf(stderr, "active_seconds must be a positive integer\n");
         return EXIT_FAILURE;

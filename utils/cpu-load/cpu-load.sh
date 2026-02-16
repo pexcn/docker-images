@@ -4,4 +4,4 @@
 : "${TIME_RANGE:=00:30-06:30}"
 : "${ACTIVE_SECONDS:=7200}"
 
-exec cpu-load "$PERCENT_RANGE" "$TIME_RANGE" "$ACTIVE_SECONDS"
+exec cpu-load -p "$PERCENT_RANGE" -t "$TIME_RANGE" -d "$ACTIVE_SECONDS"
