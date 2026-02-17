@@ -34,6 +34,7 @@
 #include <sched.h>
 #include <signal.h>
 #include <getopt.h>
+#include <math.h>
 
 // Length of one load cycle (PWM period) in seconds.
 // 0.01s = 10ms. This provides a smooth 100Hz switching frequency.
@@ -518,6 +519,11 @@ static void usage(const char *prog_name, int status)
             "Usage:\n"
             "  %s -p <percent_range> -t <time_range> -d <active_seconds>\n"
             "\n"
+            "Options:\n"
+            "  -p  Target CPU load percent range (e.g., 40:60)\n"
+            "  -t  Time window (e.g., 00:30-06:30)\n"
+            "  -d  Active duration in seconds (e.g., 7200) or percentage (e.g., 33%%)\n"
+            "\n"
             "Example:\n"
             "  %s -p 40:60 -t 00:30-06:30 -d 7200\n",
             prog_name, prog_name);
@@ -528,7 +534,7 @@ int main(int argc, char *argv[])
 {
     const char *opt_percent_range = NULL;
     const char *opt_time_range = NULL;
-    const char *opt_active_seconds = NULL;
+    const char *opt_active_duration = NULL;
 
     int opt;
     while ((opt = getopt(argc, argv, "p:t:d:h")) != -1) {
@@ -540,7 +546,7 @@ int main(int argc, char *argv[])
             opt_time_range = optarg;
             break;
         case 'd':
-            opt_active_seconds = optarg;
+            opt_active_duration = optarg;
             break;
         case 'h':
             usage(argv[0], EXIT_SUCCESS);
@@ -551,7 +557,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    if (!opt_percent_range || !opt_time_range || !opt_active_seconds || optind != argc) {
+    if (!opt_percent_range || !opt_time_range || !opt_active_duration || optind != argc) {
         usage(argv[0], EXIT_FAILURE);
     }
 
@@ -571,7 +577,22 @@ int main(int argc, char *argv[])
     int window_duration = window_end_sec - window_start_sec;
 
     // Parse active seconds
-    long active_seconds = strtol(opt_active_seconds, NULL, 10);
+    long active_seconds = 0;
+    char *pct_ptr = strchr(opt_active_duration, '%');
+
+    if (pct_ptr) {
+        // Parse as percentage
+        double pct = strtod(opt_active_duration, NULL);
+        if (pct <= 0.0 || pct > 100.0) {
+            fprintf(stderr, "Invalid active percentage: %s (must be > 0%% and <= 100%%)\n", opt_active_duration);
+            return EXIT_FAILURE;
+        }
+        active_seconds = (long)((double)window_duration * (pct / 100.0));
+    } else {
+        // Parse as absolute seconds
+        active_seconds = strtol(opt_active_duration, NULL, 10);
+    }
+
     if (active_seconds <= 0) {
         fprintf(stderr, "active_seconds must be a positive integer\n");
         return EXIT_FAILURE;
