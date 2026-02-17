@@ -42,24 +42,24 @@
 
 // High frequency control parameters
 #define CONTROL_STEP_SEC 0.1
-#define STEPS_PER_SEC    10
+#define STEPS_PER_SEC 10
 
 // Proportional gain for the simple controller (actually an integral gain)
 #define KP 0.5
 
 // Global atomic flags / parameters
-static atomic_int g_running        = 1;  // global "keep running" flag
-static atomic_int g_load_enabled   = 0;  // 1 = workers should generate load, 0 = idle
-static atomic_int g_target_percent = 0;  // per-core busy percentage for workers
+static atomic_int g_running = 1; // global "keep running" flag
+static atomic_int g_load_enabled = 0; // 1 = workers should generate load, 0 = idle
+static atomic_int g_target_percent = 0; // per-core busy percentage for workers
 
 // Stop flag set by signal handler (mainly for debugging / observability)
 static volatile sig_atomic_t g_stop_flag = 0;
 
 // CPU usage measurement from /proc/stat
 static unsigned long long g_prev_total_jiffies = 0;
-static unsigned long long g_prev_idle_jiffies  = 0;
-static int    g_cpu_usage_inited = 0;   // 0 = first sample, no delta yet
-static double g_last_cpu_usage   = 0.0; // last measured global CPU usage (0..100)
+static unsigned long long g_prev_idle_jiffies = 0;
+static int g_cpu_usage_inited = 0; // 0 = first sample, no delta yet
+static double g_last_cpu_usage = 0.0; // last measured global CPU usage (0..100)
 
 // Global file pointer for /proc/stat to avoid frequent open/close
 static FILE *g_proc_stat_fp = NULL;
@@ -72,7 +72,7 @@ static double timespec_diff_sec(const struct timespec *start,
                                 const struct timespec *end)
 {
     time_t sec = end->tv_sec - start->tv_sec;
-    long   nsec = end->tv_nsec - start->tv_nsec;
+    long nsec = end->tv_nsec - start->tv_nsec;
     return (double)sec + (double)nsec / 1000000000.0;
 }
 
@@ -87,7 +87,7 @@ static void burn_cpu_loops(unsigned long loops)
         // Compiler barrier: tells the compiler that 'v' is modified/read here,
         // preventing the loop from being optimized away (Dead Code Elimination),
         // without generating extra instructions like volatile memory access would.
-        __asm__ volatile ("" : "+r" (v));
+        __asm__ volatile("" : "+r"(v));
     }
 }
 
@@ -206,7 +206,7 @@ static void sleep_for(double seconds)
     }
 
     struct timespec req;
-    req.tv_sec  = (time_t)seconds;
+    req.tv_sec = (time_t)seconds;
     req.tv_nsec = (long)((seconds - (double)req.tv_sec) * 1000000000L);
 
     // Normalize nsec
@@ -302,22 +302,21 @@ static int parse_percent_range(const char *input, int *out_min, int *out_max)
         return -1;
     }
 
-    char   buf[64];
+    char buf[64];
     size_t len_min = (size_t)(sep - input);
     size_t len_max = strlen(sep + 1);
 
-    if (len_min == 0 || len_min >= sizeof(buf) ||
-        len_max == 0 || len_max >= sizeof(buf)) {
+    if (len_min == 0 || len_min >= sizeof(buf) || len_max == 0 || len_max >= sizeof(buf)) {
         return -1;
     }
 
     memcpy(buf, input, len_min);
     buf[len_min] = '\0';
-    int min_val  = atoi(buf);
+    int min_val = atoi(buf);
 
     memcpy(buf, sep + 1, len_max);
     buf[len_max] = '\0';
-    int max_val  = atoi(buf);
+    int max_val = atoi(buf);
 
     if (min_val < 0 || max_val < 0 || min_val > 100 || max_val > 100 || min_val > max_val) {
         return -1;
@@ -340,12 +339,11 @@ static int parse_time_window(const char *input, int *out_start_sec, int *out_end
         return -1;
     }
 
-    char   left[16], right[16];
-    size_t len_left  = (size_t)(sep - input);
+    char left[16], right[16];
+    size_t len_left = (size_t)(sep - input);
     size_t len_right = strlen(sep + 1);
 
-    if (len_left == 0 || len_left >= sizeof(left) ||
-        len_right == 0 || len_right >= sizeof(right)) {
+    if (len_left == 0 || len_left >= sizeof(left) || len_right == 0 || len_right >= sizeof(right)) {
         return -1;
     }
 
@@ -355,7 +353,7 @@ static int parse_time_window(const char *input, int *out_start_sec, int *out_end
     right[len_right] = '\0';
 
     int start_hour, start_min, end_hour, end_min;
-    if (sscanf(left,  "%d:%d", &start_hour, &start_min) != 2) {
+    if (sscanf(left, "%d:%d", &start_hour, &start_min) != 2) {
         return -1;
     }
     if (sscanf(right, "%d:%d", &end_hour, &end_min) != 2) {
@@ -368,7 +366,7 @@ static int parse_time_window(const char *input, int *out_start_sec, int *out_end
     }
 
     int start = start_hour * 3600 + start_min * 60;
-    int end   = end_hour * 3600 + end_min * 60;
+    int end = end_hour * 3600 + end_min * 60;
 
     // For simplicity: only support start < end within the same day.
     if (start >= end) {
@@ -376,7 +374,7 @@ static int parse_time_window(const char *input, int *out_start_sec, int *out_end
     }
 
     *out_start_sec = start;
-    *out_end_sec   = end;
+    *out_end_sec = end;
     return 0;
 }
 
@@ -403,14 +401,13 @@ static int read_proc_stat(unsigned long long *out_total, unsigned long long *out
     // cpu user nice system idle iowait irq softirq steal guest guest_nice
     unsigned long long user = 0, nice = 0, system = 0;
     unsigned long long idle_val = 0, iowait = 0;
-    int items_read = sscanf(line,
-                         "cpu  %llu %llu %llu %llu %llu",
+    int items_read = sscanf(line, "cpu  %llu %llu %llu %llu %llu",
                          &user, &nice, &system, &idle_val, &iowait);
     if (items_read < 4) {
         return -1;
     }
 
-    *out_idle  = idle_val + iowait;
+    *out_idle = idle_val + iowait;
     *out_total = user + nice + system + *out_idle;
     return 0;
 }
@@ -425,25 +422,27 @@ static void update_cpu_usage(void)
 
     if (!g_cpu_usage_inited) {
         g_prev_total_jiffies = curr_total;
-        g_prev_idle_jiffies  = curr_idle;
-        g_cpu_usage_inited   = 1;
+        g_prev_idle_jiffies = curr_idle;
+        g_cpu_usage_inited = 1;
         // On first sample, we do not know the usage yet; keep 0.
-        g_last_cpu_usage     = 0.0;
+        g_last_cpu_usage = 0.0;
         return;
     }
 
     unsigned long long delta_total = curr_total - g_prev_total_jiffies;
-    unsigned long long delta_idle  = curr_idle  - g_prev_idle_jiffies;
-    g_prev_total_jiffies           = curr_total;
-    g_prev_idle_jiffies            = curr_idle;
+    unsigned long long delta_idle = curr_idle - g_prev_idle_jiffies;
+    g_prev_total_jiffies = curr_total;
+    g_prev_idle_jiffies = curr_idle;
 
     if (delta_total == 0) {
         return;
     }
 
     double usage = 100.0 * (double)(delta_total - delta_idle) / (double)delta_total;
-    if (usage < 0.0)   usage = 0.0;
-    if (usage > 100.0) usage = 100.0;
+    if (usage < 0.0)
+        usage = 0.0;
+    if (usage > 100.0)
+        usage = 100.0;
 
     g_last_cpu_usage = usage;
 }
@@ -460,7 +459,7 @@ static void get_day_time(int *sec_of_day, int *yday)
     localtime_r(&now, &tm_now);
 
     *sec_of_day = tm_now.tm_hour * 3600 + tm_now.tm_min * 60 + tm_now.tm_sec;
-    *yday       = tm_now.tm_yday;
+    *yday = tm_now.tm_yday;
 }
 
 // Signal handler: request a graceful shutdown
@@ -468,7 +467,7 @@ static void handle_signal(int signo)
 {
     (void)signo;
     g_stop_flag = 1;
-    atomic_store_explicit(&g_running,      0, memory_order_relaxed);
+    atomic_store_explicit(&g_running, 0, memory_order_relaxed);
     atomic_store_explicit(&g_load_enabled, 0, memory_order_relaxed);
 }
 
@@ -502,7 +501,8 @@ static void *worker_thread(void *arg)
 }
 
 // Helper to count available CPUs accurately
-static int get_available_cpus(void) {
+static int get_available_cpus(void)
+{
     cpu_set_t set;
     CPU_ZERO(&set);
     if (sched_getaffinity(0, sizeof(set), &set) == 0) {
@@ -588,7 +588,7 @@ int main(int argc, char *argv[])
         // Parse as percentage
         double pct = strtod(opt_active_duration, NULL);
         if (pct <= 0.0 || pct > 100.0) {
-            fprintf(stderr, "Invalid active percentage: %s (must be > 0%% and <= 100%%)\n", opt_active_duration);
+            fprintf(stderr, "Invalid active percentage: %s\n", opt_active_duration);
             return EXIT_FAILURE;
         }
         active_duration = (long)((double)window_duration * (pct / 100.0));
@@ -655,7 +655,7 @@ int main(int argc, char *argv[])
             "  Worker threads : %d\n",
             min_percent, max_percent,
             window_start_sec / 3600, (window_start_sec / 60) % 60,
-            window_end_sec   / 3600, (window_end_sec   / 60) % 60,
+            window_end_sec / 3600, (window_end_sec / 60) % 60,
             window_duration, active_duration, min_active_seconds, n_cpus);
     fflush(stdout);
 
@@ -718,7 +718,7 @@ int main(int argc, char *argv[])
 
         // We are inside today's window
         long remaining_active = active_duration - used_active_today;
-        int  remaining_time   = window_end_sec - sec_of_day;
+        int remaining_time = window_end_sec - sec_of_day;
 
         if (remaining_active <= 0 || remaining_time <= 0) {
             // Already used all active seconds today; stay idle until window ends.
@@ -786,13 +786,15 @@ int main(int argc, char *argv[])
             integrator_state += error * KP;
 
             // Clamp integrator
-            if (integrator_state < 0.0) integrator_state = 0.0;
-            if (integrator_state > 100.0) integrator_state = 100.0;
+            if (integrator_state < 0.0)
+                integrator_state = 0.0;
+            if (integrator_state > 100.0)
+                integrator_state = 100.0;
 
             // Push to workers
             int target_per_core = (int)(integrator_state + 0.5);
             atomic_store_explicit(&g_target_percent, target_per_core, memory_order_relaxed);
-            
+
             sleep_for(CONTROL_STEP_SEC);
 
             update_cpu_usage();
