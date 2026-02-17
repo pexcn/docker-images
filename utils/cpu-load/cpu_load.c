@@ -526,7 +526,7 @@ static void usage(const char *prog_name, int status)
             "  -m  Minimum continuous active seconds per burst\n"
             "\n"
             "Example:\n"
-            "  %s -p 40:60 -t 00:30-06:30 -d 20% -m 60\n",
+            "  %s -p 40:60 -t 00:30-06:30 -d 20%% -m 60\n",
             prog_name, prog_name);
     exit(status);
 }
