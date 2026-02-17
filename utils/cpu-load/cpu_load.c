@@ -81,7 +81,7 @@ static void burn_cpu_loops(unsigned long loops)
     for (unsigned long i = 0; i < loops; ++i) {
         // Simple integer arithmetic mix (XOR + ADD)
         v = (v ^ 0x5AA5) + i;
-        
+
         // Compiler barrier: tells the compiler that 'v' is modified/read here,
         // preventing the loop from being optimized away (Dead Code Elimination),
         // without generating extra instructions like volatile memory access would.
@@ -141,6 +141,8 @@ static void sleep_for(double seconds)
     struct timespec req;
     req.tv_sec  = (time_t)seconds;
     req.tv_nsec = (long)((seconds - (double)req.tv_sec) * 1000000000L);
+
+    // Normalize nsec
     if (req.tv_nsec < 0) {
         req.tv_nsec = 0;
     } else if (req.tv_nsec >= 1000000000L) {
@@ -223,84 +225,84 @@ static void generate_load_interval(double interval_sec, int percent)
 }
 
 // Parse percent range "min:max"
-static int parse_percent_range(const char *s, int *out_min, int *out_max)
+static int parse_percent_range(const char *input, int *out_min, int *out_max)
 {
-    if (!s || !out_min || !out_max) {
+    if (!input || !out_min || !out_max) {
         return -1;
     }
 
-    char *colon = strchr(s, ':');
-    if (!colon) {
+    char *sep = strchr(input, ':');
+    if (!sep) {
         return -1;
     }
 
     char   buf[64];
-    size_t len1 = (size_t)(colon - s);
-    size_t len2 = strlen(colon + 1);
+    size_t len_min = (size_t)(sep - input);
+    size_t len_max = strlen(sep + 1);
 
-    if (len1 == 0 || len1 >= sizeof(buf) ||
-        len2 == 0 || len2 >= sizeof(buf)) {
+    if (len_min == 0 || len_min >= sizeof(buf) ||
+        len_max == 0 || len_max >= sizeof(buf)) {
         return -1;
     }
 
-    memcpy(buf, s, len1);
-    buf[len1] = '\0';
-    int minp  = atoi(buf);
+    memcpy(buf, input, len_min);
+    buf[len_min] = '\0';
+    int min_val  = atoi(buf);
 
-    memcpy(buf, colon + 1, len2);
-    buf[len2] = '\0';
-    int maxp  = atoi(buf);
+    memcpy(buf, sep + 1, len_max);
+    buf[len_max] = '\0';
+    int max_val  = atoi(buf);
 
-    if (minp < 0 || maxp < 0 || minp > 100 || maxp > 100 || minp > maxp) {
+    if (min_val < 0 || max_val < 0 || min_val > 100 || max_val > 100 || min_val > max_val) {
         return -1;
     }
 
-    *out_min = minp;
-    *out_max = maxp;
+    *out_min = min_val;
+    *out_max = max_val;
     return 0;
 }
 
 // Parse time window "HH:MM-HH:MM" (same day, start < end)
-static int parse_time_window(const char *s, int *out_start_sec, int *out_end_sec)
+static int parse_time_window(const char *input, int *out_start_sec, int *out_end_sec)
 {
-    if (!s || !out_start_sec || !out_end_sec) {
+    if (!input || !out_start_sec || !out_end_sec) {
         return -1;
     }
 
-    char *dash = strchr(s, '-');
-    if (!dash) {
+    char *sep = strchr(input, '-');
+    if (!sep) {
         return -1;
     }
 
     char   left[16], right[16];
-    size_t len_left  = (size_t)(dash - s);
-    size_t len_right = strlen(dash + 1);
+    size_t len_left  = (size_t)(sep - input);
+    size_t len_right = strlen(sep + 1);
 
     if (len_left == 0 || len_left >= sizeof(left) ||
         len_right == 0 || len_right >= sizeof(right)) {
         return -1;
     }
 
-    memcpy(left, s, len_left);
+    memcpy(left, input, len_left);
     left[len_left] = '\0';
-    memcpy(right, dash + 1, len_right);
+    memcpy(right, sep + 1, len_right);
     right[len_right] = '\0';
 
-    int sh, sm, eh, em;
-    if (sscanf(left,  "%d:%d", &sh, &sm) != 2) {
+    int start_hour, start_min, end_hour, end_min;
+    if (sscanf(left,  "%d:%d", &start_hour, &start_min) != 2) {
         return -1;
     }
-    if (sscanf(right, "%d:%d", &eh, &em) != 2) {
-        return -1;
-    }
-
-    if (sh < 0 || sh > 23 || eh < 0 || eh > 23 ||
-        sm < 0 || sm > 59 || em < 0 || em > 59) {
+    if (sscanf(right, "%d:%d", &end_hour, &end_min) != 2) {
         return -1;
     }
 
-    int start = sh * 3600 + sm * 60;
-    int end   = eh * 3600 + em * 60;
+    if (start_hour < 0 || start_hour > 23 || end_hour < 0 || end_hour > 23 ||
+        start_min < 0 || start_min > 59 || end_min < 0 || end_min > 59) {
+        return -1;
+    }
+
+    int start = start_hour * 3600 + start_min * 60;
+    int end   = end_hour * 3600 + end_min * 60;
 
     // For simplicity: only support start < end within the same day.
     if (start >= end) {
@@ -313,13 +315,11 @@ static int parse_time_window(const char *s, int *out_start_sec, int *out_end_sec
 }
 
 // Read /proc/stat and update global CPU usage
-static int read_proc_stat(unsigned long long *total, unsigned long long *idle)
+static int read_proc_stat(unsigned long long *out_total, unsigned long long *out_idle)
 {
-    if (!total || !idle) {
+    if (!out_total || !out_idle) {
         return -1;
     }
-
-    // Check global file pointer
     if (!g_proc_stat_fp) {
         return -1;
     }
@@ -336,47 +336,46 @@ static int read_proc_stat(unsigned long long *total, unsigned long long *idle)
     // Format (Linux):
     // cpu user nice system idle iowait irq softirq steal guest guest_nice
     unsigned long long user = 0, nice = 0, system = 0;
-    unsigned long long idle_v = 0, iowait = 0;
-    int matched = sscanf(line,
+    unsigned long long idle_val = 0, iowait = 0;
+    int items_read = sscanf(line,
                          "cpu  %llu %llu %llu %llu %llu",
-                         &user, &nice, &system, &idle_v, &iowait);
-    if (matched < 4) {
+                         &user, &nice, &system, &idle_val, &iowait);
+    if (items_read < 4) {
         return -1;
     }
 
-    *idle  = idle_v + iowait;
-    *total = user + nice + system + *idle;
+    *out_idle  = idle_val + iowait;
+    *out_total = user + nice + system + *out_idle;
     return 0;
 }
 
 // Update the global CPU usage value by sampling /proc/stat and computing a delta.
 static void update_cpu_usage(void)
 {
-    unsigned long long total = 0, idle = 0;
-    if (read_proc_stat(&total, &idle) != 0) {
-        // If we cannot read, keep previous value.
+    unsigned long long curr_total = 0, curr_idle = 0;
+    if (read_proc_stat(&curr_total, &curr_idle) != 0) {
         return;
     }
 
     if (!g_cpu_usage_inited) {
-        g_prev_total_jiffies = total;
-        g_prev_idle_jiffies  = idle;
+        g_prev_total_jiffies = curr_total;
+        g_prev_idle_jiffies  = curr_idle;
         g_cpu_usage_inited   = 1;
         // On first sample, we do not know the usage yet; keep 0.
         g_last_cpu_usage     = 0.0;
         return;
     }
 
-    unsigned long long dtotal = total - g_prev_total_jiffies;
-    unsigned long long didle  = idle  - g_prev_idle_jiffies;
-    g_prev_total_jiffies      = total;
-    g_prev_idle_jiffies       = idle;
+    unsigned long long delta_total = curr_total - g_prev_total_jiffies;
+    unsigned long long delta_idle  = curr_idle  - g_prev_idle_jiffies;
+    g_prev_total_jiffies           = curr_total;
+    g_prev_idle_jiffies            = curr_idle;
 
-    if (dtotal == 0) {
+    if (delta_total == 0) {
         return;
     }
 
-    double usage = 100.0 * (double)(dtotal - didle) / (double)dtotal;
+    double usage = 100.0 * (double)(delta_total - delta_idle) / (double)delta_total;
     if (usage < 0.0)   usage = 0.0;
     if (usage > 100.0) usage = 100.0;
 
@@ -410,15 +409,15 @@ static void handle_signal(int signo)
 // Worker thread: generate CPU load as instructed
 static void *worker_thread(void *arg)
 {
-    int cpu = *(int *)arg;
+    int cpu_index = *(int *)arg;
     free(arg);
 
     // Pin this thread to the given CPU, best-effort.
     cpu_set_t set;
     CPU_ZERO(&set);
-    CPU_SET(cpu, &set);
+    CPU_SET(cpu_index, &set);
     if (pthread_setaffinity_np(pthread_self(), sizeof(set), &set) != 0) {
-        // If setting affinity fails, just continue without pinning.
+        // Continue without pinning if failed
     }
 
     while (atomic_load_explicit(&g_running, memory_order_relaxed)) {
@@ -429,8 +428,8 @@ static void *worker_thread(void *arg)
             continue;
         }
 
-        int percent = atomic_load_explicit(&g_target_percent, memory_order_relaxed);
-        generate_load_interval(CONTROL_STEP_SEC, percent);
+        int target = atomic_load_explicit(&g_target_percent, memory_order_relaxed);
+        generate_load_interval(CONTROL_STEP_SEC, target);
     }
 
     return NULL;
@@ -455,11 +454,7 @@ static void usage(const char *prog_name, int status)
             "  %s -p <percent_range> -t <time_range> -d <active_seconds>\n"
             "\n"
             "Example:\n"
-            "  %s -p 40:60 -t 00:30-06:30 -d 7200\n"
-            "\n"
-            "Meaning:\n"
-            "  Every day between 00:30 and 06:30, there will be a total of 7200 seconds with CPU load, randomly distributed in that window.\n"
-            "  During those active seconds, overall CPU usage (averaged across cores) will fluctuate randomly between 40%% and 60%%.\n",
+            "  %s -p 40:60 -t 00:30-06:30 -d 7200\n",
             prog_name, prog_name);
     exit(status);
 }
@@ -498,21 +493,17 @@ int main(int argc, char *argv[])
     // Parse percent range
     int min_percent, max_percent;
     if (parse_percent_range(opt_percent_range, &min_percent, &max_percent) != 0) {
-        fprintf(stderr,
-                "Invalid CPU percent range: %s, expected min:max, e.g. 40:60\n",
-                opt_percent_range);
+        fprintf(stderr, "Invalid CPU percent range: %s\n", opt_percent_range);
         return EXIT_FAILURE;
     }
 
     // Parse time window
     int window_start_sec, window_end_sec;
     if (parse_time_window(opt_time_range, &window_start_sec, &window_end_sec) != 0) {
-        fprintf(stderr,
-                "Invalid time window: %s, expected HH:MM-HH:MM, e.g. 00:30-06:30\n",
-                opt_time_range);
+        fprintf(stderr, "Invalid time window: %s\n", opt_time_range);
         return EXIT_FAILURE;
     }
-    int window_length = window_end_sec - window_start_sec;
+    int window_duration = window_end_sec - window_start_sec;
 
     // Parse active seconds
     long active_seconds = strtol(opt_active_seconds, NULL, 10);
@@ -521,28 +512,23 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    if (active_seconds > window_length) {
-        // We clamp to window_length seconds (at most one load second per real second).
+    if (active_seconds > window_duration) {
         fprintf(stderr,
-                "Warning: active_seconds (%ld) is greater than window length (%d), clamping to window length.\n",
-                active_seconds, window_length);
-        active_seconds = window_length;
+                "Warning: active_seconds (%ld) > window duration (%d), clamping.\n",
+                active_seconds, window_duration);
+        active_seconds = window_duration;
     }
 
     // Initialize random seed
     srandom((unsigned int)(time(NULL) ^ getpid()));
 
-    // Install signal handlers before creating worker threads
+    // Install signal handlers
     struct sigaction sa;
     memset(&sa, 0, sizeof(sa));
     sa.sa_handler = handle_signal;
     sigemptyset(&sa.sa_mask);
-    if (sigaction(SIGINT, &sa, NULL) != 0) {
-        perror("sigaction(SIGINT)");
-    }
-    if (sigaction(SIGTERM, &sa, NULL) != 0) {
-        perror("sigaction(SIGTERM)");
-    }
+    sigaction(SIGINT, &sa, NULL);
+    sigaction(SIGTERM, &sa, NULL);
 
     // Detect number of CPUs and create worker threads
     int n_cpus = get_available_cpus();
@@ -563,13 +549,13 @@ int main(int argc, char *argv[])
     fprintf(stdout,
             "cpu-load started:\n"
             "  Time range     : %02d:%02d-%02d:%02d\n"
-            "  Window length  : %d seconds\n"
+            "  Window duration: %d seconds\n"
             "  Active seconds : %ld seconds per day\n"
             "  CPU range      : %d%%-%d%%\n"
-            "  Worker threads : %d (logical CPUs)\n",
+            "  Worker threads : %d\n",
             window_start_sec / 3600, (window_start_sec / 60) % 60,
             window_end_sec   / 3600, (window_end_sec   / 60) % 60,
-            window_length, active_seconds,
+            window_duration, active_seconds,
             min_percent, max_percent,
             n_cpus);
     fflush(stdout);
@@ -578,39 +564,23 @@ int main(int argc, char *argv[])
     pthread_t *threads = calloc((size_t)n_cpus, sizeof(pthread_t));
     if (!threads) {
         perror("calloc");
-        if (g_proc_stat_fp) {
-            fclose(g_proc_stat_fp);
-        }
+        fclose(g_proc_stat_fp);
         return EXIT_FAILURE;
     }
 
     for (int i = 0; i < n_cpus; ++i) {
         int *cpu_id = malloc(sizeof(int));
         if (!cpu_id) {
-            perror("malloc");
-            free(threads);
-            if (g_proc_stat_fp) {
-                fclose(g_proc_stat_fp);
-            }
             return EXIT_FAILURE;
         }
         *cpu_id = i;
-
-        if (pthread_create(&threads[i], NULL, worker_thread, cpu_id) != 0) {
-            perror("pthread_create");
-            free(cpu_id);
-            free(threads);
-            if (g_proc_stat_fp) {
-                fclose(g_proc_stat_fp);
-            }
-            return EXIT_FAILURE;
-        }
+        pthread_create(&threads[i], NULL, worker_thread, cpu_id);
     }
 
-    // Controller state: our own busy percentage contribution.
-    double controller_own_percent = 0.0;
+    // Controller state: The accumulated output of the integral controller
+    double integrator_state = 0.0;
 
-    // Scheduler loop (main thread)
+    // Scheduler loop
     int last_yday = -1;
     long used_active_today = 0;
 
@@ -645,30 +615,30 @@ int main(int argc, char *argv[])
 
         // We are inside today's window
         long remaining_active = active_seconds - used_active_today;
-        int remaining_window_seconds = window_end_sec - sec_of_day;
+        int  remaining_time   = window_end_sec - sec_of_day;
 
-        if (remaining_active <= 0 || remaining_window_seconds <= 0) {
+        if (remaining_active <= 0 || remaining_time <= 0) {
             // Already used all active seconds today; stay idle until window ends.
             atomic_store_explicit(&g_load_enabled, 0, memory_order_relaxed);
-            bounded_sleep((double)remaining_window_seconds, 10.0);
+            bounded_sleep((double)remaining_time, 10.0);
             continue;
         }
 
-        // Decide whether this second should be a "candidate load second"
-        int load_candidate;
-        if (remaining_active >= remaining_window_seconds) {
+        // Determine if we should activate load this second
+        int should_generate_load = 0;
+        if (remaining_active >= remaining_time) {
             // We must load in every remaining second to consume quota
-            load_candidate = 1;
+            should_generate_load = 1;
         } else {
-            double p = (double)remaining_active / (double)remaining_window_seconds;
-            double r = (double)random() / (double)RAND_MAX;
-            load_candidate = (r < p) ? 1 : 0;
+            double prob = (double)remaining_active / (double)remaining_time;
+            double rand_val = (double)random() / (double)RAND_MAX;
+            should_generate_load = (rand_val < prob) ? 1 : 0;
         }
 
         // Use last measured global CPU usage
         double current_usage = g_cpu_usage_inited ? g_last_cpu_usage : 0.0;
 
-        if (!load_candidate) {
+        if (!should_generate_load) {
             // This second is not selected for active load: keep workers idle.
             atomic_store_explicit(&g_load_enabled, 0, memory_order_relaxed);
 
@@ -695,31 +665,28 @@ int main(int argc, char *argv[])
 
             // PID Calculation
             double error = (double)target_global - current_usage;
-            controller_own_percent += KP * error;
+            integrator_state += error * KP;
 
-            if (controller_own_percent < 0.0) controller_own_percent = 0.0;
-            if (controller_own_percent > 100.0) controller_own_percent = 100.0;
-
-            int own_percent_int = (int)(controller_own_percent + 0.5);
+            // Clamp integrator
+            if (integrator_state < 0.0) integrator_state = 0.0;
+            if (integrator_state > 100.0) integrator_state = 100.0;
 
             // Push to workers
-            atomic_store_explicit(&g_target_percent, own_percent_int, memory_order_relaxed);
+            int target_per_core = (int)(integrator_state + 0.5);
+            atomic_store_explicit(&g_target_percent, target_per_core, memory_order_relaxed);
             
-            // Wait for 1 tick (0.1s)
             sleep_for(CONTROL_STEP_SEC);
 
-            // Read Feedback
             update_cpu_usage();
             if (g_cpu_usage_inited) {
                 current_usage = g_last_cpu_usage;
             }
         }
 
-        // This second counts towards the active_seconds budget
         used_active_today += 1;
     }
 
-    // Graceful shutdown: ensure workers see g_running == 0
+    // Shutdown
     atomic_store_explicit(&g_running, 0, memory_order_relaxed);
     atomic_store_explicit(&g_load_enabled, 0, memory_order_relaxed);
 
@@ -728,10 +695,8 @@ int main(int argc, char *argv[])
     }
     free(threads);
 
-    // Close global file pointer
     if (g_proc_stat_fp) {
         fclose(g_proc_stat_fp);
-        g_proc_stat_fp = NULL;
     }
 
     return EXIT_SUCCESS;
