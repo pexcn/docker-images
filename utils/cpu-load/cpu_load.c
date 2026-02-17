@@ -35,8 +35,9 @@
 #include <signal.h>
 #include <getopt.h>
 
-// Length of one control slice in milliseconds (default: 10 ms)
-#define SLICE_MILLIS 10
+// Length of one load cycle (PWM period) in seconds.
+// 0.01s = 10ms. This provides a smooth 100Hz switching frequency.
+#define LOAD_CYCLE_SEC 0.01
 
 // High frequency control parameters
 #define CONTROL_STEP_SEC 0.1
@@ -127,7 +128,7 @@ static void busy_wait(double seconds)
     }
 
     const clockid_t clk = CLOCK_MONOTONIC_RAW;
-    const double target_chunk = 0.002; // 2ms target work chunk
+    const double target_chunk = 0.002; // 2ms target work chunk for calibration
     const unsigned long min_loops = 50;
     const unsigned long max_loops = 100000000UL;
 
@@ -243,8 +244,7 @@ static void bounded_sleep(double seconds, double max_step)
 }
 
 // Generate CPU load for approximately "interval_sec" seconds with
-// the given "percent" usage on this core. The implementation uses
-// short slices (e.g., 10 ms) for smoother average CPU usage.
+// the given "percent" usage on this core.
 static void generate_load_interval(double interval_sec, int percent)
 {
     if (interval_sec <= 0.0) {
@@ -274,7 +274,7 @@ static void generate_load_interval(double interval_sec, int percent)
         }
 
         double remaining = interval_sec - elapsed;
-        double max_slice = (double)SLICE_MILLIS / 1000.0;
+        double max_slice = LOAD_CYCLE_SEC;
         double slice = (remaining > max_slice) ? max_slice : remaining;
 
         double busy_sec = slice * (double)percent / 100.0;
@@ -612,7 +612,7 @@ int main(int argc, char *argv[])
     calibrate_cpu_speed();
 
     fprintf(stdout,
-            "cpu-load started:\n"
+            "CPU Load started:\n"
             "  Time range     : %02d:%02d-%02d:%02d\n"
             "  Window duration: %d seconds\n"
             "  Active seconds : %ld seconds per day\n"
