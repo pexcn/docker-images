@@ -517,15 +517,16 @@ static void usage(const char *prog_name, int status)
     FILE *stream = (status == EXIT_SUCCESS) ? stdout : stderr;
     fprintf(stream,
             "Usage:\n"
-            "  %s -p <percent_range> -t <time_range> -d <active_duration>\n"
+            "  %s -p <percent_range> -t <time_range> -d <active_duration> [-m <min_active_seconds>]\n"
             "\n"
             "Options:\n"
             "  -p  Percent range (e.g., 40:60)\n"
             "  -t  Time window (e.g., 00:30-06:30)\n"
             "  -d  Active duration in seconds (e.g., 7200) or percentage (e.g., 33%%)\n"
+            "  -m  Minimum continuous active seconds per burst\n"
             "\n"
             "Example:\n"
-            "  %s -p 40:60 -t 00:30-06:30 -d 7200\n",
+            "  %s -p 40:60 -t 00:30-06:30 -d 7200 -m 60\n",
             prog_name, prog_name);
     exit(status);
 }
@@ -535,9 +536,10 @@ int main(int argc, char *argv[])
     const char *opt_percent_range = NULL;
     const char *opt_time_range = NULL;
     const char *opt_active_duration = NULL;
+    const char *opt_min_active_seconds = NULL;
 
     int opt;
-    while ((opt = getopt(argc, argv, "p:t:d:h")) != -1) {
+    while ((opt = getopt(argc, argv, "p:t:d:m:h")) != -1) {
         switch (opt) {
         case 'p':
             opt_percent_range = optarg;
@@ -547,6 +549,9 @@ int main(int argc, char *argv[])
             break;
         case 'd':
             opt_active_duration = optarg;
+            break;
+        case 'm':
+            opt_min_active_seconds = optarg;
             break;
         case 'h':
             usage(argv[0], EXIT_SUCCESS);
@@ -604,6 +609,15 @@ int main(int argc, char *argv[])
         active_duration = window_duration;
     }
 
+    // Parse optional min active seconds (burst)
+    long min_active_seconds = 0;
+    if (opt_min_active_seconds) {
+        min_active_seconds = strtol(opt_min_active_seconds, NULL, 10);
+        if (min_active_seconds < 0) {
+            min_active_seconds = 0;
+        }
+    }
+
     // Initialize random seed
     srandom((unsigned int)(time(NULL) ^ getpid()));
 
@@ -637,11 +651,12 @@ int main(int argc, char *argv[])
             "  Time range     : %02d:%02d-%02d:%02d\n"
             "  Window duration: %d seconds\n"
             "  Active duration: %ld seconds per day\n"
+            "  Min burst      : %ld seconds\n"
             "  Worker threads : %d\n",
             min_percent, max_percent,
             window_start_sec / 3600, (window_start_sec / 60) % 60,
             window_end_sec   / 3600, (window_end_sec   / 60) % 60,
-            window_duration, active_duration, n_cpus);
+            window_duration, active_duration, min_active_seconds, n_cpus);
     fflush(stdout);
 
     // create worker threads
@@ -667,6 +682,7 @@ int main(int argc, char *argv[])
     // Scheduler loop
     int last_yday = -1;
     long used_active_today = 0;
+    long burst_remaining = 0;
 
     while (atomic_load_explicit(&g_running, memory_order_relaxed)) {
         int sec_of_day, yday;
@@ -675,12 +691,14 @@ int main(int argc, char *argv[])
         // New day: reset counters
         if (yday != last_yday) {
             used_active_today = 0;
+            burst_remaining = 0;
             last_yday = yday;
         }
 
         if (sec_of_day < window_start_sec) {
             // Before today's window: idle until window start (bounded).
             atomic_store_explicit(&g_load_enabled, 0, memory_order_relaxed);
+            burst_remaining = 0; // Reset burst if outside window
 
             int delta = window_start_sec - sec_of_day;
             if (delta > 60) {
@@ -693,6 +711,7 @@ int main(int argc, char *argv[])
         if (sec_of_day >= window_end_sec) {
             // After today's window: idle until next day.
             atomic_store_explicit(&g_load_enabled, 0, memory_order_relaxed);
+            burst_remaining = 0;
             bounded_sleep(60.0, 10.0);
             continue;
         }
@@ -704,19 +723,34 @@ int main(int argc, char *argv[])
         if (remaining_active <= 0 || remaining_time <= 0) {
             // Already used all active seconds today; stay idle until window ends.
             atomic_store_explicit(&g_load_enabled, 0, memory_order_relaxed);
+            burst_remaining = 0;
             bounded_sleep((double)remaining_time, 10.0);
             continue;
         }
 
         // Determine if we should activate load this second
         int should_generate_load = 0;
-        if (remaining_active >= remaining_time) {
-            // We must load in every remaining second to consume quota
+
+        // Continue existing burst
+        if (burst_remaining > 0) {
             should_generate_load = 1;
-        } else {
-            double prob = (double)remaining_active / (double)remaining_time;
-            double rand_val = (double)random() / (double)RAND_MAX;
-            should_generate_load = (rand_val < prob) ? 1 : 0;
+            burst_remaining--;
+        } else { // Check standard probability logic
+            if (remaining_active >= remaining_time) {
+                // We must load in every remaining second to consume quota
+                should_generate_load = 1;
+            } else {
+                double prob = (double)remaining_active / (double)remaining_time;
+                double rand_val = (double)random() / (double)RAND_MAX;
+
+                if (rand_val < prob) {
+                    should_generate_load = 1;
+                    // Trigger new burst if configured
+                    if (min_active_seconds > 1) {
+                        burst_remaining = min_active_seconds - 1;
+                    }
+                }
+            }
         }
 
         // Use last measured global CPU usage
