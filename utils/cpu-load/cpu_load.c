@@ -517,10 +517,10 @@ static void usage(const char *prog_name, int status)
     FILE *stream = (status == EXIT_SUCCESS) ? stdout : stderr;
     fprintf(stream,
             "Usage:\n"
-            "  %s -p <percent_range> -t <time_range> -d <active_seconds>\n"
+            "  %s -p <percent_range> -t <time_range> -d <active_duration>\n"
             "\n"
             "Options:\n"
-            "  -p  Target CPU load percent range (e.g., 40:60)\n"
+            "  -p  Percent range (e.g., 40:60)\n"
             "  -t  Time window (e.g., 00:30-06:30)\n"
             "  -d  Active duration in seconds (e.g., 7200) or percentage (e.g., 33%%)\n"
             "\n"
@@ -576,10 +576,9 @@ int main(int argc, char *argv[])
     }
     int window_duration = window_end_sec - window_start_sec;
 
-    // Parse active seconds
-    long active_seconds = 0;
+    // Parse active duration
+    long active_duration = 0;
     char *pct_ptr = strchr(opt_active_duration, '%');
-
     if (pct_ptr) {
         // Parse as percentage
         double pct = strtod(opt_active_duration, NULL);
@@ -587,22 +586,22 @@ int main(int argc, char *argv[])
             fprintf(stderr, "Invalid active percentage: %s (must be > 0%% and <= 100%%)\n", opt_active_duration);
             return EXIT_FAILURE;
         }
-        active_seconds = (long)((double)window_duration * (pct / 100.0));
+        active_duration = (long)((double)window_duration * (pct / 100.0));
     } else {
         // Parse as absolute seconds
-        active_seconds = strtol(opt_active_duration, NULL, 10);
+        active_duration = strtol(opt_active_duration, NULL, 10);
     }
 
-    if (active_seconds <= 0) {
-        fprintf(stderr, "active_seconds must be a positive integer\n");
+    if (active_duration <= 0) {
+        fprintf(stderr, "active_duration must be a positive integer\n");
         return EXIT_FAILURE;
     }
 
-    if (active_seconds > window_duration) {
+    if (active_duration > window_duration) {
         fprintf(stderr,
-                "Warning: active_seconds (%ld) > window duration (%d), clamping.\n",
-                active_seconds, window_duration);
-        active_seconds = window_duration;
+                "Warning: active duration (%ld) > window duration (%d), clamping.\n",
+                active_duration, window_duration);
+        active_duration = window_duration;
     }
 
     // Initialize random seed
@@ -634,16 +633,15 @@ int main(int argc, char *argv[])
 
     fprintf(stdout,
             "CPU Load started:\n"
+            "  Percent range  : %d%%-%d%%\n"
             "  Time range     : %02d:%02d-%02d:%02d\n"
             "  Window duration: %d seconds\n"
-            "  Active seconds : %ld seconds per day\n"
-            "  CPU range      : %d%%-%d%%\n"
+            "  Active duration: %ld seconds per day\n"
             "  Worker threads : %d\n",
+            min_percent, max_percent,
             window_start_sec / 3600, (window_start_sec / 60) % 60,
             window_end_sec   / 3600, (window_end_sec   / 60) % 60,
-            window_duration, active_seconds,
-            min_percent, max_percent,
-            n_cpus);
+            window_duration, active_duration, n_cpus);
     fflush(stdout);
 
     // create worker threads
@@ -700,7 +698,7 @@ int main(int argc, char *argv[])
         }
 
         // We are inside today's window
-        long remaining_active = active_seconds - used_active_today;
+        long remaining_active = active_duration - used_active_today;
         int  remaining_time   = window_end_sec - sec_of_day;
 
         if (remaining_active <= 0 || remaining_time <= 0) {
