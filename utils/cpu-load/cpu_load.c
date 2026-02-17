@@ -522,11 +522,11 @@ static void usage(const char *prog_name, int status)
             "Options:\n"
             "  -p  Percent range (e.g., 40:60)\n"
             "  -t  Time window (e.g., 00:30-06:30)\n"
-            "  -d  Active duration in seconds (e.g., 7200) or percentage (e.g., 33%%)\n"
+            "  -d  Active duration in seconds (e.g., 4320) or percentage (e.g., 20%%)\n"
             "  -m  Minimum continuous active seconds per burst\n"
             "\n"
             "Example:\n"
-            "  %s -p 40:60 -t 00:30-06:30 -d 7200 -m 60\n",
+            "  %s -p 40:60 -t 00:30-06:30 -d 20% -m 60\n",
             prog_name, prog_name);
     exit(status);
 }
