@@ -27,10 +27,5 @@ RUN apk update \
   && rm -rf /var/cache/apk/*
 
 COPY --from=builder /usr/local/bin/cpu-load /usr/local/bin/
-COPY cpu-load.sh /usr/local/bin/
 
-ENV PERCENT_RANGE="40:60"
-ENV TIME_RANGE="00:30-06:30"
-ENV ACTIVE_SECONDS="7200"
-
-ENTRYPOINT ["cpu-load.sh"]
+ENTRYPOINT ["cpu-load"]
