@@ -119,16 +119,81 @@ static void calibrate_cpu_speed(void)
     fprintf(stdout, "Done. (%lu loops/sec)\n", g_loops_per_sec);
 }
 
-// Simple busy-wait for the given number of seconds on the current core.
+// Busy-wait for the given number of seconds on the current core.
 static void busy_wait(double seconds)
 {
     if (seconds <= 0.0) {
         return;
     }
 
-    // Calculate required loops based on calibration
-    unsigned long loops = (unsigned long)(seconds * (double)g_loops_per_sec);
-    burn_cpu_loops(loops);
+    const clockid_t clk = CLOCK_MONOTONIC_RAW;
+    const double target_chunk = 0.002; // 2ms target work chunk
+    const unsigned long min_loops = 50;
+    const unsigned long max_loops = 100000000UL;
+
+    struct timespec t_start, t_now, t_after;
+    clock_gettime(clk, &t_start);
+
+    // Seed chunk_loops from calibration result, but do not rely on it being exact.
+    unsigned long chunk_loops = 5000;
+    if (g_loops_per_sec > 0) {
+        double guess = (double)g_loops_per_sec * target_chunk;
+        if (guess < (double)min_loops) {
+            guess = (double)min_loops;
+        }
+        if (guess > (double)max_loops) {
+            guess = (double)max_loops;
+        }
+        chunk_loops = (unsigned long)guess;
+    }
+
+    for (;;) {
+        clock_gettime(clk, &t_now);
+        double elapsed = timespec_diff_sec(&t_start, &t_now);
+        if (elapsed >= seconds) {
+            break;
+        }
+
+        double remaining = seconds - elapsed;
+        double slice = (remaining < target_chunk) ? remaining : target_chunk;
+
+        unsigned long loops = chunk_loops;
+        if (slice < target_chunk) {
+            double scaled = (double)chunk_loops * (slice / target_chunk);
+            if (scaled < (double)min_loops) {
+                scaled = (double)min_loops;
+            }
+            loops = (unsigned long)scaled;
+        }
+
+        burn_cpu_loops(loops);
+
+        // Online retune: adjust chunk_loops so that burn_cpu_loops() takes about
+        // target_chunk seconds on the current system state.
+        clock_gettime(clk, &t_after);
+        double actual = timespec_diff_sec(&t_now, &t_after);
+        if (actual > 0.0) {
+            double ratio = target_chunk / actual;
+
+            // Clamp adaptation to avoid instability under scheduling noise.
+            if (ratio < 0.5) {
+                ratio = 0.5;
+            }
+            if (ratio > 2.0) {
+                ratio = 2.0;
+            }
+
+            // Smooth update to reduce jitter.
+            double updated = (double)chunk_loops * (0.9 + 0.1 * ratio);
+            if (updated < (double)min_loops) {
+                updated = (double)min_loops;
+            }
+            if (updated > (double)max_loops) {
+                updated = (double)max_loops;
+            }
+            chunk_loops = (unsigned long)updated;
+        }
+    }
 }
 
 // Sleep for the given number of seconds using clock_nanosleep on CLOCK_MONOTONIC.
