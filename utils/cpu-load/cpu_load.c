@@ -740,14 +740,27 @@ int main(int argc, char *argv[])
                 // We must load in every remaining second to consume quota
                 should_generate_load = 1;
             } else {
-                double prob = (double)remaining_active / (double)remaining_time;
+                // If bursts are enabled, a single "start" decision commits to burst_len seconds of load
+                double duty_cycle = (double)remaining_active / (double)remaining_time;
+                double start_prob = duty_cycle;
+
+                // If using bursts, adjust start probability based on duty cycle formula
+                if (min_active_seconds > 1) {
+                    double burst_len = (double)min_active_seconds;
+                    start_prob = duty_cycle / (burst_len * (1.0 - duty_cycle) + duty_cycle);
+                }
+
                 double rand_val = (double)random() / (double)RAND_MAX;
 
-                if (rand_val < prob) {
+                if (rand_val < start_prob) {
                     should_generate_load = 1;
-                    // Trigger new burst if configured
+                    // Trigger new burst if configured, cap to remaining quota to avoid overshoot
                     if (min_active_seconds > 1) {
-                        burst_remaining = min_active_seconds - 1;
+                        long burst_duration = min_active_seconds - 1;
+                        long max_burst = remaining_active - 1;
+                        if (burst_duration > max_burst) burst_duration = max_burst;
+                        if (burst_duration < 0) burst_duration = 0;
+                        burst_remaining = burst_duration;
                     }
                 }
             }
