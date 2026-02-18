@@ -6,4 +6,4 @@ services:
     network_mode: none
     environment:
       TZ: Asia/Taipei
-    command: -p 40:60 -t 00:30-06:30 -d 20% -m 60
+    command: -p 40:60 -t 00:30-06:30 -d 20% -m 60:10

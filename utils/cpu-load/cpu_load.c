@@ -517,16 +517,16 @@ static void usage(const char *prog_name, int status)
     FILE *stream = (status == EXIT_SUCCESS) ? stdout : stderr;
     fprintf(stream,
             "Usage:\n"
-            "  %s -p <percent_range> -t <time_range> -d <active_duration> [-m <min_active_seconds>]\n"
+            "  %s -p <percent_range> -t <time_range> -d <active_duration> [-m <min_active_seconds>[:<jitter>]]\n"
             "\n"
             "Options:\n"
             "  -p  Percent range (e.g., 40:60)\n"
             "  -t  Time window (e.g., 00:30-06:30)\n"
             "  -d  Active duration in seconds (e.g., 4320) or percentage (e.g., 20%%)\n"
-            "  -m  Minimum continuous active seconds per burst\n"
+            "  -m  Minimum continuous active seconds per burst (e.g., 60:10)\n"
             "\n"
             "Example:\n"
-            "  %s -p 40:60 -t 00:30-06:30 -d 20%% -m 60\n",
+            "  %s -p 40:60 -t 00:30-06:30 -d 20%% -m 60:10\n",
             prog_name, prog_name);
     exit(status);
 }
@@ -611,10 +611,24 @@ int main(int argc, char *argv[])
 
     // Parse optional min active seconds (burst)
     long min_active_seconds = 0;
+    long min_active_jitter = 0;
+
     if (opt_min_active_seconds) {
-        min_active_seconds = strtol(opt_min_active_seconds, NULL, 10);
+        char *sep = strchr(opt_min_active_seconds, ':');
+        if (sep) {
+            *sep = '\0';
+            min_active_seconds = strtol(opt_min_active_seconds, NULL, 10);
+            min_active_jitter = strtol(sep + 1, NULL, 10);
+            *sep = ':';
+        } else {
+            min_active_seconds = strtol(opt_min_active_seconds, NULL, 10);
+        }
+
         if (min_active_seconds < 0) {
             min_active_seconds = 0;
+        }
+        if (min_active_jitter < 0) {
+            min_active_jitter = 0;
         }
     }
 
@@ -651,12 +665,12 @@ int main(int argc, char *argv[])
             "  Time range     : %02d:%02d-%02d:%02d\n"
             "  Window duration: %d seconds\n"
             "  Active duration: %ld seconds per day\n"
-            "  Min burst      : %ld seconds\n"
+            "  Min burst      : %ld seconds (jitter: +/-%lds)\n"
             "  Worker threads : %d\n",
             min_percent, max_percent,
             window_start_sec / 3600, (window_start_sec / 60) % 60,
             window_end_sec / 3600, (window_end_sec / 60) % 60,
-            window_duration, active_duration, min_active_seconds, n_cpus);
+            window_duration, active_duration, min_active_seconds, min_active_jitter, n_cpus);
     fflush(stdout);
 
     // create worker threads
@@ -756,7 +770,19 @@ int main(int argc, char *argv[])
                     should_generate_load = 1;
                     // Trigger new burst if configured, cap to remaining quota to avoid overshoot
                     if (min_active_seconds > 1) {
-                        long burst_duration = min_active_seconds - 1;
+                        long current_burst = min_active_seconds;
+
+                        if (min_active_jitter > 0) {
+                            long r = random() % (min_active_jitter * 2 + 1);
+                            long variance = r - min_active_jitter;
+                            current_burst += variance;
+                        }
+
+                        if (current_burst < 1) {
+                            current_burst = 1;
+                        }
+
+                        long burst_duration = current_burst - 1;
                         long max_burst = remaining_active - 1;
                         if (burst_duration > max_burst) burst_duration = max_burst;
                         if (burst_duration < 0) burst_duration = 0;
