@@ -532,7 +532,7 @@ static void usage(const char *prog_name, int status)
     FILE *stream = (status == EXIT_SUCCESS) ? stdout : stderr;
     fprintf(stream,
             "Usage:\n"
-            "  %s -p <percent>[:<max_percent>] -t <time_range> -d <active_duration> [-m <min_active_seconds>[:<jitter>]]\n"
+            "  %s -p <percent>[:<max_percent>] -t <time_window> -d <active_duration> [-m <min_active_seconds>[:<jitter>]]\n"
             "\n"
             "Options:\n"
             "  -p  Percent load (e.g., 40) or range (e.g., 40:60)\n"
@@ -549,7 +549,7 @@ static void usage(const char *prog_name, int status)
 int main(int argc, char *argv[])
 {
     const char *opt_percent_range = NULL;
-    const char *opt_time_range = NULL;
+    const char *opt_time_window = NULL;
     const char *opt_active_duration = NULL;
     const char *opt_min_active_seconds = NULL;
 
@@ -560,7 +560,7 @@ int main(int argc, char *argv[])
             opt_percent_range = optarg;
             break;
         case 't':
-            opt_time_range = optarg;
+            opt_time_window = optarg;
             break;
         case 'd':
             opt_active_duration = optarg;
@@ -577,7 +577,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    if (!opt_percent_range || !opt_time_range || !opt_active_duration || optind != argc) {
+    if (!opt_percent_range || !opt_time_window || !opt_active_duration || optind != argc) {
         usage(argv[0], EXIT_FAILURE);
     }
 
@@ -590,8 +590,8 @@ int main(int argc, char *argv[])
 
     // Parse time window
     int window_start_sec, window_end_sec;
-    if (parse_time_window(opt_time_range, &window_start_sec, &window_end_sec) != 0) {
-        fprintf(stderr, "Invalid time window: %s\n", opt_time_range);
+    if (parse_time_window(opt_time_window, &window_start_sec, &window_end_sec) != 0) {
+        fprintf(stderr, "Invalid time window: %s\n", opt_time_window);
         return EXIT_FAILURE;
     }
     int window_duration = window_end_sec - window_start_sec;
@@ -675,17 +675,16 @@ int main(int argc, char *argv[])
     calibrate_cpu_speed();
 
     fprintf(stdout,
-            "CPU Load started:\n"
-            "  Percent range  : %d%%-%d%%\n"
-            "  Time range     : %02d:%02d-%02d:%02d\n"
+            "CPU Load started (threads: %d)\n"
+            "  Percent load   : %d%%-%d%%\n"
+            "  Time window    : %02d:%02d-%02d:%02d\n"
             "  Window duration: %d seconds\n"
             "  Active duration: %ld seconds per day\n"
-            "  Min burst      : %ld seconds (jitter: +/-%lds)\n"
-            "  Worker threads : %d\n",
-            min_percent, max_percent,
+            "  Min burst      : %ld seconds (jitter: +/-%lds)\n",
+            n_cpus, min_percent, max_percent,
             window_start_sec / 3600, (window_start_sec / 60) % 60,
             window_end_sec / 3600, (window_end_sec / 60) % 60,
-            window_duration, active_duration, min_active_seconds, min_active_jitter, n_cpus);
+            window_duration, active_duration, min_active_seconds, min_active_jitter);
     fflush(stdout);
 
     // create worker threads
