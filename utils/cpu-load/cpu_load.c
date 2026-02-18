@@ -296,7 +296,7 @@ static void generate_load_interval(double interval_sec, int percent)
     }
 }
 
-// Parse percent range "min:max"
+// Parse percent single "value" or range "min:max"
 static int parse_percent_range(const char *input, int *out_min, int *out_max)
 {
     if (!input || !out_min || !out_max) {
@@ -304,10 +304,19 @@ static int parse_percent_range(const char *input, int *out_min, int *out_max)
     }
 
     char *sep = strchr(input, ':');
+
+    // If no colon is found, treat as a single fixed value (min == max)
     if (!sep) {
-        return -1;
+        int val = atoi(input);
+        if (val < 0 || val > 100) {
+            return -1;
+        }
+        *out_min = val;
+        *out_max = val;
+        return 0;
     }
 
+    // If colon is found, parse as range min:max
     char buf[64];
     size_t len_min = (size_t)(sep - input);
     size_t len_max = strlen(sep + 1);
@@ -523,13 +532,13 @@ static void usage(const char *prog_name, int status)
     FILE *stream = (status == EXIT_SUCCESS) ? stdout : stderr;
     fprintf(stream,
             "Usage:\n"
-            "  %s -p <percent_range> -t <time_range> -d <active_duration> [-m <min_active_seconds>[:<jitter>]]\n"
+            "  %s -p <percent>[:<max_percent>] -t <time_range> -d <active_duration> [-m <min_active_seconds>[:<jitter>]]\n"
             "\n"
             "Options:\n"
-            "  -p  Percent range (e.g., 40:60)\n"
+            "  -p  Percent load (e.g., 40) or range (e.g., 40:60)\n"
             "  -t  Time window (e.g., 00:30-06:30)\n"
             "  -d  Active duration in seconds (e.g., 4320) or percentage (e.g., 20%%)\n"
-            "  -m  Minimum continuous active seconds per burst (e.g., 60:10)\n"
+            "  -m  Minimum continuous active seconds per burst (e.g., 60) or with jitter (e.g., 60:10)\n"
             "\n"
             "Example:\n"
             "  %s -p 40:60 -t 00:30-06:30 -d 20%% -m 60:10\n",
