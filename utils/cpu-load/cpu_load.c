@@ -226,6 +226,12 @@ static void sleep_for(double seconds)
             // On other errors, give up the sleep but keep going.
             break;
         }
+
+        // Stop sleeping if interrupted by a signal and requested to exit.
+        if (!atomic_load_explicit(&g_running, memory_order_relaxed)) {
+            break;
+        }
+
         // Restart sleep with remaining time if interrupted by a signal.
         req = rem;
     }
