@@ -67,6 +67,15 @@ static FILE *g_proc_stat_fp = NULL;
 // Calibration result: loops per second
 static unsigned long g_loops_per_sec = 0;
 
+// Helper to get formatted timestamp string
+static void get_time_str(char *buf, size_t size)
+{
+    time_t now = time(NULL);
+    struct tm tm_now;
+    localtime_r(&now, &tm_now);
+    strftime(buf, size, "[%Y-%m-%d %H:%M:%S]", &tm_now);
+}
+
 // Utility: read current time diff in seconds (double)
 static double timespec_diff_sec(const struct timespec *start,
                                 const struct timespec *end)
@@ -712,6 +721,10 @@ int main(int argc, char *argv[])
     long used_active_today = 0;
     long burst_remaining = 0;
 
+    // To detect burst edges for logging
+    int prev_load_enabled = 0;
+    char time_buf[32];
+
     while (atomic_load_explicit(&g_running, memory_order_relaxed)) {
         int sec_of_day, yday;
         get_day_time(&sec_of_day, &yday);
@@ -727,6 +740,7 @@ int main(int argc, char *argv[])
             // Before today's window: idle until window start (bounded).
             atomic_store_explicit(&g_load_enabled, 0, memory_order_relaxed);
             burst_remaining = 0; // Reset burst if outside window
+            prev_load_enabled = 0;
 
             int delta = window_start_sec - sec_of_day;
             if (delta > 60) {
@@ -740,6 +754,7 @@ int main(int argc, char *argv[])
             // After today's window: idle until next day.
             atomic_store_explicit(&g_load_enabled, 0, memory_order_relaxed);
             burst_remaining = 0;
+            prev_load_enabled = 0;
             bounded_sleep(60.0, 10.0);
             continue;
         }
@@ -752,12 +767,27 @@ int main(int argc, char *argv[])
             // Already used all active seconds today; stay idle until window ends.
             atomic_store_explicit(&g_load_enabled, 0, memory_order_relaxed);
             burst_remaining = 0;
+
+            // Log end if we just transitioned to idle
+            if (prev_load_enabled == 1) {
+                get_time_str(time_buf, sizeof(time_buf));
+                fprintf(stdout, "%s [Burst Stop]  Active Total: %lds\n",
+                        time_buf, used_active_today);
+                fflush(stdout);
+            }
+            prev_load_enabled = 0;
+
             bounded_sleep((double)remaining_time, 10.0);
             continue;
         }
 
         // Determine if we should activate load this second
         int should_generate_load = 0;
+
+        // Flags for logging
+        int is_new_burst_start = 0;
+        long log_burst_duration = 0;
+        long log_variance = 0;
 
         // Continue existing burst
         if (burst_remaining > 0) {
@@ -788,8 +818,8 @@ int main(int argc, char *argv[])
 
                         if (min_active_jitter > 0) {
                             long r = random() % (min_active_jitter * 2 + 1);
-                            long variance = r - min_active_jitter;
-                            current_burst += variance;
+                            log_variance = r - min_active_jitter;
+                            current_burst += log_variance;
                         }
 
                         if (current_burst < 1) {
@@ -801,10 +831,29 @@ int main(int argc, char *argv[])
                         if (burst_duration > max_burst) burst_duration = max_burst;
                         if (burst_duration < 0) burst_duration = 0;
                         burst_remaining = burst_duration;
+
+                        is_new_burst_start = 1;
+                        log_burst_duration = burst_duration + 1;
                     }
                 }
             }
         }
+
+        // Logging Logic
+        if (is_new_burst_start) {
+            get_time_str(time_buf, sizeof(time_buf));
+            fprintf(stdout, "%s [Burst Start] Active Duration: %lds (base: %ld, jitter: %+ld) | Remaining: %lds\n",
+                    time_buf, log_burst_duration, min_active_seconds, log_variance, remaining_active);
+            fflush(stdout);
+        }
+
+        if (prev_load_enabled == 1 && should_generate_load == 0) {
+            get_time_str(time_buf, sizeof(time_buf));
+            fprintf(stdout, "%s [Burst Stop]  Active Total: %lds\n",
+                    time_buf, used_active_today);
+            fflush(stdout);
+        }
+        prev_load_enabled = should_generate_load;
 
         // Use last measured global CPU usage
         double current_usage = g_cpu_usage_inited ? g_last_cpu_usage : 0.0;
