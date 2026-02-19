@@ -12,6 +12,7 @@ BLACKLIST_FILES="${BLACKLIST_FILES:=/etc/gfw-defense/blacklist.txt}"
 WHITELIST_FILES="${WHITELIST_FILES:=/etc/gfw-defense/whitelist.txt}"
 AUTO_BLOCK="${AUTO_BLOCK:=0}"
 AUTO_BLOCK_INTERVAL="${AUTO_BLOCK_INTERVAL:=0}"
+AUTO_BLOCK_MAX_FAILURES="${AUTO_BLOCK_MAX_FAILURES:=3}"
 UPDATE_LIST_INTERVAL="${UPDATE_LIST_INTERVAL:=0}"
 UPDATE_LIST_URLS="${UPDATE_LIST_URLS:=}"
 BLACKLIST="gfw_defense_blacklist"
@@ -71,6 +72,7 @@ _get_reserved_ips() {
 
 _get_loginfail_ips() {
   local since="$1"
+  local max_failures="$2"
   lastb -i -s "$since" |
     # get ip list
     awk '{print $3}' |
@@ -78,8 +80,8 @@ _get_loginfail_ips() {
     grep -E '^[1-9][0-9]*\.' |
     # remove duplicates, sort by count
     sort | uniq -c | sort -rn |
-    # output more than 3 times
-    awk '$1 > 3 {print $2}'
+    # output more than max_failures
+    awk -v threshold="$max_failures" '$1 > threshold {print $2}'
 }
 
 _is_exist_ipset() {
@@ -155,7 +157,7 @@ load_ipsets() {
   if [ "$AUTO_BLOCK" = 1 ] || [ "$AUTO_BLOCK_INTERVAL" != 0 ]; then
     prev="$(_get_ipset_count $BLACKLIST)"
     ipset -exist restore <<-EOF
-		$(_get_loginfail_ips "-1month" | sed "s/^/add $BLACKLIST /")
+		$(_get_loginfail_ips "-1month" "$AUTO_BLOCK_MAX_FAILURES" | sed "s/^/add $BLACKLIST /")
 		EOF
     next="$(_get_ipset_count $BLACKLIST)"
     info "blocklist loaded into blacklist ($prev -> $next)."
@@ -245,7 +247,7 @@ auto_block() {
 
           PREV="$(_get_ipset_count $BLACKLIST)"
           ipset -exist restore <<-EOF
-			$(_get_loginfail_ips "-1day" | sed "s/^/add $BLACKLIST /")
+			$(_get_loginfail_ips "-1day" "$AUTO_BLOCK_MAX_FAILURES" | sed "s/^/add $BLACKLIST /")
 			EOF
           NEXT="$(_get_ipset_count $BLACKLIST)"
           info "autoblock has been triggered ($PREV -> $NEXT)."
@@ -268,7 +270,7 @@ auto_block() {
       SINCE="$(date -d "@$(($(date +%s) - $AUTO_BLOCK_INTERVAL_INNER * 4))" '+%Y-%m-%d %H:%M:%S')"
       PREV="$(_get_ipset_count $BLACKLIST)"
       ipset -exist restore <<-EOF
-		$(_get_loginfail_ips "$SINCE" | sed "s/^/add $BLACKLIST /")
+		$(_get_loginfail_ips "$SINCE" "$AUTO_BLOCK_MAX_FAILURES" | sed "s/^/add $BLACKLIST /")
 		EOF
       NEXT="$(_get_ipset_count $BLACKLIST)"
       info "blocklist appended into blacklist ($PREV -> $NEXT)."
