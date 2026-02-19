@@ -841,6 +841,14 @@ int main(int argc, char *argv[])
 
         // Logging Logic
         if (is_new_burst_start) {
+            // Ensure 'Burst Stop' log is printed during contiguous bursts
+            if (prev_load_enabled == 1) {
+                get_time_str(time_buf, sizeof(time_buf));
+                fprintf(stdout, "%s [Burst Stop]  Active Total: %lds\n",
+                        time_buf, used_active_today);
+                fflush(stdout);
+            }
+
             get_time_str(time_buf, sizeof(time_buf));
             fprintf(stdout, "%s [Burst Start] Active Duration: %lds (base: %ld, jitter: %+ld) | Remaining: %lds\n",
                     time_buf, log_burst_duration, min_active_seconds, log_variance, remaining_active);
