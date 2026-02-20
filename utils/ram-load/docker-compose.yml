@@ -1,0 +1,9 @@
+services:
+  ram-load:
+    image: pexcn/docker-images:ram-load
+    container_name: ram-load
+    restart: unless-stopped
+    network_mode: none
+    environment:
+      TZ: Asia/Taipei
+    command: -p 30:70
