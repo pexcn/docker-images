@@ -556,7 +556,7 @@ static void usage(const char *prog_name, int status)
     FILE *stream = (status == EXIT_SUCCESS) ? stdout : stderr;
     fprintf(stream,
             "Usage:\n"
-            "  %s -p <percent>[:<max_percent>] -t <time_window> -d <active_duration> [-m <min_active_seconds>[:<jitter>]]\n"
+            "  %s -p <percent>[:<max_percent>] -t <start_time>-<end_time> -d <active_seconds|active_percent%%> [-m <min_active_seconds>[:<jitter>]]\n"
             "\n"
             "Options:\n"
             "  -p  Percent load (e.g., 40) or range (e.g., 40:60)\n"
