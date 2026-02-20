@@ -52,9 +52,6 @@ static atomic_int g_running = 1; // global "keep running" flag
 static atomic_int g_load_enabled = 0; // 1 = workers should generate load, 0 = idle
 static atomic_int g_target_percent = 0; // per-core busy percentage for workers
 
-// Stop flag set by signal handler (mainly for debugging / observability)
-static volatile sig_atomic_t g_stop_flag = 0;
-
 // CPU usage measurement from /proc/stat
 static unsigned long long g_prev_total_jiffies = 0;
 static unsigned long long g_prev_idle_jiffies = 0;
@@ -490,7 +487,6 @@ static void get_day_time(int *sec_of_day, int *yday)
 static void handle_signal(int signo)
 {
     (void)signo;
-    g_stop_flag = 1;
     atomic_store_explicit(&g_running, 0, memory_order_relaxed);
     atomic_store_explicit(&g_load_enabled, 0, memory_order_relaxed);
 }
