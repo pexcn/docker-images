@@ -389,8 +389,9 @@ static int parse_time_window(const char *input, int *out_start_sec, int *out_end
     int start = start_hour * 3600 + start_min * 60;
     int end = end_hour * 3600 + end_min * 60;
 
-    // For simplicity: only support start < end within the same day.
-    if (start >= end) {
+    // start == end is meaningless (zero-length window), reject it.
+    // start > end is allowed and means a cross-midnight window.
+    if (start == end) {
         return -1;
     }
 
@@ -468,10 +469,10 @@ static void update_cpu_usage(void)
     g_last_cpu_usage = usage;
 }
 
-// Get current second of day and day-of-year
-static void get_day_time(int *sec_of_day, int *yday)
+// Get current second of day
+static void get_day_time(int *sec_of_day)
 {
-    if (!sec_of_day || !yday) {
+    if (!sec_of_day) {
         return;
     }
 
@@ -480,7 +481,25 @@ static void get_day_time(int *sec_of_day, int *yday)
     localtime_r(&now, &tm_now);
 
     *sec_of_day = tm_now.tm_hour * 3600 + tm_now.tm_min * 60 + tm_now.tm_sec;
-    *yday = tm_now.tm_yday;
+}
+
+// Returns seconds remaining in the current window from sec_of_day,
+// or -1 if currently outside the window.
+// For cross-midnight windows (start > end), the window spans from 'start' to the end of the day,
+// continuing from 0 to 'end' on the next day.
+static int window_remaining(int sec_of_day, int start, int end, int cross_midnight)
+{
+    if (!cross_midnight) {
+        if (sec_of_day < start || sec_of_day >= end)
+            return -1;
+        return end - sec_of_day;
+    }
+    // cross-midnight: inside if sec >= start OR sec < end
+    if (sec_of_day >= start)
+        return (86400 - sec_of_day) + end;
+    if (sec_of_day < end)
+        return end - sec_of_day;
+    return -1;
 }
 
 // Signal handler: request a graceful shutdown
@@ -599,7 +618,10 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Invalid time window: %s\n", opt_time_window);
         return EXIT_FAILURE;
     }
-    int window_duration = window_end_sec - window_start_sec;
+    int cross_midnight = (window_end_sec <= window_start_sec);
+    int window_duration = cross_midnight
+        ? (86400 - window_start_sec + window_end_sec)
+        : (window_end_sec - window_start_sec);
 
     // Parse active duration
     long active_duration = 0;
@@ -713,51 +735,58 @@ int main(int argc, char *argv[])
     double integrator_state = 0.0;
 
     // Scheduler loop
-    int last_yday = -1;
     long used_active_today = 0;
     long burst_remaining = 0;
+    int prev_in_window = -1; // -1 = unknown (first iteration)
 
     // To detect burst edges for logging
     int prev_load_enabled = 0;
     char time_buf[32];
 
     while (atomic_load_explicit(&g_running, memory_order_relaxed)) {
-        int sec_of_day, yday;
-        get_day_time(&sec_of_day, &yday);
+        int sec_of_day;
+        get_day_time(&sec_of_day);
 
-        // New day: reset counters
-        if (yday != last_yday) {
+        int remaining_time = window_remaining(sec_of_day, window_start_sec, window_end_sec, cross_midnight);
+        int cur_in_window = (remaining_time >= 0);
+
+        // Reset quota on window entry (works correctly for both normal and cross-midnight windows).
+        // prev_in_window == 0 means we were outside last iteration; transition -> inside means new session.
+        if (cur_in_window && prev_in_window == 0) {
             used_active_today = 0;
             burst_remaining = 0;
-            last_yday = yday;
         }
+        prev_in_window = cur_in_window;
 
-        if (sec_of_day < window_start_sec) {
-            // Before today's window: idle until window start (bounded).
-            atomic_store_explicit(&g_load_enabled, 0, memory_order_relaxed);
-            burst_remaining = 0; // Reset burst if outside window
-            prev_load_enabled = 0;
-
-            int delta = window_start_sec - sec_of_day;
-            if (delta > 60) {
-                delta = 60; // do not sleep too long, to be responsive to day changes
-            }
-            bounded_sleep((double)delta, 10.0);
-            continue;
-        }
-
-        if (sec_of_day >= window_end_sec) {
-            // After today's window: idle until next day.
+        if (remaining_time < 0) {
+            // Outside today's window: stay idle.
             atomic_store_explicit(&g_load_enabled, 0, memory_order_relaxed);
             burst_remaining = 0;
             prev_load_enabled = 0;
-            bounded_sleep(60.0, 10.0);
+
+            // Compute how long until the window next opens, so we wake up promptly.
+            // Cap at 60s to remain responsive to day/signal changes.
+            int secs_until_open;
+            if (!cross_midnight) {
+                if (sec_of_day < window_start_sec) {
+                    // Before today's window
+                    secs_until_open = window_start_sec - sec_of_day;
+                } else {
+                    // After today's window: next opening is tomorrow
+                    secs_until_open = (86400 - sec_of_day) + window_start_sec;
+                }
+            } else {
+                // Cross-midnight: outside region is end <= sec_of_day < start
+                secs_until_open = window_start_sec - sec_of_day;
+            }
+            if (secs_until_open <= 0 || secs_until_open > 60)
+                secs_until_open = 60;
+            bounded_sleep((double)secs_until_open, 10.0);
             continue;
         }
 
         // We are inside today's window
         long remaining_active = active_duration - used_active_today;
-        int remaining_time = window_end_sec - sec_of_day;
 
         if (remaining_active <= 0 || remaining_time <= 0) {
             // Already used all active seconds today; stay idle until window ends.
