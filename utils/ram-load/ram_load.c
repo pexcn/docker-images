@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 /*
- * cpu_load.c
+ * ram_load.c
  *
  * Copyright (c) 2026 pexcn <pexcn97@gmail.com>
  *
@@ -303,34 +303,53 @@ static int in_time_window(int start_min, int end_min)
     return cur >= start_min || cur < end_min;
 }
 
-// Compute the target memory usage percentage using a sine wave baseline
-// with per-cycle randomized period, plus small xorshift64 noise.
+// Compute the target memory usage percentage.
 //
-// Cycle management uses 'while' (not 'if') so that a long suspension
-// (system sleep, OOM pause) that skips multiple periods still fast-forwards
-// correctly without leaving phase outside [0, 1).
+// Every wave therefore has a different height and depth, so the curve never
+// locks into a uniform peak-to-trough pattern over a full day.
+// The small xorshift64 noise (+-8%) adds short-term jitter on top.
 static double compute_target(double min_p, double max_p, double elapsed_sec)
 {
     static double cycle_start = 0.0; // start time of the current sine cycle
     static double period      = 0.0; // length of the current cycle; 0 = uninitialized
+    static double local_lo    = 0.0; // this cycle's randomized trough
+    static double local_hi    = 0.0; // this cycle's randomized peak
 
-    // Advance past any completed periods.  Using 'while' handles the edge
-    // case where elapsed_sec jumps by more than one period at once.
+    // Advance past any completed periods and flag when a new cycle begins.
+    int new_cycle = (period <= 0.0); // true on very first call
     while (period <= 0.0 || elapsed_sec >= cycle_start + period) {
         // Anchor the new cycle at the exact end of the previous one to avoid
         // accumulating timing drift from sleep overruns.
         cycle_start = (period > 0.0) ? (cycle_start + period) : 0.0;
         period      = rand_f64_range(SINE_PERIOD_MIN_SEC, SINE_PERIOD_MAX_SEC);
+        new_cycle   = 1;
     }
 
-    double phase = (elapsed_sec - cycle_start) / period;
-    double range = max_p - min_p;
+    // At the start of each new cycle, independently draw a random trough and
+    // peak within [min_p, max_p].  Independent per-cycle draws produce the
+    // "staggered" look: some waves are tall, some shallow, some sit high,
+    // some sit low.
+    if (new_cycle) {
+        double range = max_p - min_p;
+
+        // Trough: anywhere in the lower half of the full range.
+        local_lo = rand_f64_range(min_p, min_p + range * 0.5);
+
+        // Peak: at least 20% of the full range above the trough, up to max_p.
+        // The floor ensures every cycle has a visible rise.
+        double peak_floor = local_lo + range * 0.2;
+        if (peak_floor > max_p) peak_floor = max_p;
+        local_hi = rand_f64_range(peak_floor, max_p);
+    }
+
+    double phase     = (elapsed_sec - cycle_start) / period;
+    double loc_range = local_hi - local_lo;
 
     // Amplitude 0.45 (not 0.5) keeps sine_pos in [0.05, 0.95], leaving
     // headroom so the +-8% noise rarely hits the clamp boundary.
     double sine_pos = 0.5 + 0.45 * sin(2.0 * M_PI * phase);
     double noise    = rand_f64_sym() * NOISE_RATIO;
-    double raw      = min_p + range * (sine_pos + noise);
+    double raw      = local_lo + loc_range * (sine_pos + noise);
 
     if (raw < min_p) raw = min_p;
     if (raw > max_p) raw = max_p;
@@ -467,7 +486,7 @@ int main(int argc, char *argv[])
     // Print startup banner
     fprintf(stdout,
             "RAM Load started\n"
-            "  Algorithm      : sine (%.0f-%.0f min/cycle) + xorshift64 noise (+-%.0f%% range)\n"
+            "  Algorithm      : sine (%.0f-%.0f min/cycle, random trough+peak per cycle) + xorshift64 noise (+-%.0f%%)\n"
             "  Percent range  : %.1f%% - %.1f%%\n"
             "  Active window  : ",
             SINE_PERIOD_MIN_SEC / 60.0, SINE_PERIOD_MAX_SEC / 60.0, NOISE_RATIO * 100.0,
