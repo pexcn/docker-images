@@ -44,7 +44,7 @@
     "nofile": 1048576,
     "no_delay": true,
     "fast_open": true,
-    "mptcp": true,
+    //"mptcp": true,
 
     "balancer": {
         "max_server_rtt": 5,
