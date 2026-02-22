@@ -57,6 +57,9 @@
 // EMA smoothing factor for baseline (alpha = 0.1 ~= 10-sample window ~75 seconds)
 #define BASELINE_EMA_ALPHA     0.1
 
+// Margin above max_percent that triggers immediate full release.
+#define SAFETY_MARGIN          5.0
+
 // Hard upper bound to avoid OOM
 #define MAX_PCT_SAFETY         95.0
 
@@ -565,20 +568,33 @@ int main(int argc, char *argv[])
                            + BASELINE_EMA_ALPHA * baseline_pct;
         }
 
-        // Safety guard: if the system (including us) already exceeds max_percent,
-        // release everything to avoid competing with real workloads for memory.
-        if (used_pct >= max_percent) {
-            if (g_nchunks > 0) {
-                get_time_str(time_buf, sizeof(time_buf));
-                fprintf(stdout, "%s [Safety] system %.1f%% >= max %.1f%%, releasing all\n",
-                        time_buf, used_pct, max_percent);
-                fflush(stdout);
-                chunks_free_all();
-            }
-            for (int s = 0; s < LOOP_SEC_MAX && g_running; s++) {
-                sleep(1);
-            }
-            continue;
+        // Two-tier safety guard:
+        //
+        // Tier 1 [max_percent, max_percent + SAFETY_MARGIN]:
+        //   Minor overshoot: fall through to the normal control loop.
+        //   The closed-loop formula produces target_own_kb=0, so diff<0 and
+        //   the regular release path sheds at most MAX_ADJUST_PER_CYCLE chunks
+        //   per iteration: a smooth, gradual descent on the curve.
+        //
+        // Tier 2 (> max_percent + SAFETY_MARGIN):
+        //   True emergency: a large real workload has arrived and OOM Killer
+        //   could fire within seconds.  Release everything immediately, then
+        //   re-enter the loop at once (no sleep) so the program can start
+        //   re-allocating as soon as the situation normalises.
+        if (used_pct > max_percent + SAFETY_MARGIN) {
+            get_time_str(time_buf, sizeof(time_buf));
+            fprintf(stdout, "%s [Emergency] system %.1f%% > max+margin %.1f%%, releasing all immediately\n",
+                    time_buf, used_pct, max_percent + SAFETY_MARGIN);
+            fflush(stdout);
+            chunks_free_all();
+            continue; // re-enter immediately, no sleep
+        }
+        if (used_pct >= max_percent && g_nchunks > 0) {
+            get_time_str(time_buf, sizeof(time_buf));
+            fprintf(stdout, "%s [Safety] system %.1f%% >= max %.1f%%, releasing gradually\n",
+                    time_buf, used_pct, max_percent);
+            fflush(stdout);
+            // Fall through: normal control loop handles gradual release.
         }
 
         // If even the smoothed baseline exceeds max_percent, other processes are
