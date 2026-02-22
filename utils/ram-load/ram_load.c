@@ -51,8 +51,11 @@
 #define SINE_PERIOD_MIN_SEC    2700.0                 // 45 minutes
 #define SINE_PERIOD_MAX_SEC    5400.0                 // 90 minutes
 
-// Noise amplitude as a fraction of [min, max] range
+// Noise amplitude as a fraction of local cycle range
 #define NOISE_RATIO            0.08                   // +-8% * range
+
+// EMA smoothing factor for baseline (alpha = 0.1 ~= 10-sample window ~75 seconds)
+#define BASELINE_EMA_ALPHA     0.1
 
 // Hard upper bound to avoid OOM
 #define MAX_PCT_SAFETY         95.0
@@ -63,10 +66,11 @@ typedef struct {
     size_t size;
 } Chunk;
 
-static volatile sig_atomic_t  g_running   = 1;       // set to 0 by signal handler
-static Chunk                 *g_chunks    = NULL;     // array of allocated chunks
-static int                    g_nchunks   = 0;        // number of currently held chunks
-static uint64_t               g_rng_state = 0;       // xorshift64 state, seeded at startup
+static volatile sig_atomic_t  g_running       = 1;    // set to 0 by signal handler
+static Chunk                 *g_chunks        = NULL;  // array of allocated chunks
+static int                    g_nchunks       = 0;     // number of currently held chunks
+static uint64_t               g_rng_state     = 0;    // xorshift64 state, seeded at startup
+static double                 g_baseline_ema  = -1.0; // EMA of others' memory usage (%); -1 = uninitialized
 
 // Signal handler: request graceful shutdown
 static void handle_signal(int signo)
@@ -307,8 +311,11 @@ static int in_time_window(int start_min, int end_min)
 //
 // Every wave therefore has a different height and depth, so the curve never
 // locks into a uniform peak-to-trough pattern over a full day.
+// Smooths transient memory spikes to avoid anchoring the cycle's baseline at
+// an artificially high level.
 // The small xorshift64 noise (+-8%) adds short-term jitter on top.
-static double compute_target(double min_p, double max_p, double elapsed_sec)
+static double compute_target(double min_p, double max_p, double elapsed_sec,
+                             double baseline_ema)
 {
     static double cycle_start = 0.0; // start time of the current sine cycle
     static double period      = 0.0; // length of the current cycle; 0 = uninitialized
@@ -325,19 +332,24 @@ static double compute_target(double min_p, double max_p, double elapsed_sec)
         new_cycle   = 1;
     }
 
-    // At the start of each new cycle, independently draw a random trough and
-    // peak within [min_p, max_p].  Independent per-cycle draws produce the
-    // "staggered" look: some waves are tall, some shallow, some sit high,
-    // some sit low.
     if (new_cycle) {
-        double range = max_p - min_p;
+        // Effective lower bound: 1pp above the smoothed baseline so we always
+        // contribute something visible.  Using the EMA here (not the raw
+        // instantaneous value) is what prevents transient spikes from
+        // anchoring local_lo high for an entire cycle.
+        double eff_min = baseline_ema + 1.0;
+        if (eff_min < min_p)  eff_min = min_p;
+        if (eff_min >= max_p) eff_min = max_p - 1.0; // keep room to rise
 
-        // Trough: anywhere in the lower half of the full range.
-        local_lo = rand_f64_range(min_p, min_p + range * 0.5);
+        double eff_range = max_p - eff_min;
 
-        // Peak: at least 20% of the full range above the trough, up to max_p.
-        // The floor ensures every cycle has a visible rise.
-        double peak_floor = local_lo + range * 0.2;
+        // Trough: anywhere in the lower half of the effective range.
+        local_lo = rand_f64_range(eff_min, eff_min + eff_range * 0.5);
+
+        // Peak: at least 20% of the full [min_p, max_p] range above the trough,
+        // up to max_p.  Using the full range for the minimum rise keeps waves
+        // visually meaningful even when eff_min is high.
+        double peak_floor = local_lo + (max_p - min_p) * 0.2;
         if (peak_floor > max_p) peak_floor = max_p;
         local_hi = rand_f64_range(peak_floor, max_p);
     }
@@ -519,16 +531,38 @@ int main(int argc, char *argv[])
 
         double used_pct = 100.0 * (mi.total_kb - mi.available_kb) / (double)mi.total_kb;
 
-        // Determine target percentage for this cycle
-        int    active     = !has_window || in_time_window(start_min, end_min);
-        double target_pct;
+        // Compute baseline: memory used by all processes OTHER than us.
+        //
+        //   system_used  = MemTotal - MemAvailable (includes our RSS)
+        //   others_used  = system_used - own_rss
+        //   baseline_pct = others_used / total * 100
+        //
+        // Subtracting own RSS avoids the feedback where a larger self footprint
+        // raises system usage, which in turn lowers the computed target, causing
+        // oscillation.
+        long own_rss_kb     = get_own_rss_kb();
+        long system_used_kb = mi.total_kb - mi.available_kb;
+        long others_used_kb = system_used_kb - own_rss_kb;
+        if (others_used_kb < 0) {
+            others_used_kb = 0;
+        }
+        double baseline_pct = 100.0 * (double)others_used_kb / (double)mi.total_kb;
 
-        if (active && max_percent > min_percent) {
-            double elapsed = difftime(time(NULL), prog_start);
-            target_pct = compute_target(min_percent, max_percent, elapsed);
+        // Update the EMA of baseline_pct every control iteration.
+        // Using the EMA (rather than the raw instantaneous value) prevents a
+        // transient spike (apt upgrade, logrotate) coinciding with a new cycle
+        // boundary from anchoring local_lo high for an entire 45-90 min cycle.
+        // alpha=BASELINE_EMA_ALPHA weights the current sample at 10%, smoothing
+        // over ~10 samples (~75 seconds at a 7.5-second average cycle).
+        // Genuine long-term baseline shifts (new resident service) are still
+        // tracked since the EMA converges within a few minutes.
+        // On the very first iteration, seed directly so the EMA is valid
+        // immediately without a slow warm-up from zero.
+        if (g_baseline_ema < 0.0) {
+            g_baseline_ema = baseline_pct;
         } else {
-            // Idle period: hold near min_percent
-            target_pct = min_percent;
+            g_baseline_ema = (1.0 - BASELINE_EMA_ALPHA) * g_baseline_ema
+                           + BASELINE_EMA_ALPHA * baseline_pct;
         }
 
         // Safety guard: if the system (including us) already exceeds max_percent,
@@ -547,22 +581,37 @@ int main(int argc, char *argv[])
             continue;
         }
 
-        // Closed-loop calculation: how many chunks should we hold?
-        //
-        //   system_used  = MemTotal - MemAvailable          (includes our RSS)
-        //   others_used  = system_used - own_rss
-        //   target_own   = target_pct% * total - others_used
-        //
-        // Subtracting own RSS avoids the feedback where a larger self footprint
-        // raises system usage, which in turn lowers the computed target, causing
-        // oscillation.
-        long own_rss_kb     = get_own_rss_kb();
-        long system_used_kb = mi.total_kb - mi.available_kb;
-        long others_used_kb = system_used_kb - own_rss_kb;
-        if (others_used_kb < 0) {
-            others_used_kb = 0;
+        // If even the smoothed baseline exceeds max_percent, other processes are
+        // occupying more than the user's ceiling.  Use the EMA (not the raw value)
+        // to avoid false warnings from transient spikes.
+        if (g_baseline_ema >= max_percent) {
+            get_time_str(time_buf, sizeof(time_buf));
+            fprintf(stdout, "%s [Warning] baseline(EMA) %.1f%% >= max %.1f%%,"
+                    " other processes exceed your -p ceiling; holding\n",
+                    time_buf, g_baseline_ema, max_percent);
+            fflush(stdout);
+            for (int s = 0; s < LOOP_SEC_MAX && g_running; s++) {
+                sleep(1);
+            }
+            continue;
         }
 
+        // Determine target percentage for this cycle
+        int    active     = !has_window || in_time_window(start_min, end_min);
+        double target_pct;
+
+        if (active && max_percent > min_percent) {
+            double elapsed = difftime(time(NULL), prog_start);
+            target_pct = compute_target(min_percent, max_percent, elapsed, g_baseline_ema);
+        } else {
+            // Idle period: hold at the effective floor (max of min_percent and EMA baseline).
+            target_pct = (g_baseline_ema + 1.0 > min_percent) ? g_baseline_ema + 1.0 : min_percent;
+            if (target_pct > max_percent) target_pct = max_percent;
+        }
+
+        // Closed-loop calculation: how many chunks should we hold?
+        //
+        //   target_own = target_pct% * total - others_used
         long target_kb     = (long)(mi.total_kb * target_pct / 100.0);
         long target_own_kb = target_kb - others_used_kb;
         if (target_own_kb < 0) {
@@ -575,10 +624,18 @@ int main(int argc, char *argv[])
 
         // Log and adjust
         get_time_str(time_buf, sizeof(time_buf));
-        fprintf(stdout, "%s system=%.1f%%  target=%.1f%%  self=%lu MB  %s  ",
-                time_buf, used_pct, target_pct,
-                (unsigned long)g_nchunks * (CHUNK_SIZE >> 20),
-                active ? "active" : "idle");
+        if (g_baseline_ema > min_percent) {
+            fprintf(stdout, "%s system=%.1f%%  target=%.1f%%  self=%lu MB  baseline(EMA)=%.1f%%  %s  ",
+                    time_buf, used_pct, target_pct,
+                    (unsigned long)g_nchunks * (CHUNK_SIZE >> 20),
+                    g_baseline_ema,
+                    active ? "active" : "idle");
+        } else {
+            fprintf(stdout, "%s system=%.1f%%  target=%.1f%%  self=%lu MB  %s  ",
+                    time_buf, used_pct, target_pct,
+                    (unsigned long)g_nchunks * (CHUNK_SIZE >> 20),
+                    active ? "active" : "idle");
+        }
 
         if (diff > 0) {
             int n = (int)((diff < MAX_ADJUST_PER_CYCLE) ? diff : MAX_ADJUST_PER_CYCLE);
