@@ -9,9 +9,7 @@ Environment variable | Default value | Optional value | Description
 ### Server
 
 ```sh
-#
 # Server mode
-#
 ss-server \
   -s 0.0.0.0 \
   -p 80 \
@@ -24,18 +22,13 @@ ss-server \
   --fast-open \
   --no-delay
 
-#
-# Plugin options
-#
-# See net/shadowsocks-rust/README.md
+# Plugin options: see net/shadowsocks-rust/README.md
 ```
 
 ### Client
 
 ```sh
-#
 # Local mode
-#
 ss-local \
   -s 111.222.33.44 \
   -p 80 \
@@ -50,25 +43,5 @@ ss-local \
   --fast-open \
   --no-delay
 
-#
-# Plugin options
-#
-# See net/shadowsocks-rust/README.md
-```
-
-### Manager
-
-```sh
-#
-# Manager mode
-#
-ss-manager \
-  --manager-address 127.0.0.1:6000 \
-  -m aes-256-gcm \
-  -t 600 \
-  -n 1048576 \
-  -u \
-  --reuse-port \
-  --fast-open \
-  --no-delay
+# Plugin options: see net/shadowsocks-rust/README.md
 ```

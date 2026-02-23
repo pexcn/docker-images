@@ -24,10 +24,10 @@ ssservice server \
 #
 # Plugin options
 #
-# --plugin "obfs-server" --plugin-opts "obfs=http;fast-open;mptcp"
-# --plugin "obfs-server" --plugin-opts "obfs=tls;fast-open;mptcp"
-# --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;mode=websocket;host=example.com;path=/ws;loglevel=none"
-# --plugin "xray-plugin" --plugin-opts "server;tls;fast-open;mode=grpc;host=example.com;loglevel=none"
+# --plugin "obfs-server" --plugin-mode "tcp_only" --plugin-opts "obfs=http;fast-open;mptcp"
+# --plugin "obfs-server" --plugin-mode "tcp_only" --plugin-opts "obfs=tls;fast-open;mptcp"
+# --plugin "xray-plugin" --plugin-mode "tcp_only" --plugin-opts "server;tls;fast-open;mode=websocket;host=example.com;path=/ws;loglevel=none"
+# --plugin "xray-plugin" --plugin-mode "tcp_only" --plugin-opts "server;tls;fast-open;mode=grpc;host=example.com;loglevel=none"
 # --plugin "xray-plugin" --plugin-opts "server;fast-open;mode=quic;host=example.com;loglevel=none"
 # --plugin "qtun-server" --plugin-opts "acme_host=example.com"
 ```
@@ -95,29 +95,10 @@ ssservice local \
 #
 # Plugin options
 #
-# --plugin "obfs-local" --plugin-opts "obfs=http;obfs-host=cloudfront.com;fast-open;mptcp"
-# --plugin "obfs-local" --plugin-opts "obfs=tls;obfs-host=cloudfront.com;fast-open;mptcp"
-# --plugin "xray-plugin" --plugin-opts "tls;fast-open;mode=websocket;host=example.com;path=/ws?ed=2560;mux=4;loglevel=none"
-# --plugin "xray-plugin" --plugin-opts "tls;fast-open;mode=grpc;host=example.com;loglevel=none"
+# --plugin "obfs-local" --plugin-mode "tcp_only" --plugin-opts "obfs=http;obfs-host=cloudfront.com;fast-open;mptcp"
+# --plugin "obfs-local" --plugin-mode "tcp_only" --plugin-opts "obfs=tls;obfs-host=cloudfront.com;fast-open;mptcp"
+# --plugin "xray-plugin" --plugin-mode "tcp_only" --plugin-opts "tls;fast-open;mode=websocket;host=example.com;path=/ws?ed=2560;mux=4;loglevel=none"
+# --plugin "xray-plugin" --plugin-mode "tcp_only" --plugin-opts "tls;fast-open;mode=grpc;host=example.com;loglevel=none"
 # --plugin "xray-plugin" --plugin-opts "fast-open;mode=quic;host=example.com;loglevel=none"
 # --plugin "qtun-client" --plugin-opts "host=example.com"
-```
-
-### Manager
-
-```sh
-#
-# Manager mode
-#
-ssservice manager \
-  --manager-address [::1]:6000 \
-  --encrypt-method aes-128-gcm \
-  --timeout 600 \
-  --udp-timeout 300 \
-  --user nobody \
-  --nofile 1048576 \
-  --tcp-keep-alive 60 \
-  --tcp-fast-open \
-  --tcp-no-delay \
-  -U
 ```
