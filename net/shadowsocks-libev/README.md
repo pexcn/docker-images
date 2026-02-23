@@ -17,7 +17,7 @@ ss-server \
   -p 80 \
   -k password \
   -m aes-256-gcm \
-  -t 3600 \
+  -t 600 \
   -n 1048576 \
   -u \
   --reuse-port \
@@ -43,7 +43,7 @@ ss-local \
   -l 1080 \
   -k password \
   -m aes-256-gcm \
-  -t 3600 \
+  -t 600 \
   -n 1048576 \
   -u \
   --reuse-port \
@@ -65,7 +65,7 @@ ss-local \
 ss-manager \
   --manager-address 127.0.0.1:6000 \
   -m aes-256-gcm \
-  -t 3600 \
+  -t 600 \
   -n 1048576 \
   -u \
   --reuse-port \

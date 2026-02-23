@@ -12,11 +12,11 @@ ssservice server \
   --server-addr [::]:80 \
   --password password \
   --encrypt-method aes-128-gcm \
-  --timeout 3600 \
+  --timeout 600 \
   --udp-timeout 300 \
   --user nobody \
   --nofile 1048576 \
-  --tcp-keep-alive 300 \
+  --tcp-keep-alive 60 \
   --tcp-fast-open \
   --tcp-no-delay \
   -U
@@ -44,11 +44,11 @@ ssservice local \
   --server-addr 111.222.33.44:80 \
   --password password \
   --encrypt-method aes-128-gcm \
-  --timeout 3600 \
+  --timeout 600 \
   --udp-timeout 300 \
   --user nobody \
   --nofile 1048576 \
-  --tcp-keep-alive 300 \
+  --tcp-keep-alive 60 \
   --tcp-fast-open \
   --tcp-no-delay \
   -U
@@ -63,11 +63,11 @@ ssservice local \
   --server-addr 111.222.33.44:2077 \
   --password password \
   --encrypt-method aes-128-gcm \
-  --timeout 3600 \
+  --timeout 600 \
   --udp-timeout 300 \
   --user nobody \
   --nofile 1048576 \
-  --tcp-keep-alive 300 \
+  --tcp-keep-alive 60 \
   --tcp-fast-open \
   --tcp-no-delay \
   -U
@@ -81,11 +81,11 @@ ssservice local \
   --server-addr 111.222.33.44:2077 \
   --password password \
   --encrypt-method aes-128-gcm \
-  --timeout 3600 \
+  --timeout 600 \
   --udp-timeout 300 \
   --user nobody \
   --nofile 1048576 \
-  --tcp-keep-alive 300 \
+  --tcp-keep-alive 60 \
   --tcp-fast-open \
   --tcp-no-delay \
   --tcp-redir tproxy \
@@ -112,11 +112,11 @@ ssservice local \
 ssservice manager \
   --manager-address [::1]:6000 \
   --encrypt-method aes-128-gcm \
-  --timeout 3600 \
+  --timeout 600 \
   --udp-timeout 300 \
   --user nobody \
   --nofile 1048576 \
-  --tcp-keep-alive 300 \
+  --tcp-keep-alive 60 \
   --tcp-fast-open \
   --tcp-no-delay \
   -U

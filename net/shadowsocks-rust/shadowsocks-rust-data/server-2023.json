@@ -36,7 +36,7 @@
     "mode": "tcp_and_udp",
     "timeout": 600,
     "udp_timeout": 300,
-    "keep_alive": 300,
+    "keep_alive": 60,
     "nofile": 1048576,
     "no_delay": true,
     "fast_open": true
