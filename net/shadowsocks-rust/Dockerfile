@@ -77,12 +77,12 @@ RUN apk del .build-deps \
 #
 # Build stage [v2ray-plugin & xray-plugin]
 #
-FROM golang:1.22-alpine AS builder-ray
+FROM golang:1.26-alpine AS builder-ray
 
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git
 
-ARG V2RAY_VERSION=v5.15.1
+ARG V2RAY_VERSION=v5.46.0
 RUN git clone https://github.com/teddysun/v2ray-plugin.git --branch $V2RAY_VERSION \
   && cd v2ray-plugin \
   && env CGO_ENABLED=0 go build -v -trimpath -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w -buildid=" -o v2ray-plugin \
@@ -90,7 +90,7 @@ RUN git clone https://github.com/teddysun/v2ray-plugin.git --branch $V2RAY_VERSI
   && cd - \
   && rm -r v2ray-plugin
 
-ARG XRAY_VERSION=v1.8.11
+ARG XRAY_VERSION=v1.8.24
 RUN git clone https://github.com/teddysun/xray-plugin.git --branch $XRAY_VERSION \
   && cd xray-plugin \
   && env CGO_ENABLED=0 go build -v -trimpath -ldflags "-X main.VERSION=$(git describe --tags --abbrev=0) -s -w -buildid=" -o xray-plugin \
@@ -123,7 +123,7 @@ RUN apk update \
 #
 # Runtime stage
 #
-FROM alpine:3.22
+FROM alpine:3.23
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 RUN apk update \
