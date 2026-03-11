@@ -84,18 +84,20 @@ RUN apk del .build-deps \
 #
 FROM rust:alpine AS builder-qtun
 
-ARG QTUN_VERSION=db2e18c3555bcae27148c6bac3594ff969ed5634
 RUN apk update \
-  && apk add --no-cache --virtual .build-deps git musl-dev \
-  && git clone https://github.com/shadowsocks/qtun.git \
+  && apk add --no-cache --virtual .build-deps git musl-dev
+
+ARG QTUN_VERSION=ab58110075488f8411b0eafd3d9412be2ace3c61
+RUN git clone https://github.com/shadowsocks/qtun.git \
   && cd qtun \
   && git checkout $QTUN_VERSION \
   && cargo build --release \
   && strip target/release/qtun-server target/release/qtun-client \
   && install target/release/qtun-server target/release/qtun-client /usr/local/bin/ \
   && cd - \
-  && rm -r qtun \
-  && apk del .build-deps \
+  && rm -r qtun
+
+RUN apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
 #
