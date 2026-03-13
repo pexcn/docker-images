@@ -161,15 +161,11 @@ RUN apk del .build-deps \
 #
 # Runtime stage
 #
-FROM alpine
+FROM alpine:3.23
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 RUN apk update \
   && apk add --no-cache tzdata \
-  && rm -rf /var/cache/apk/*
-
-RUN apk update \
-  && apk add --no-cache ca-certificates \
   && rm -rf /var/cache/apk/*
 
 COPY --from=builder-ss /usr/local/bin/ /usr/local/bin/
