@@ -32,13 +32,14 @@ RUN apt-get update \
 ARG UTIL_VERSION=2.41.3
 RUN curl https://www.kernel.org/pub/linux/utils/util-linux/v$(echo "$UTIL_VERSION" | cut -d'.' -f1-2)/util-linux-${UTIL_VERSION}.tar.gz | tar zxv \
   && cd util-linux-${UTIL_VERSION} \
+  && [ "$(dpkg --print-architecture)" != "arm64" ] || LDFLAGS_EXT="-lc" \
   && ./configure \
       --prefix=/usr/local \
       --disable-all-programs \
       --enable-last \
       --disable-liblastlog2 \
       CFLAGS="-O3 -pipe" \
-      LDFLAGS="-Wl,-static -static -static-libgcc -no-pie -Wl,--build-id=none" \
+      LDFLAGS="-Wl,-static -static -static-libgcc -no-pie -Wl,--build-id=none $LDFLAGS_EXT" \
   && make -j$(nproc) \
   && make install-strip \
   && cd - \
