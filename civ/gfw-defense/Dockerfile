@@ -15,7 +15,7 @@ RUN --mount=type=ssh \
   && git clone git@github.com:pexcn/gfw-defense.git \
   && cd gfw-defense \
   && git checkout $VERSION \
-  && CFLAGS="-O3" LDFLAGS="-static -Wl,--build-id=none -no-pie -s" shc -B -f gfw-defense.sh -o gfw-defense \
+  && CFLAGS="-O3" LDFLAGS="-static -Wl,--build-id=none -no-pie -s" shc -B -r -f gfw-defense.sh -o gfw-defense \
   && install gfw-defense /usr/local/bin/ \
   && cd - \
   && rm -r gfw-defense \
