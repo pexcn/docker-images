@@ -49,7 +49,7 @@ FROM alpine:3.23
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 RUN apk update \
-  && apk add --no-cache curl iptables iptables-legacy ipset tzdata \
+  && apk add --no-cache curl iptables iptables-legacy ipset openssl tzdata \
   && rm -rf /var/cache/apk/*
 
 # No chinazi please.
