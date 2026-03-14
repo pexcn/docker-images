@@ -21,6 +21,7 @@ services:
       AUTO_BLOCK_MAX_FAILURES: 3
       UPDATE_LIST_INTERVAL: 0
       UPDATE_LIST_URLS: https://raw.githubusercontent.com/pexcn/daily/gh-pages/chnroute/chnroute.txt
+      LICENSE_KEY: 3d15dc3e797aa7e38a833c1c89c45c05
     volumes:
       - /var/log/btmp:/var/log/btmp:ro
       - ./gfw-defense-data:/etc/gfw-defense

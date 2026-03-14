@@ -5,6 +5,23 @@
 #
 # Build stage
 #
+FROM alpine:3.23 AS builder
+
+ARG VERSION=4fe3b3036ffb7235b1aafc1dbb9c5066504fcda9
+RUN --mount=type=ssh \
+  apk add --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/edge/testing \
+      --virtual .build-deps git openssh-client gcc musl-dev shc \
+  && mkdir -p -m 0700 /root/.ssh && ssh-keyscan github.com >> /root/.ssh/known_hosts \
+  && git clone git@github.com:pexcn/gfw-defense.git \
+  && cd gfw-defense \
+  && git checkout $VERSION \
+  && CFLAGS="-O3" LDFLAGS="-static -Wl,--build-id=none -no-pie -s" shc -B -f gfw-defense.sh -o gfw-defense \
+  && install gfw-defense /usr/local/bin/ \
+  && cd - \
+  && rm -r gfw-defense \
+  && apk del .build-deps \
+  && rm -rf /var/cache/apk/*
+
 FROM debian:bookworm-slim AS builder-util
 
 RUN apt-get update \
@@ -35,7 +52,7 @@ RUN apk update \
   && apk add --no-cache curl iptables iptables-legacy ipset tzdata \
   && rm -rf /var/cache/apk/*
 
-# If a country cannot guarantee freedom of speech for its people, then it has no reason to exist.
+# No chinazi please.
 RUN rm \
     /usr/share/zoneinfo/PRC \
     /usr/share/zoneinfo/Asia/Chongqing \
@@ -51,9 +68,9 @@ RUN mkdir -p /etc/gfw-defense \
   && touch /etc/gfw-defense/blacklist.txt \
   && touch /etc/gfw-defense/whitelist.txt
 
+COPY --from=builder /usr/local/bin/gfw-defense /usr/local/bin/
 COPY --from=builder-util /usr/local/bin/last /usr/local/bin/
 RUN ln -s last /usr/local/bin/lastb
-COPY gfw-defense.sh /usr/local/bin/
 
 ENV BLOCKING_POLICY=DROP
 ENV PASSING_POLICY=ACCEPT
@@ -69,5 +86,6 @@ ENV AUTO_BLOCK_INTERVAL=0
 ENV AUTO_BLOCK_MAX_FAILURES=3
 ENV UPDATE_LIST_INTERVAL=0
 ENV UPDATE_LIST_URLS=
+ENV LICENSE_KEY=
 
-ENTRYPOINT ["gfw-defense.sh"]
+ENTRYPOINT ["gfw-defense"]
