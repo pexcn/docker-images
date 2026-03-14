@@ -29,16 +29,18 @@ RUN apt-get update \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
-ARG UTIL_VERSION=2.41.2
+ARG UTIL_VERSION=2.41.3
 RUN curl https://www.kernel.org/pub/linux/utils/util-linux/v$(echo "$UTIL_VERSION" | cut -d'.' -f1-2)/util-linux-${UTIL_VERSION}.tar.gz | tar zxv \
   && cd util-linux-${UTIL_VERSION} \
   && ./configure \
-      --without-python \
+      --prefix=/usr/local \
+      --disable-all-programs \
+      --enable-last \
       --disable-liblastlog2 \
       CFLAGS="-O3 -pipe" \
-      LDFLAGS="-Wl,--build-id=none -Wl,-static -static -static-libgcc -no-pie -Wl,-s" \
-  && make -j$(nproc) last \
-  && install last /usr/local/bin/ \
+      LDFLAGS="-Wl,-static -static -static-libgcc -no-pie -Wl,--build-id=none" \
+  && make -j$(nproc) \
+  && make install-strip \
   && cd - \
   && rm -r util-linux-${UTIL_VERSION}
 
