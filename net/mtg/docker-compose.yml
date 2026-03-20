@@ -1,0 +1,10 @@
+services:
+  mtg:
+    image: pexcn/docker-images:mtg
+    container_name: mtg
+    restart: unless-stopped
+    network_mode: host
+    command: >
+      simple-run 0.0.0.0:8443 eec380eb8b5fc5d3981d27cc3ea31a1d557777772e746d616c6c2e686b
+        --prefer-ip=prefer-ipv4
+        --doh-ip=8.8.8.8
