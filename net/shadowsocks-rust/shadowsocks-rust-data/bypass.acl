@@ -1,0 +1,11 @@
+[proxy_all]
+
+[bypass_list]
+# Club Sim
+||clubsim.com.hk
+
+# iFAST
+||ifastgb.com
+||fundsupermart.com
+||zimperium.com
+||ifastcorp.com

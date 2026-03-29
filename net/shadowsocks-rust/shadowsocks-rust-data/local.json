@@ -44,6 +44,7 @@
         }
     ],
 
+    "acl": "/etc/shadowsocks-rust/bypass.acl",
     "mode": "tcp_and_udp",
     "timeout": 600,
     "udp_timeout": 300,
