@@ -10,7 +10,7 @@ FROM golang:1.26-alpine AS builder
 ARG DASHBOARD_VER=v2.0.7
 ARG SWAG_VER=v1.16.6
 RUN apk add --no-cache --virtual .build-deps git bash yq curl gcc musl-dev \
-  && git clone https://github.com/naiba/nezha.git --branch $DASHBOARD_VER \
+  && git clone https://github.com/nezhahq/nezha.git --branch $DASHBOARD_VER \
   && cd nezha \
   && ./script/fetch-frontends.sh \
   # TODO: country.mmdb
