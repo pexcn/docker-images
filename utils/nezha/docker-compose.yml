@@ -1,0 +1,10 @@
+services:
+  nezha-dashboard:
+    image: pexcn/docker-images:nezha
+    container_name: nezha-dashboard
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TZ: Asia/Taipei
+    volumes:
+      - ./nezha-data:/opt/nezha
