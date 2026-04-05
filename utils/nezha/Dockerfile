@@ -50,6 +50,7 @@ RUN apk add --no-cache ca-certificates tzdata \
 
 COPY --from=builder /usr/local/bin/dashboard /usr/local/bin/
 COPY --from=builder /usr/local/bin/agent /usr/local/bin/
+COPY nezha.sh /usr/local/bin/
 
 RUN mkdir -p /opt/nezha \
   && chown -R nobody:nobody /opt/nezha
