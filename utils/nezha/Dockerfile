@@ -48,6 +48,9 @@ LABEL maintainer="pexcn <pexcn97@gmail.com>"
 RUN apk add --no-cache ca-certificates tzdata \
   && rm -rf /var/cache/apk/*
 
+# make the agent to read information from /etc/os-release
+RUN rm /etc/alpine-release
+
 COPY --from=builder /usr/local/bin/dashboard /usr/local/bin/
 COPY --from=builder /usr/local/bin/agent /usr/local/bin/
 COPY nezha.sh /usr/local/bin/

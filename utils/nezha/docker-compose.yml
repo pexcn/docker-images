@@ -8,3 +8,16 @@ services:
       TZ: Asia/Taipei
     volumes:
       - ./nezha-data:/opt/nezha
+
+  nezha-agent:
+    image: pexcn/docker-images:nezha
+    container_name: nezha-agent
+    restart: unless-stopped
+    network_mode: host
+    pid: host
+    environment:
+      TZ: Asia/Taipei
+    volumes:
+      - /etc/os-release:/etc/os-release:ro
+      - ./nezha-data:/opt/nezha
+    command: agent -c /opt/nezha/agent.yml
