@@ -25,6 +25,20 @@ RUN apk add --no-cache --virtual .build-deps git bash yq curl gcc musl-dev \
   && apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
+ARG TARGETARCH
+ARG AGENT_VER=v2.0.2
+RUN apk add --no-cache --virtual .build-deps git \
+  && git clone https://github.com/nezhahq/agent.git --branch $AGENT_VER \
+  && cd agent \
+  && env CGO_ENABLED=0 go build -v -trimpath -mod=readonly \
+      -ldflags="-s -w -buildid= -X github.com/nezhahq/agent/pkg/monitor.Version=${AGENT_VER} -X main.arch=${TARGETARCH}" \
+      ./cmd/agent \
+  && install agent /usr/local/bin/ \
+  && cd - \
+  && rm -r agent \
+  && apk del .build-deps \
+  && rm -rf /var/cache/apk/*
+
 #
 # Runtime stage
 #
@@ -35,6 +49,7 @@ RUN apk add --no-cache ca-certificates tzdata \
   && rm -rf /var/cache/apk/*
 
 COPY --from=builder /usr/local/bin/dashboard /usr/local/bin/
+COPY --from=builder /usr/local/bin/agent /usr/local/bin/
 
 RUN mkdir -p /opt/nezha \
   && chown -R nobody:nobody /opt/nezha
