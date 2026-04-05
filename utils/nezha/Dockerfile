@@ -41,4 +41,4 @@ RUN mkdir -p /opt/nezha \
 WORKDIR /opt/nezha
 USER nobody
 EXPOSE 8008
-ENTRYPOINT ["dashboard"]
+ENTRYPOINT ["nezha.sh"]
