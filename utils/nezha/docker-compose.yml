@@ -8,6 +8,7 @@ services:
       TZ: Asia/Taipei
     volumes:
       - ./nezha-data:/opt/nezha
+    command: dashboard -c /opt/nezha/dashboard.yml -db /opt/nezha/dashboard.db
 
   nezha-agent:
     image: pexcn/docker-images:nezha
