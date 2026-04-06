@@ -161,6 +161,8 @@ jobs:
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
           ssh: default=${{ env.SSH_AUTH_SOCK }}
+          secrets: |
+            ipinfo_token=${{ secrets.IPINFO_TOKEN }}
 
   clean-untagged:
     if: always()
