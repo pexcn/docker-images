@@ -13,7 +13,7 @@ RUN apk add --no-cache --virtual .build-deps git bash yq curl gcc musl-dev \
   && git clone https://github.com/nezhahq/nezha.git --branch $DASHBOARD_VER \
   && cd nezha \
   && ./script/fetch-frontends.sh \
-  # TODO: country.mmdb
+  && curl -L https://ipinfo.io/data/free/country.mmdb?token=${IPINFO_TOKEN} -o pkg/geoip/geoip.db \
   && go install github.com/swaggo/swag/cmd/swag@${SWAG_VER} \
   && swag init --pd -d cmd/dashboard -g main.go -o cmd/dashboard/docs \
   && env CGO_ENABLED=1 go build -v -trimpath -mod=readonly -tags "go_json,musl" \
