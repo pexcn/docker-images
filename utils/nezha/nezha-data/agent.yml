@@ -4,3 +4,4 @@ tls: true
 disable_auto_update: true
 disable_command_execute: true
 disable_force_update: true
+disable_nat: true
