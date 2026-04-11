@@ -5,60 +5,26 @@
 #
 # Build stage
 #
-FROM alpine:3.20 AS builder
+FROM alpine:3.23 AS builder
 
-ARG QUICTLS_VER=openssl-3.1.5-quic1
-RUN apk update \
-  && apk add --no-cache --virtual .build-deps \
-      git perl gcc make musl-dev linux-headers \
-  && git clone https://github.com/quictls/openssl.git --branch $QUICTLS_VER --single-branch --recurse-submodules -j$(nproc) quictls-${QUICTLS_VER} \
-  && cd quictls-${QUICTLS_VER} \
-  && case $(apk --print-arch) in \
-       x86_64) extra_args="enable-ec_nistp_64_gcc_128";; \
-       *) extra_args="";; \
-     esac \
-  && ./Configure \
-      --prefix=/usr \
-      --openssldir=/etc/ssl \
-      --libdir=lib \
-      shared \
-      no-weak-ssl-ciphers \
-      enable-ktls \
-      $extra_args \
-  && make -j$(nproc) \
-  && make install_sw \
-  && make clean \
-  && cd - \
-  && rm -rf quictls-${QUICTLS_VER} \
-  && apk del .build-deps \
-  && rm -rf /var/cache/apk/*
-
-ARG NGINX_VER=1.26.1
+ARG NGINX_VER=1.28.3
 ARG NGX_BROTLI_VER=a71f9312c2deb28875acc7bacfdd5695a111aa53
-ARG NGX_UPSTREAM_CHECK_VER=244e1cd436d496279b1649304b0985ae5621465c
+ARG NGX_UPSTREAM_CHECK_VER=973877bb0564875e750230f95f4a2e3cac7c3840
 ARG NGX_SUBS_FILTER_VER=e12e965ac1837ca709709f9a26f572a54d83430e
 ARG NGX_GOOGLE_FILTER_VER=bab4e945db9170cb32b49ac928f14b06313893eb
 RUN apk update \
   && apk add --no-cache --virtual .build-deps \
-      curl git patch make gcc g++ linux-headers pcre2-dev brotli-static zlib-static \
+      curl git patch make gcc g++ linux-headers pcre2-dev pcre2-static \
+      openssl-dev openssl-libs-static brotli-static zlib-static \
   && curl https://nginx.org/download/nginx-${NGINX_VER}.tar.gz | tar zxv \
   && git clone https://github.com/google/ngx_brotli.git --recurse-submodules ngx_brotli \
   && git clone https://github.com/pexcn/ngx_upstream_check.git ngx_upstream_check \
   && git clone https://github.com/yaoweibin/ngx_http_substitutions_filter_module.git ngx_subs_filter \
   && git clone https://github.com/GetPageSpeed/ngx_http_google_filter_module.git ngx_google_filter \
-  && cd ngx_brotli \
-  && git checkout $NGX_BROTLI_VER \
-  && cd - \
-  && cd ngx_upstream_check \
-  && git checkout $NGX_UPSTREAM_CHECK_VER \
-  && patch -d ../nginx-${NGINX_VER} -p1 < check_1.20.1+.patch \
-  && cd - \
-  && cd ngx_subs_filter \
-  && git checkout $NGX_SUBS_FILTER_VER \
-  && cd - \
-  && cd ngx_google_filter \
-  && git checkout $NGX_GOOGLE_FILTER_VER \
-  && cd - \
+  && cd ngx_brotli && git checkout $NGX_BROTLI_VER && cd - \
+  && cd ngx_upstream_check && git checkout $NGX_UPSTREAM_CHECK_VER && patch -d ../nginx-${NGINX_VER} -p1 < check_1.28.1+.patch && cd - \
+  && cd ngx_subs_filter && git checkout $NGX_SUBS_FILTER_VER && cd - \
+  && cd ngx_google_filter && git checkout $NGX_GOOGLE_FILTER_VER && cd - \
   && cd nginx-${NGINX_VER} \
   && ./configure \
       --prefix=/etc/nginx \
@@ -78,14 +44,13 @@ RUN apk update \
       --group=nginx \
       --with-file-aio \
       --with-threads \
-      --with-http_sub_module \
       --with-http_addition_module \
       --with-http_auth_request_module \
       --with-http_dav_module \
       --with-http_flv_module \
+      --with-http_mp4_module \
       --with-http_gunzip_module \
       --with-http_gzip_static_module \
-      --with-http_mp4_module \
       --with-http_random_index_module \
       --with-http_realip_module \
       --with-http_secure_link_module \
@@ -100,7 +65,7 @@ RUN apk update \
       --with-stream_ssl_module \
       --with-stream_ssl_preread_module \
       --with-cc-opt='-O3 -flto=auto' \
-      --with-ld-opt='-s -Wl,--build-id=none -l:libpcre2-8.a -l:libssl.a -l:libcrypto.a -l:libz.a' \
+      --with-ld-opt='-flto=auto -static -s -Wl,--build-id=none -Wl,-z,relro,-z,now' \
       --with-compat \
       --add-dynamic-module=/ngx_brotli \
       --add-dynamic-module=/ngx_upstream_check \
@@ -108,7 +73,6 @@ RUN apk update \
       --add-dynamic-module=/ngx_google_filter \
   && make -j$(nproc) \
   && make install \
-  && make clean \
   && cd - \
   && rm -rf nginx-${NGINX_VER} ngx_brotli ngx_upstream_check ngx_subs_filter ngx_google_filter \
   && apk del .build-deps \
@@ -117,7 +81,7 @@ RUN apk update \
 #
 # Runtime stage
 #
-FROM alpine:3.20
+FROM alpine:3.23
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 RUN apk update \
