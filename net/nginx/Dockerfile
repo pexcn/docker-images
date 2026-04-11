@@ -85,7 +85,7 @@ FROM alpine:3.23
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 RUN apk update \
-  && apk add --no-cache tzdata \
+  && apk add --no-cache ca-certificates tzdata \
   && rm -rf /var/cache/apk/*
 
 COPY --from=builder /etc/nginx/ /etc/nginx/

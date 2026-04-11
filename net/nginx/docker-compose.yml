@@ -8,10 +8,6 @@ services:
       - NET_ADMIN
       - SYS_ADMIN
       - SYS_NICE
-    logging:
-      options:
-        max-file: 5
-        max-size: 20m
     labels:
       - "me.pexcn.container.name=nginx"
     environment:
