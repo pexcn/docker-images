@@ -65,7 +65,7 @@ RUN apk update \
       --with-stream_ssl_module \
       --with-stream_ssl_preread_module \
       --with-cc-opt='-O3 -flto=auto' \
-      --with-ld-opt='-flto=auto -static -s -Wl,--build-id=none -Wl,-z,relro,-z,now' \
+      --with-ld-opt='-flto=auto -s -Wl,--build-id=none -Wl,-z,relro,-z,now -l:libssl.a -l:libcrypto.a -l:libpcre2-8.a -l:libz.a' \
       --with-compat \
       --add-dynamic-module=/ngx_brotli \
       --add-dynamic-module=/ngx_upstream_check \
