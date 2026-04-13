@@ -13,8 +13,8 @@ RUN > /etc/apt/sources.list \
   && echo "deb http://security.debian.org/debian-security/ bookworm-security main" >> /etc/apt/sources.list
 
 # don't exclude some languages for dpkg
-RUN echo 'path-include /usr/share/locale/zh_CN/*' >> /etc/dpkg/dpkg.cfg.d/append-dpkg-languages \
-  && echo 'path-include /usr/share/locale/zh_TW/*' >> /etc/dpkg/dpkg.cfg.d/append-dpkg-languages \
+RUN echo 'path-include /usr/share/locale/zh_CN/*' > /etc/dpkg/dpkg.cfg.d/package-languages \
+  && echo 'path-include /usr/share/locale/zh_TW/*' >> /etc/dpkg/dpkg.cfg.d/package-languages \
   && apt-get update \
   && apt-get install --no-install-recommends --reinstall -y \
       apt bash bsdutils coreutils diffutils dpkg findutils \
