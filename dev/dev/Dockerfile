@@ -16,7 +16,7 @@ RUN > /etc/apt/sources.list \
 RUN echo 'path-include /usr/share/locale/zh_CN/*' >> /etc/dpkg/dpkg.cfg.d/append-dpkg-languages \
   && echo 'path-include /usr/share/locale/zh_TW/*' >> /etc/dpkg/dpkg.cfg.d/append-dpkg-languages \
   && apt-get update \
-  && apt-get install --no-install-recommends -y \
+  && apt-get install --no-install-recommends --reinstall -y \
       apt bash bsdutils coreutils diffutils dpkg findutils \
       grep gzip sed tar util-linux util-linux-extra \
   && apt-get clean \
