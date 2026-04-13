@@ -12,6 +12,16 @@ RUN > /etc/apt/sources.list \
   && echo "deb http://deb.debian.org/debian bookworm-backports main" >> /etc/apt/sources.list \
   && echo "deb http://security.debian.org/debian-security/ bookworm-security main" >> /etc/apt/sources.list
 
+# don't exclude some languages for dpkg
+RUN echo 'path-include /usr/share/locale/zh_CN/*' >> /etc/dpkg/dpkg.cfg.d/append-dpkg-languages \
+  && path-include '/usr/share/locale/zh_TW/*' >> /etc/dpkg/dpkg.cfg.d/append-dpkg-languages \
+  && apt-get update \
+  && apt-get install --no-install-recommends -y \
+      apt bash bsdutils coreutils diffutils dpkg findutils \
+      grep gzip sed tar util-linux util-linux-extra \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
 # install packages
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
