@@ -5,6 +5,7 @@ listen_port: 8008
 location: Asia/Taipei
 site_name: Server Status
 tls: true
+jwt_timeout: 12
 tsdb:
   data_path: /opt/nezha/tsdb
   retention_days: 30
