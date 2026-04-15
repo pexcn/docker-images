@@ -82,8 +82,7 @@ RUN apk add --no-cache --virtual .build-deps \
 FROM alpine:3.23
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
-RUN apk add --no-cache ca-certificates tzdata \
-      nginx-mod-http-geoip2 nginx-mod-stream-geoip2
+RUN apk add --no-cache ca-certificates tzdata
 
 COPY --from=builder /etc/nginx/ /etc/nginx/
 COPY --from=builder /etc/nginx/html/ /usr/share/nginx/html/
@@ -105,8 +104,7 @@ RUN mkdir /var/log/nginx \
   && ln -sf /dev/stderr /var/log/nginx/error.log
 
 # clean directory structure
-RUN rm /etc/nginx/*.default \
-  && rm -r /etc/nginx/modules
+RUN rm /etc/nginx/*.default
 
 STOPSIGNAL SIGQUIT
 
