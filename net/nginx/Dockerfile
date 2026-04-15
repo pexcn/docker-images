@@ -100,7 +100,6 @@ RUN addgroup -g $NGINX_GID -S nginx \
   && adduser -S -D -H -u $NGINX_UID -h /var/cache/nginx -s /sbin/nologin -G nginx -g nginx nginx
 
 # prepare nginx working directory
-# manually created because the above `adduser` command is to be used as a reference for other dockerfiles
 RUN mkdir /var/cache/nginx
 
 # redirect log path to stdout/stderr
@@ -108,9 +107,8 @@ RUN mkdir /var/log/nginx \
   && ln -sf /dev/stdout /var/log/nginx/access.log \
   && ln -sf /dev/stderr /var/log/nginx/error.log
 
-# optimize directory structure
-RUN rm /etc/nginx/*.default \
-  && ln -s /usr/lib/nginx/modules /etc/nginx/modules
+# clean directory structure
+RUN rm /etc/nginx/*.default
 
 STOPSIGNAL SIGQUIT
 
