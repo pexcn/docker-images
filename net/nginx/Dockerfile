@@ -7,9 +7,9 @@
 #
 FROM alpine:3.23 AS builder
 
-ARG NGINX_VER=1.28.3
+ARG NGINX_VER=1.30.0
 ARG NGX_BROTLI_VER=a71f9312c2deb28875acc7bacfdd5695a111aa53
-ARG NGX_UPSTREAM_CHECK_VER=973877bb0564875e750230f95f4a2e3cac7c3840
+ARG NGX_UPSTREAM_CHECK_VER=ccd94c732adba1a385776cd59283d041cf75c740
 ARG NGX_SUBS_FILTER_VER=e12e965ac1837ca709709f9a26f572a54d83430e
 ARG NGX_GOOGLE_FILTER_VER=bab4e945db9170cb32b49ac928f14b06313893eb
 RUN apk update \
@@ -22,7 +22,7 @@ RUN apk update \
   && git clone https://github.com/yaoweibin/ngx_http_substitutions_filter_module.git ngx_subs_filter \
   && git clone https://github.com/GetPageSpeed/ngx_http_google_filter_module.git ngx_google_filter \
   && cd ngx_brotli && git checkout $NGX_BROTLI_VER && cd - \
-  && cd ngx_upstream_check && git checkout $NGX_UPSTREAM_CHECK_VER && patch -d ../nginx-${NGINX_VER} -p1 < check_1.28.1+.patch && cd - \
+  && cd ngx_upstream_check && git checkout $NGX_UPSTREAM_CHECK_VER && patch -d ../nginx-${NGINX_VER} -p1 < check_1.30.0+.patch && cd - \
   && cd ngx_subs_filter && git checkout $NGX_SUBS_FILTER_VER && cd - \
   && cd ngx_google_filter && git checkout $NGX_GOOGLE_FILTER_VER && cd - \
   && cd nginx-${NGINX_VER} \
