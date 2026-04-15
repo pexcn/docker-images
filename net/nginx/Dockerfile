@@ -12,8 +12,7 @@ ARG NGX_BROTLI_VER=a71f9312c2deb28875acc7bacfdd5695a111aa53
 ARG NGX_UPSTREAM_CHECK_VER=ccd94c732adba1a385776cd59283d041cf75c740
 ARG NGX_SUBS_FILTER_VER=e12e965ac1837ca709709f9a26f572a54d83430e
 ARG NGX_GOOGLE_FILTER_VER=bab4e945db9170cb32b49ac928f14b06313893eb
-RUN apk update \
-  && apk add --no-cache --virtual .build-deps \
+RUN apk add --no-cache --virtual .build-deps \
       curl git patch make gcc g++ linux-headers pcre2-dev pcre2-static \
       openssl-dev openssl-libs-static brotli-static zlib-static \
   && curl https://nginx.org/download/nginx-${NGINX_VER}.tar.gz | tar zxv \
@@ -74,9 +73,8 @@ RUN apk update \
   && make -j$(nproc) \
   && make install \
   && cd - \
-  && rm -rf nginx-${NGINX_VER} ngx_brotli ngx_upstream_check ngx_subs_filter ngx_google_filter \
-  && apk del .build-deps \
-  && rm -rf /var/cache/apk/*
+  && rm -r nginx-${NGINX_VER} ngx_brotli ngx_upstream_check ngx_subs_filter ngx_google_filter \
+  && apk del .build-deps
 
 #
 # Runtime stage
@@ -84,9 +82,7 @@ RUN apk update \
 FROM alpine:3.23
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
-RUN apk update \
-  && apk add --no-cache ca-certificates tzdata \
-  && rm -rf /var/cache/apk/*
+RUN apk add --no-cache ca-certificates tzdata
 
 COPY --from=builder /etc/nginx/ /etc/nginx/
 COPY --from=builder /etc/nginx/html/ /usr/share/nginx/html/
