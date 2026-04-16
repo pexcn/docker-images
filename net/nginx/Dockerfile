@@ -68,7 +68,7 @@ RUN apk add --no-cache --virtual .build-deps \
       --with-stream_ssl_module \
       --with-stream_ssl_preread_module \
       --with-cc-opt='-O3 -flto=auto' \
-      --with-ld-opt='-flto=auto -s -Wl,--build-id=none -Wl,-z,relro,-z,now -l:libssl.a -l:libcrypto.a -l:libpcre2-8.a -l:libz.a' \
+      --with-ld-opt='-flto=auto -s -Wl,--build-id=none -Wl,-z,relro,-z,now -l:libssl.a -l:libcrypto.a -l:libpcre2-8.a -l:libz.a -l:libmaxminddb.a' \
       --with-compat \
       --add-dynamic-module=/ngx_brotli \
       --add-dynamic-module=/ngx_geoip2 \
