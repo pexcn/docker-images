@@ -108,8 +108,9 @@ RUN mkdir /var/log/nginx \
   && ln -sf /dev/stdout /var/log/nginx/access.log \
   && ln -sf /dev/stderr /var/log/nginx/error.log
 
-# clean directory structure
-RUN rm /etc/nginx/*.default
+# optimize directory structure
+RUN rm /etc/nginx/*.default \
+  && ln -s /usr/lib/nginx/modules /etc/nginx/modules
 
 STOPSIGNAL SIGQUIT
 
