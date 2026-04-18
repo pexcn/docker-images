@@ -1,0 +1,123 @@
+# Nezha Monitoring
+
+## Custom Codes
+
+```html
+<style>
+/* 隐藏滚动条 */
+html {
+  scrollbar-width: none;
+}
+html::-webkit-scrollbar {
+  display: none;
+}
+
+/* 隐藏站点名后面的竖线和描述 */
+.header-top > section.cursor-pointer > .shrink-0.bg-border,
+.header-top > section.cursor-pointer > p {
+  display: none !important;
+}
+
+/* 隐藏右上角搜索按钮 */
+.header-handles > button[title="Search"] {
+  display: none !important;
+}
+
+/* 隐藏右上角主题切换按钮 */
+.header-handles > button:has(svg.lucide-sun):has(svg.lucide-moon) {
+  display: none !important;
+}
+
+/* 隐藏右上角背景按钮 */
+.header-handles > button:has(svg.lucide-image-minus) {
+  display: none !important;
+}
+
+/* 隐藏右侧排序按钮 */
+.server-overview-controls > button:last-of-type {
+  display: none !important;
+}
+
+/* 隐藏不需要的语言选择项 */
+[role="menu"]:has(> [role="menuitem"]:nth-child(7)) > [role="menuitem"]:nth-child(n+4) {
+  display: none !important;
+}
+
+/* 隐藏页脚 */
+.server-footer {
+  display: none !important;
+}
+
+/* 背景模糊 */
+div.fixed.inset-0.z-0.bg-cover {
+  filter: blur(4px) brightness(0.6);
+  transform: scale(1.06);
+  transform-origin: center;
+}
+
+/* 分组按钮文字为大写 */
+.server-overview-controls > section > .scrollbar-hidden > div {
+  text-transform: uppercase;
+}
+
+/* 调整右上角按钮透明度 */
+.header-handles > button {
+  background-color: hsl(var(--card) / 0.6) !important;
+}
+.header-handles > button:hover {
+  background-color: hsl(var(--card) / 0.8) !important;
+}
+
+/* 调整分组按钮透明度 */
+.server-overview-controls > section > .scrollbar-hidden > div {
+  background-color: hsl(var(--card) / 0.6) !important;
+}
+
+/* 调整概览卡片透明度 */
+main .grid:first-of-type > .rounded-lg.border {
+  background-color: hsl(var(--card) / 0.6) !important;
+}
+main .grid:first-of-type > .rounded-lg.border:hover {
+  background-color: hsl(var(--card) / 0.8) !important;
+}
+
+/* 调整服务器卡片透明度 */
+main div.rounded-lg.border.cursor-pointer:has(> section[style*="grid-template-columns"]) {
+  background-color: hsl(var(--card) / 0.6) !important;
+}
+main div.rounded-lg.border.cursor-pointer:has(> section[style*="grid-template-columns"]):hover {
+  background-color: hsl(var(--card) / 0.8) !important;
+}
+
+/* 调整概览卡片高度 */
+main .grid:first-of-type > .rounded-lg.border {
+  min-height: 105px !important;
+}
+
+/* 调整服务器卡片高度 */
+main div.rounded-lg.border.cursor-pointer:has(> section[style*="grid-template-columns"]) {
+  min-height: 100px !important;
+}
+
+/* 调整服务器卡片进度条高度 */
+main div.rounded-lg.border.cursor-pointer [role="progressbar"] {
+  height: 4.4px !important;
+  border-radius: 2px !important;
+  overflow: hidden !important;
+}
+
+/* 调整服务器卡片内文字间距 */
+/* TODO... */
+</style>
+
+<script>
+window.CustomBackgroundImage = "https://pexcn.github.io/bing-wallpaper/2026/03/25/20260325-zh.jpg";
+window.CustomLogo = 'https://raw.githubusercontent.com/pexcn/pexcn/master/pacman.svg';
+window.DisableAnimatedMan = true;
+window.ForceTheme = "dark";
+//window.ForceShowServices = true;
+//window.ForceCardInline = true;
+//window.ForceShowMap = true;
+window.ForcePeakCutEnabled = true;
+</script>
+```
