@@ -3,9 +3,10 @@
 ## Custom Codes
 
 ```html
-<!-- Official Theme Configs  -->
+<!-- Dash Configs  -->
 <script>
-window.CustomBackgroundImage = "https://pexcn.github.io/bing-wallpaper/2026/03/25/20260325-zh.jpg";
+window.CustomBackgroundImage = "https://pexcn.github.io/bing-wallpaper/latest-desktop.jpg";
+window.CustomMobileBackgroundImage = "https://pexcn.github.io/bing-wallpaper/latest-mobile.jpg";
 window.CustomLogo = "https://cdn.jsdelivr.net/gh/pexcn/docker-images@master/utils/nezha/custom-theme/assets/logo.svg";
 window.DisableAnimatedMan = true;
 window.ForceTheme = "dark";
@@ -25,7 +26,7 @@ window.ForcePeakCutEnabled = true;
 <!-- Custom Favicon  -->
 <script>
 window.CustomFavicon = "🍍🍓🍅🥝🍤🍥🍭🎃🐙🐸🦀🧬😎🤓🤡🖕🤏💊🚀🌀";
-//window.CustomFavicon = "https://cdn.jsdelivr.net/gh/pexcn/pexcn.github.io@master/frog.png";
+//window.CustomFavicon = "https://cdn.jsdelivr.net/gh/pexcn/docker-images@master/utils/nezha/custom-theme/assets/logo.svg";
 </script>
 <script src="https://cdn.jsdelivr.net/gh/pexcn/docker-images@master/utils/nezha/custom-theme/js/custom-favicon.js"></script>
 ```
