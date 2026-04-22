@@ -108,7 +108,6 @@ jobs:
     uses: pexcn/github-builder/.github/workflows/build.yml@main
     permissions:
       contents: read
-      id-token: write
       packages: write
     with:
       output: image
@@ -122,6 +121,7 @@ jobs:
         ghcr.io/${{ github.repository }}
       meta-tags: |
         type=raw,value=${{ matrix.BUILD_TAG }}
+      sign: false
       ssh: default
     secrets:
       registry-auths: |
