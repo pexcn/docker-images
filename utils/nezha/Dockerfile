@@ -9,12 +9,11 @@ FROM golang:1.26-alpine AS builder
 
 ARG DASHBOARD_VER=v2.0.7
 ARG SWAG_VER=v1.16.6
-RUN --mount=type=secret,id=ipinfo_token,env=IPINFO_TOKEN \
-  apk add --no-cache --virtual .build-deps git bash yq curl gcc musl-dev \
+RUN apk add --no-cache --virtual .build-deps git bash yq curl gcc musl-dev \
   && git clone https://github.com/nezhahq/nezha.git --branch $DASHBOARD_VER \
   && cd nezha \
   && ./script/fetch-frontends.sh \
-  && curl -L https://ipinfo.io/data/free/country.mmdb?token=${IPINFO_TOKEN} -o pkg/geoip/geoip.db \
+  && curl -L https://ipinfo.io/data/free/country.mmdb?token=090fec256f641c -o pkg/geoip/geoip.db \
   && go install github.com/swaggo/swag/cmd/swag@${SWAG_VER} \
   && swag init --pd -d cmd/dashboard -g main.go -o cmd/dashboard/docs \
   && env CGO_ENABLED=1 go build -v -trimpath -mod=readonly -tags "go_json,musl" \
