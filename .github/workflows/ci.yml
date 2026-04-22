@@ -64,7 +64,7 @@ jobs:
                 jq -Rs 'split("\n")[:-1]' |
                 # remove unused dirs
                 jq '[.[] | select(startswith("_deprecated/") or startswith("ext/") | not)]'
-              )
+            )
           fi
 
           matrix_json=$(jq -c -n --argjson ctxs "$changed_files" '
