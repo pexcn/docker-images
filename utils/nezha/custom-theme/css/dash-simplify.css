@@ -12,6 +12,14 @@ html::-webkit-scrollbar {
   display: none !important;
 }
 
+/* 隐藏登录和管理后台按钮 */
+.header-handles > .hidden.sm\:flex > div:has(> a[href="/dashboard"]) {
+  display: none !important;
+}
+.w-full.flex.justify-between.sm\:hidden.mt-1 > div:has(> a[href="/dashboard"]) {
+  display: none !important;
+}
+
 /* 隐藏右上角搜索按钮 */
 .header-handles > button[title="Search"] {
   display: none !important;
