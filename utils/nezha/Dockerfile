@@ -22,11 +22,10 @@ RUN apk add --no-cache --virtual .build-deps git bash yq curl gcc musl-dev \
   && install dashboard /usr/local/bin/ \
   && cd - \
   && rm -r nezha \
-  && apk del .build-deps \
-  && rm -rf /var/cache/apk/*
+  && apk del .build-deps
 
 ARG TARGETARCH
-ARG AGENT_VER=v2.0.2
+ARG AGENT_VER=v2.0.3
 RUN apk add --no-cache --virtual .build-deps git \
   && git clone https://github.com/nezhahq/agent.git --branch $AGENT_VER \
   && cd agent \
@@ -36,8 +35,7 @@ RUN apk add --no-cache --virtual .build-deps git \
   && install agent /usr/local/bin/ \
   && cd - \
   && rm -r agent \
-  && apk del .build-deps \
-  && rm -rf /var/cache/apk/*
+  && apk del .build-deps
 
 #
 # Runtime stage
@@ -45,8 +43,7 @@ RUN apk add --no-cache --virtual .build-deps git \
 FROM alpine:3.23
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
-RUN apk add --no-cache ca-certificates tzdata \
-  && rm -rf /var/cache/apk/*
+RUN apk add --no-cache ca-certificates tzdata
 
 # make the agent to read information from /etc/os-release
 RUN rm /etc/alpine-release
