@@ -15,6 +15,15 @@ RUN case $(apk --print-arch) in \
   && wget https://github.com/pexcn/docker-images/releases/download/vohive/vohive_${VOHIVE_VER}_linux_${variant} -O /usr/local/bin/vohive \
   && chmod +x /usr/local/bin/vohive
 
+COPY <<'EOF' /opt/vohive/config/config.yaml
+server:
+    debug: false
+    port: :7575
+web:
+    username: admin
+    password: admin
+EOF
+
 #
 # Runtime stage
 #
@@ -24,7 +33,7 @@ LABEL maintainer="pexcn <pexcn97@gmail.com>"
 RUN apk add --no-cache tzdata
 
 COPY --from=builder /usr/local/bin/vohive /usr/local/bin/
-COPY config.yaml /opt/vohive/config/
+COPY --from=builder /opt/vohive/config/config.yaml /opt/vohive/config/
 
 RUN mkdir -p /opt/vohive/config /opt/vohive/data /opt/vohive/logs \
   && chown -R nobody:nobody /opt/vohive
