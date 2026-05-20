@@ -35,10 +35,8 @@ RUN apk add --no-cache tzdata
 COPY --from=builder /usr/local/bin/vohive /usr/local/bin/
 COPY --from=builder /opt/vohive/config/config.yaml /opt/vohive/config/
 
-RUN mkdir -p /opt/vohive/config /opt/vohive/data /opt/vohive/logs \
-  && chown -R nobody:nobody /opt/vohive
+RUN mkdir -p /opt/vohive/config /opt/vohive/data /opt/vohive/logs
 
 WORKDIR /opt/vohive
-USER nobody
 ENTRYPOINT ["vohive"]
 CMD ["-c", "/opt/vohive/config/config.yaml"]

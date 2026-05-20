@@ -5,10 +5,11 @@ services:
     restart: unless-stopped
     network_mode: host
     #privileged: true
-    #devices:
-    #  - /dev/:/dev/
     environment:
       TZ: Asia/Taipei
+    devices:
+      - /dev/ttyUSB2:/dev/ttyUSB2
+      - /dev/cdc-wdm0:/dev/cdc-wdm0
     volumes:
       - ./vohive-data/config:/opt/vohive/config
       - ./vohive-data/data:/opt/vohive/data
