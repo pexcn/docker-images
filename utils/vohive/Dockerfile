@@ -30,7 +30,7 @@ EOF
 FROM alpine:3.23
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
-RUN apk add --no-cache tzdata
+RUN apk add --no-cache tzdata libqmi
 
 COPY --from=builder /usr/local/bin/vohive /usr/local/bin/
 COPY --from=builder /opt/vohive/config/config.yaml /opt/vohive/config/
