@@ -7,7 +7,7 @@
 #
 FROM alpine:3.23 AS builder
 
-ARG VOHIVE_VER=v1.1.8
+ARG VOHIVE_VER=v1.1.11
 RUN case $(apk --print-arch) in \
       x86_64) variant="amd64";; \
       aarch64) variant="arm64";; \
