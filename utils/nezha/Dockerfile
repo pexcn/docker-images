@@ -12,7 +12,6 @@ ARG SWAG_VER=v1.16.6
 RUN apk add --no-cache --virtual .build-deps git bash yq curl gcc musl-dev \
   && git clone https://github.com/nezhahq/nezha.git --branch $DASHBOARD_VER \
   && cd nezha \
-  && sed -i 's/v2.1.1/v2.1.2/g' service/singleton/frontend-templates.yaml \
   && ./script/fetch-frontends.sh \
   && curl -L https://ipinfo.io/data/free/country.mmdb?token=090fec256f641c -o pkg/geoip/geoip.db \
   && go install github.com/swaggo/swag/cmd/swag@${SWAG_VER} \
