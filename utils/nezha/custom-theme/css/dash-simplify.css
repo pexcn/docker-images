@@ -1,6 +1,6 @@
 /* 隐藏滚动条 */
 html {
-    scrollbar-width: none;
+  scrollbar-width: none;
 }
 html::-webkit-scrollbar {
   display: none;
@@ -36,7 +36,12 @@ html::-webkit-scrollbar {
 }
 
 /* 隐藏右侧排序按钮 */
-.server-overview-controls > button:last-of-type {
+.server-overview-controls > section + div.shrink-0 {
+  display: none !important;
+}
+
+/* 隐藏在线率卡片 */
+main div.w-full.space-y-3.px-4.py-4.rounded-lg:has(> div[class*="gap-[3px]"]):has(> div.flex.justify-between.text-xs) {
   display: none !important;
 }
 
@@ -82,17 +87,17 @@ div.fixed.inset-0.z-0.bg-cover {
 }
 
 /* 调整概览按钮风格（关闭状态） */
-.server-overview-controls > section > button:not([class*="bg-blue-600"]) {
+.server-overview-controls > section > button:not([class~="text-white"]) {
   background-color: hsl(var(--card) / 0.6) !important;
   border: 1px solid hsl(var(--input)) !important;
   box-shadow: none !important;
 }
-.server-overview-controls > section > button:not([class*="bg-blue-600"]):hover {
+.server-overview-controls > section > button:not([class~="text-white"]):hover {
   background-color: hsl(var(--card) / 0.8) !important;
 }
 
 /* 调整概览按钮风格（开启状态） */
-.server-overview-controls > section > button[class*="bg-blue-600"] {
+.server-overview-controls > section > button[class~="text-white"] {
   background-color: var(--color-stone-700) !important;
   border: 1px solid hsl(var(--input)) !important;
   box-shadow: none !important;
@@ -100,33 +105,38 @@ div.fixed.inset-0.z-0.bg-cover {
 }
 
 /* 调整概览卡片透明度 */
-main .grid:first-of-type > .rounded-lg.border {
+main .server-overview > .rounded-lg {
   background-color: hsl(var(--card) / 0.6) !important;
 }
-main .grid:first-of-type > .rounded-lg.border:hover {
+main .server-overview > .rounded-lg:hover {
   background-color: hsl(var(--card) / 0.8) !important;
 }
 
 /* 调整服务器卡片透明度 */
-main div.rounded-lg.border.cursor-pointer:has(> section[style*="grid-template-columns"]) {
+main div.rounded-lg.cursor-pointer:has(> section[style*="grid-template-columns"]) {
   background-color: hsl(var(--card) / 0.6) !important;
 }
-main div.rounded-lg.border.cursor-pointer:has(> section[style*="grid-template-columns"]):hover {
+main div.rounded-lg.cursor-pointer:has(> section[style*="grid-template-columns"]):hover {
   background-color: hsl(var(--card) / 0.8) !important;
 }
 
 /* 调整概览卡片高度 */
-main .grid:first-of-type > .rounded-lg.border {
+main .server-overview > .rounded-lg {
   min-height: 105px !important;
 }
 
+/* 调整流量卡片透明度 */
+main div.rounded-lg.border.text-card-foreground[class*="bg-card"]:has(> div.space-y-3) {
+  background-color: hsl(var(--card) / 0.6) !important;
+}
+
 /* 调整服务器卡片高度 */
-main div.rounded-lg.border.cursor-pointer:has(> section[style*="grid-template-columns"]) {
+main div.rounded-lg.cursor-pointer:has(> section[style*="grid-template-columns"]) {
   min-height: 100px !important;
 }
 
 /* 调整服务器卡片进度条高度 */
-main div.rounded-lg.border.cursor-pointer [role="progressbar"] {
+main div.rounded-lg.cursor-pointer [role="progressbar"] {
   height: 4.4px !important;
   border-radius: 2px !important;
   overflow: hidden !important;
