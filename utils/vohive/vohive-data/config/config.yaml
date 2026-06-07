@@ -4,3 +4,18 @@ server:
 web:
     username: admin
     password: admin
+telegram:
+    admin_id: ___ADMIN_ID___
+    base_url: ""
+    bot_token: ___BOT_TOKEN___
+    chat_id: ___CHAT_ID___
+    enabled: true
+    proxy: ""
+webhook:
+    enabled: true
+    timeout_ms: 5000
+    retry_max: 3
+    secret: ""
+    text_template: '{{text}}'
+    urls:
+        - https://api.telegram.org/bot___BOT_TOKEN___/sendMessage?chat_id=___CHAT_ID___
