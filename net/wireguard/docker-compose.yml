@@ -5,11 +5,9 @@ services:
     restart: unless-stopped
     network_mode: host
     privileged: true
-    logging:
-      options:
-        max-size: 20m
     environment:
       TZ: Asia/Taipei
       PEER_RESOLVE_INTERVAL: 0
+      USE_IPTABLES_NFT_BACKEND: 0
     volumes:
       - ./wireguard-data:/etc/wireguard

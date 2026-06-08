@@ -1,21 +1,22 @@
 #!/bin/sh
+# shellcheck disable=SC2155,SC3043,SC3048
 
 info() {
   local green='\e[0;32m'
   local clear='\e[0m'
-  local time=$(date '+%Y-%m-%d %T')
+  local time="$(date '+%Y-%m-%d %T')"
   printf "${green}[${time}] [INFO]: ${clear}%s\n" "$*"
 }
 
 warn() {
   local yellow='\e[1;33m'
   local clear='\e[0m'
-  local time=$(date '+%Y-%m-%d %T')
+  local time="$(date '+%Y-%m-%d %T')"
   printf "${yellow}[${time}] [WARN]: ${clear}%s\n" "$*" >&2
 }
 
 _get_boringtun_threads() {
-  local cores=$(grep -c "^processor" /proc/cpuinfo)
+  local cores="$(grep -c "^processor" /proc/cpuinfo)"
   local default=4
   [ "$cores" -lt "$default" ] && echo "$default" || echo "$cores"
 }
@@ -40,7 +41,7 @@ setup_environment() {
   export WG_SUDO=1
   export WG_LOG_LEVEL=info
   export WG_LOG_FILE=/dev/stdout
-  export WG_THREADS=$(_get_boringtun_threads)
+  export WG_THREADS="$(_get_boringtun_threads)"
   export WG_QUICK_USERSPACE_IMPLEMENTATION=boringtun-cli
 
   # make configs be safe
@@ -48,6 +49,17 @@ setup_environment() {
 
   # makesure ip_forward enabled
   sysctl -wq net.ipv4.ip_forward=1
+}
+
+setup_iptables() {
+  local symlinks="iptables iptables-save iptables-restore ip6tables ip6tables-save ip6tables-restore"
+  local bindir="$(dirname "$(which iptables)")"
+  local backend="$(iptables -V | awk -F'[()]' '{print $2}')"
+  if [ "$USE_IPTABLES_NFT_BACKEND" = 1 ]; then
+    [ "$backend" = "nf_tables" ] || for symlink in ${symlinks}; do ln -sf xtables-nft-multi "${bindir}/${symlink}"; done
+  else
+    [ "$backend" = "legacy" ] || for symlink in ${symlinks}; do ln -sf xtables-legacy-multi "${bindir}/${symlink}"; done
+  fi
 }
 
 start_wireguard() {
@@ -68,7 +80,7 @@ start_wireguard() {
       sleep "$PEER_RESOLVE_INTERVAL" &
       wait
       for cfg in /etc/wireguard/*.conf; do
-        info "[$(basename ${cfg} .conf)]: interval refresh endpoint."
+        info "[$(basename "${cfg}" .conf)]: interval refresh endpoint."
         reresolve-dns.sh "$cfg"
       done
     done
@@ -76,4 +88,5 @@ start_wireguard() {
 }
 
 setup_environment
+setup_iptables
 start_wireguard

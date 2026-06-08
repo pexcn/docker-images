@@ -40,5 +40,6 @@ COPY --from=builder /usr/local/bin/boringtun-cli /usr/local/bin/
 COPY wireguard.sh /usr/local/bin/
 
 ENV PEER_RESOLVE_INTERVAL=0
+ENV USE_IPTABLES_NFT_BACKEND=0
 
 ENTRYPOINT ["wireguard.sh"]
