@@ -6,6 +6,11 @@ if [ "$USE_IPTABLES_NFT_BACKEND" = 1 ]; then
   alias iptables-save=iptables-nft-save
   alias ip6tables=ip6tables-nft
   alias ip6tables-save=ip6tables-nft-save
+else
+  alias iptables=iptables-legacy
+  alias iptables-save=iptables-legacy-save
+  alias ip6tables=ip6tables-legacy
+  alias ip6tables-save=ip6tables-legacy-save
 fi
 
 info() {
