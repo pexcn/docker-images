@@ -7,10 +7,10 @@ services:
     privileged: true
     environment:
       TZ: Asia/Taipei
-    #dns:
-    #  - 194.25.0.52
-    #  - 194.25.0.60
-    #  - 194.25.0.68
+    #extra_hosts:
+    #  - "epdg.epc.mnc002.mcc262.pub.3gppnetwork.org=139.7.117.168"
+    #  - "epdg.epc.mnc002.mcc262.pub.3gppnetwork.org=139.7.117.169"
+    #  - "epdg.epc.mnc002.mcc262.pub.3gppnetwork.org=139.7.117.170"
     volumes:
       - ./vohive-data/config:/opt/vohive/config
       - ./vohive-data/data:/opt/vohive/data
