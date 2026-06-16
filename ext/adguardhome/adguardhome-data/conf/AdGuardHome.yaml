@@ -24,6 +24,7 @@ dns:
   refuse_any: false
   upstream_dns:
     - 127.0.0.1:53
+    - '[/mcc262.pub.3gppnetwork.org/]194.25.0.52 194.25.0.60 194.25.0.68'
   upstream_dns_file: ""
   bootstrap_dns:
     - 127.0.0.1:53
