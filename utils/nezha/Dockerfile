@@ -7,7 +7,7 @@
 #
 FROM golang:1.26-alpine AS builder
 
-ARG DASHBOARD_VER=v2.2.1
+ARG DASHBOARD_VER=v2.2.3
 ARG SWAG_VER=v1.16.6
 RUN apk add --no-cache --virtual .build-deps git bash yq curl gcc musl-dev \
   && git clone https://github.com/nezhahq/nezha.git --branch $DASHBOARD_VER \
