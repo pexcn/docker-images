@@ -14,4 +14,4 @@ services:
     volumes:
       - ./vohive-data/config:/opt/vohive/config
       - ./vohive-data/data:/opt/vohive/data
-      - ./vohive-data/logs:/opt/vohive/logs
+      #- ./vohive-data/logs:/opt/vohive/logs
