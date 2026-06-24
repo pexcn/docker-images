@@ -5,7 +5,7 @@
 FROM alpine:3.23
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
-ARG VERSION=v1.3.8
+ARG VERSION=v1.4.0
 RUN case $(apk --print-arch) in \
       x86_64) variant="amd64";; \
       aarch64) variant="arm64";; \
