@@ -7,10 +7,6 @@ services:
     privileged: true
     environment:
       TZ: Asia/Taipei
-    #extra_hosts:
-    #  - "epdg.epc.mnc002.mcc262.pub.3gppnetwork.org=139.7.117.168"
-    #  - "epdg.epc.mnc002.mcc262.pub.3gppnetwork.org=139.7.117.169"
-    #  - "epdg.epc.mnc002.mcc262.pub.3gppnetwork.org=139.7.117.170"
     volumes:
       - /dev:/dev
       - ./vohive-data/config:/opt/vohive/config

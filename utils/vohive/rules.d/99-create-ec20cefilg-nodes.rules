@@ -1,0 +1,14 @@
+# Since the usbmisc subsystem does not provide enough variables for identification, we need to introduce a few additional ones.
+SUBSYSTEM=="usbmisc", ATTRS{idVendor}=="2c7c", ATTRS{idProduct}=="0125", ATTRS{manufacturer}=="Quectel", ATTRS{product}=="EC20-CE-FILG", \
+  ENV{ID_VENDOR}="Quectel", \
+  ENV{ID_MODEL}="EC20-CE-FILG", \
+  ENV{ID_USB_VENDOR}="Quectel", \
+  ENV{ID_USB_MODEL}="EC20-CE-FILG"
+
+# Create persistent device nodes to enable port-independent symlinks.
+SUBSYSTEM=="tty", ATTRS{idVendor}=="2c7c", ATTRS{idProduct}=="0125", \
+  ENV{ID_USB_VENDOR}=="Quectel", ENV{ID_USB_MODEL}=="EC20-CE-FILG", ENV{ID_USB_INTERFACE_NUM}=="02", \
+  SYMLINK+="at-ec20cefilg"
+SUBSYSTEM=="usbmisc", ATTRS{idVendor}=="2c7c", ATTRS{idProduct}=="0125", \
+  ENV{ID_USB_VENDOR}=="Quectel", ENV{ID_USB_MODEL}=="EC20-CE-FILG", \
+  SYMLINK+="qmi-ec20cefilg"
