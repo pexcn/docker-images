@@ -2,6 +2,8 @@
 
 ## Udev Rules
 
+> No longer required since v1.5.x
+
 To allow USB devices to be plugged into any port, must configure udev rules for USB module. Refer to the configuration examples in [`rules.d`](./rules.d/).
 
 ## Wi-Fi Calling

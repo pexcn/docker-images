@@ -10,7 +10,7 @@ RUN case $(apk --print-arch) in \
       x86_64) variant="amd64";; \
       aarch64) variant="arm64";; \
     esac \
-  && wget https://github.com/iniwex5/vohive-release/releases/download/${VERSION}/vohive_${VERSION}_linux_${variant} -O /usr/local/bin/vohive \
+  && wget https://github.com/pexcn/docker-images/releases/download/vohive/vohive_${VERSION}_linux_${variant} -O /usr/local/bin/vohive \
   && chmod +x /usr/local/bin/vohive
 
 COPY <<'EOF' /opt/vohive/config/config.yaml
