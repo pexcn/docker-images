@@ -8,7 +8,6 @@ services:
     environment:
       TZ: Asia/Taipei
     volumes:
-      - /dev:/dev
       - ./vohive-data/config:/opt/vohive/config
       - ./vohive-data/data:/opt/vohive/data
       #- ./vohive-data/logs:/opt/vohive/logs
