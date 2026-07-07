@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# alias ​​settings must be global, and must be defined before the function being called with the alias
+# alias settings must be global, and must be defined before the function being called with the alias
 if [ "$USE_IPTABLES_NFT_BACKEND" = 1 ]; then
   alias iptables=iptables-nft
   alias iptables-save=iptables-nft-save
