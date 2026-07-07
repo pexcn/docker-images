@@ -61,7 +61,8 @@ dns:
   upstream_timeout: 10s
   private_networks: []
   use_private_ptr_resolvers: true
-  local_ptr_upstreams: []
+  local_ptr_upstreams:
+    - 127.0.0.1:5354
   use_dns64: false
   dns64_prefixes: []
   serve_http3: false
