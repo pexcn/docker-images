@@ -9,7 +9,7 @@ FROM golang:1.26-alpine AS builder
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 ARG VERSION=d4f041a6f3bef0bf29abb3f31b299f4eff683b23
-RUN --mount=type=ssh apk add --no-cache tzdata \
+RUN --mount=type=ssh apk add --no-cache tzdata ca-certificates \
   && apk add --no-cache --virtual .build-deps openssh-client git make \
   && mkdir -p -m 0700 /root/.ssh && ssh-keyscan github.com >> /root/.ssh/known_hosts \
   && git clone git@github.com:pexcn/socks5-monitor.git \
@@ -30,6 +30,7 @@ LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 COPY --from=builder /usr/local/bin/socks5-monitor /usr/local/bin/
 COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 
 ENV PATH=/usr/local/bin
 ENTRYPOINT ["socks5-monitor"]
