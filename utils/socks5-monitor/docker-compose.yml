@@ -1,0 +1,20 @@
+services:
+  socks5-monitor:
+    image: pexcn/docker-images:socks5-monitor
+    container_name: socks5-monitor
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TZ: Asia/Taipei
+      WEBHOOKS: |-
+        - name: "Telegram"
+          type: telegram
+          url: "https://api.telegram.org/botxxxxxxxxxx:xxxxxxxxx-xxxxxx-xx-xxxxxxxxxxxxxxx/sendMessage?chat_id=xxxxxxxx"
+        - name: "WeCom"
+          type: wecom
+          url: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+    command: >-
+      --proxy 192.168.1.10:1080
+      --proxy 192.168.1.10:1081
+      --proxy 192.168.1.10:1082
+      --protocol all
