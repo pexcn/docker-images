@@ -10,7 +10,7 @@ LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 ARG VERSION=d4f041a6f3bef0bf29abb3f31b299f4eff683b23
 RUN --mount=type=ssh apk add --no-cache tzdata \
-  && apk add --no-cache --virtual .build-deps git openssh-client \
+  && apk add --no-cache --virtual .build-deps openssh-client git make \
   && mkdir -p -m 0700 /root/.ssh && ssh-keyscan github.com >> /root/.ssh/known_hosts \
   && git clone git@github.com:pexcn/socks5-monitor.git \
   && cd socks5-monitor \
