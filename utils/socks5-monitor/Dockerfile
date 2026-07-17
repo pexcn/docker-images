@@ -22,17 +22,13 @@ RUN --mount=type=ssh \
   && apk del .build-deps \
   && rm -rf /var/cache/apk/*
 
-RUN apk add --no-cache tzdata ca-certificates
-
 #
 # Runtime stage
 #
-FROM scratch
+FROM pexcn/docker-images:scratch
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 COPY --from=builder /usr/local/bin/socks5-monitor /usr/local/bin/
-COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
 
 ENV PATH=/usr/local/bin
 ENTRYPOINT ["socks5-monitor"]
