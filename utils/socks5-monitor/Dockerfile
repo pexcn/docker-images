@@ -8,7 +8,7 @@
 FROM golang:1.26-alpine AS builder
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
-ARG VERSION=48dcd9b7289946cc29f2018c2aa9dd41c96c114a
+ARG VERSION=c8cfdbb5304d177efb9da717f4ae328eb6751876
 RUN --mount=type=ssh \
   apk add --no-cache --virtual .build-deps openssh-client git make \
   && mkdir -p -m 0700 /root/.ssh && ssh-keyscan github.com >> /root/.ssh/known_hosts \
