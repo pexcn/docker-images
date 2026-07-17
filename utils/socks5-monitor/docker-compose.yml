@@ -15,6 +15,6 @@ services:
           url: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
     command: >-
       --proxy 192.168.1.10:1080
-      --proxy 192.168.1.10:1081
-      --proxy 192.168.1.10:1082
+      --proxy 192.168.1.10:1081@GB
+      --proxy 192.168.1.10:1082@HK?interval=1m&threshold=5
       --protocol all
