@@ -28,9 +28,9 @@ RUN yes | sdkmanager --sdk_root=$ANDROID_HOME --licenses \
   && sdkmanager --sdk_root=$ANDROID_HOME --install "build-tools;$BUILD_TOOLS_VER"
 
 # apktool
-ARG APKTOOL_VER=2.11.1
+ARG APKTOOL_VER=2.12.1
 RUN wget https://github.com/iBotPeaches/Apktool/releases/download/v${APKTOOL_VER}/apktool_${APKTOOL_VER}.jar -O /usr/local/bin/apktool.jar \
-  && wget https://github.com/iBotPeaches/Apktool/raw/refs/heads/master/scripts/linux/apktool -O /usr/local/bin/apktool \
+  && wget https://github.com/iBotPeaches/Apktool/raw/v${APKTOOL_VER}/scripts/linux/apktool -O /usr/local/bin/apktool \
   && chmod +x /usr/local/bin/apktool
 
 COPY android.sh /usr/local/bin/
