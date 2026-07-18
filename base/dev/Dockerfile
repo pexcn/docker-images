@@ -2,7 +2,7 @@
 # Dockerfile for development base environment
 #
 
-FROM debian:forky-slim
+FROM debian:trixie-slim
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 # keep zh_CN/zh_TW languages for dpkg
