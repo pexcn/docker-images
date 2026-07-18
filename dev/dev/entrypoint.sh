@@ -43,6 +43,18 @@ setup_ssh_daemon() {
   info "$(service ssh start)"
 }
 
+run_init_hook() {
+  [ -n "$DEV_INIT" ] || return 0
+
+  if [ ! -x "$DEV_INIT" ]; then
+    error "init hook is not executable: ${DEV_INIT}"
+    return 1
+  fi
+
+  info "running init hook: ${DEV_INIT}"
+  "$DEV_INIT"
+}
+
 graceful_stop() {
   warn "caught SIGTERM or SIGINT signal, graceful stopping..."
 
@@ -56,7 +68,9 @@ start_container() {
   trap graceful_stop SIGTERM SIGINT
 
   # allow execute extra commands by arguments
-  "$@"
+  if (( $# > 0 )); then
+    "$@" || return $?
+  fi
 
   info "container started."
   sleep infinity &
@@ -65,4 +79,5 @@ start_container() {
 
 setup_git_config
 setup_ssh_daemon
+run_init_hook || exit $?
 start_container "$@"
