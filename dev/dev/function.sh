@@ -1,32 +1,33 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2155
 
-_get_time() {
-  date '+%Y-%m-%d %T'
+_log() {
+  local level=$1
+  local color=$2
+  local fd=$3
+  local time=$(date '+%F %T')
+  shift 3
+
+  [[ -z "${NO_COLOR:-}" && -t "$fd" ]] || color=
+
+  printf '%b[%s] [%s]: %b%s\n' "$color" "$time" "$level" \
+    "${color:+\e[0m}" "$*" >&"$fd"
 }
 
 info() {
-  local green='\e[0;32m'
-  local clear='\e[0m'
-  local time=$(_get_time)
-  printf "${green}[${time}] [INFO]: ${clear}%s\n" "$*"
+  _log INFO '\e[0;32m' 1 "$@"
 }
 
 warn() {
-  local yellow='\e[1;33m'
-  local clear='\e[0m'
-  local time=$(_get_time)
-  printf "${yellow}[${time}] [WARN]: ${clear}%s\n" "$*" >&2
+  _log WARN '\e[1;33m' 2 "$@"
 }
 
 error() {
-  local red='\e[0;31m'
-  local clear='\e[0m'
-  local time=$(_get_time)
-  printf "${red}[${time}] [ERROR]: ${clear}%s\n" "$*" >&2
+  _log ERROR '\e[0;31m' 2 "$@"
 }
 
 export -f \
-  _get_time \
+  _log \
   info \
   warn \
   error
