@@ -9,7 +9,6 @@ ARG CMDLINE_TOOLS_VER=13114758
 ARG BUILD_TOOLS_VER=35.0.1
 ENV ANDROID_HOME=/opt/android-sdk
 ENV PATH=/opt/cmdline-tools/bin:${ANDROID_HOME}/build-tools/${BUILD_TOOLS_VER}:$PATH
-ENV DEV_INIT=/usr/local/bin/android.sh
 
 # install depends
 RUN apt-get update \
@@ -34,3 +33,4 @@ RUN wget https://github.com/iBotPeaches/Apktool/releases/download/v${APKTOOL_VER
   && chmod +x /usr/local/bin/apktool
 
 COPY android.sh /usr/local/bin/
+ENV DEV_INIT=/usr/local/bin/android.sh

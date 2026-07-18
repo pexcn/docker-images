@@ -12,7 +12,6 @@ ENV RUSTUP_HOME=/usr/local/rustup
 ENV CARGO_HOME=/usr/local/cargo
 ENV PATH=/usr/local/cargo/bin:$PATH
 ENV RUST_VERSION=1.64.0
-ENV DEV_INIT=/usr/local/bin/rust.sh
 
 RUN apt-get update \
   && apt-get install --no-install-recommends -y gcc libc6-dev \
@@ -35,3 +34,4 @@ RUN apt-get update \
 RUN rustup component add rustfmt clippy
 
 COPY rust.sh /usr/local/bin/
+ENV DEV_INIT=/usr/local/bin/rust.sh
