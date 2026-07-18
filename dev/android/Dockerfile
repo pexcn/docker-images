@@ -14,7 +14,7 @@ ENV DEV_INIT=/usr/local/bin/android.sh
 # install depends
 RUN apt-get update \
   && apt-get install --no-install-recommends -y \
-      openjdk-17-jdk \
+      openjdk-21-jdk \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
