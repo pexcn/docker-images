@@ -2,19 +2,12 @@
 # Dockerfile for development base environment
 #
 
-FROM debian:bookworm-slim
+FROM debian:forky-slim
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
-# update sources
-RUN > /etc/apt/sources.list \
-  && echo "deb http://deb.debian.org/debian bookworm main" >> /etc/apt/sources.list \
-  && echo "deb http://deb.debian.org/debian bookworm-updates main" >> /etc/apt/sources.list \
-  && echo "deb http://deb.debian.org/debian bookworm-backports main" >> /etc/apt/sources.list \
-  && echo "deb http://security.debian.org/debian-security/ bookworm-security main" >> /etc/apt/sources.list
-
-# don't exclude some languages for dpkg
-RUN echo 'path-include /usr/share/locale/zh_CN/*' > /etc/dpkg/dpkg.cfg.d/package-languages \
-  && echo 'path-include /usr/share/locale/zh_TW/*' >> /etc/dpkg/dpkg.cfg.d/package-languages \
+# keep zh_CN/zh_TW languages for dpkg
+RUN echo 'path-include /usr/share/locale/zh_CN/*' > /etc/dpkg/dpkg.cfg.d/keep-languages \
+  && echo 'path-include /usr/share/locale/zh_TW/*' >> /etc/dpkg/dpkg.cfg.d/keep-languages \
   && apt-get update \
   && apt-get install --no-install-recommends --reinstall -y \
       apt bash bsdutils coreutils diffutils dpkg findutils \
