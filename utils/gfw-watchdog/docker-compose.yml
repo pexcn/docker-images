@@ -1,0 +1,24 @@
+services:
+  gfw-watchdog:
+    image: pexcn/docker-images:gfw-watchdog
+    container_name: gfw-watchdog
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TZ: Asia/Taipei
+      WEBHOOKS: |-
+        - name: "Telegram"
+          type: telegram
+          url: "https://api.telegram.org/botxxxxxxxxxx:xxxxxxxxx-xxxxxx-xx-xxxxxxxxxxxxxxx/sendMessage?chat_id=xxxxxxxx"
+        - name: "WeCom"
+          type: wecom
+          url: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+    command: >-
+      --host 8.8.8.8
+      --host 1.1.1.1:icmp,443,443/udp
+      --host node-1.example.com
+      --host node-2.example.com:443,1989/udp
+      --host node-3.example.com@ipv4
+      --host node-4.example.com@ipv6:8964/udp
+      --control 223.5.5.5
+      --control gd-ct-v4.ip.zstaticcdn.com:80
