@@ -1,0 +1,11 @@
+services:
+  codex2api:
+    image: ghcr.io/james-6-23/codex2api:2.5.8
+    container_name: codex2api
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      TZ: Asia/Taipei
+    env_file: ./.env
+    volumes:
+      - ./codex2api-data:/data
