@@ -2,10 +2,10 @@
 # Dockerfile for VoHive
 #
 
-FROM alpine:3.24
+FROM pexcn/docker-images:alpine
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
-ARG VERSION=v1.5.5-10
+ARG VERSION=v1.5.5-10u
 RUN case $(apk --print-arch) in \
       x86_64) variant="amd64";; \
       aarch64) variant="arm64";; \
@@ -22,7 +22,7 @@ web:
     password: admin
 EOF
 
-RUN apk add --no-cache tzdata libqmi
+RUN apk add --no-cache libqmi
 
 RUN mkdir -p /opt/vohive/config /opt/vohive/data /opt/vohive/logs
 
