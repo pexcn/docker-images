@@ -74,7 +74,7 @@ jobs:
 
             changed_files=$(jq -cn --arg ctx "$BUILD_CONTEXT" '[$ctx]')
 
-          # override as global build
+          # override as full build
           elif jq -e 'any(startswith(".github/"))' <<< "$changed_files" >/dev/null \
             || [ "$build_all" = true ]; then
             changed_files=$(
@@ -131,7 +131,7 @@ jobs:
       packages: write
     with:
       output: image
-      push: ${{ github.event_name == 'push' }}
+      push: true
       context: ${{ matrix.BUILD_CONTEXT }}
       platforms: ${{ matrix.TARGET_PLATFORMS }}
       cache: true
@@ -157,6 +157,8 @@ jobs:
     if: always()
     needs: build-and-push
     runs-on: ubuntu-24.04
+    permissions:
+      packages: write
     steps:
       - name: Cleanup untagged images
         # use actions/delete-package-versions instead?
