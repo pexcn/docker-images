@@ -14,8 +14,8 @@ on:
         description: 'Build context to build'
         required: false
         type: string
-      global:
-        description: 'Whether to build globally'
+      build_all:
+        description: 'Build all images, ignoring change detection'
         required: false
         type: boolean
         default: false
@@ -58,7 +58,7 @@ jobs:
           BUILD_CONTEXT: ${{ inputs.build_context }}
         run: |
           changed_files='${{ steps.detect-changes.outputs.all_changed_files }}'
-          global_build=${{ github.event.inputs.global == 'true' }}
+          build_all=${{ github.event.inputs.build_all == 'true' }}
 
           # override with a single manually selected build context
           if [ -n "$BUILD_CONTEXT" ]; then
@@ -76,7 +76,7 @@ jobs:
 
           # override as global build
           elif jq -e 'any(startswith(".github/"))' <<< "$changed_files" >/dev/null \
-            || [ "$global_build" = true ]; then
+            || [ "$build_all" = true ]; then
             changed_files=$(
               # find build context dirs
               find . -mindepth 2 -maxdepth 2 -type d ! -path './.*' -prune -printf '%P\n' |
