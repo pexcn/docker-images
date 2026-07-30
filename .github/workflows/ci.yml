@@ -10,6 +10,10 @@ on:
       - '*'
   workflow_dispatch:
     inputs:
+      build_context:
+        description: 'Build context to build'
+        required: false
+        type: string
       global:
         description: 'Whether to build globally'
         required: false
@@ -50,12 +54,28 @@ jobs:
 
       - name: Create matrix
         id: create-matrix
+        env:
+          BUILD_CONTEXT: ${{ inputs.build_context }}
         run: |
           changed_files='${{ steps.detect-changes.outputs.all_changed_files }}'
           global_build=${{ github.event.inputs.global == 'true' }}
 
+          # override with a single manually selected build context
+          if [ -n "$BUILD_CONTEXT" ]; then
+            BUILD_CONTEXT=${BUILD_CONTEXT#./}
+
+            if [ ! -f "$BUILD_CONTEXT/Dockerfile" ] \
+              || [ "$(awk -F/ '{print NF}' <<< "$BUILD_CONTEXT")" -ne 2 ] \
+              || [[ "$BUILD_CONTEXT" = _deprecated/* ]] \
+              || [[ "$BUILD_CONTEXT" = ext/* ]]; then
+              echo "Invalid build context: $BUILD_CONTEXT" >&2
+              exit 1
+            fi
+
+            changed_files=$(jq -cn --arg ctx "$BUILD_CONTEXT" '[$ctx]')
+
           # override as global build
-          if jq -e 'any(startswith(".github/"))' <<< "$changed_files" >/dev/null \
+          elif jq -e 'any(startswith(".github/"))' <<< "$changed_files" >/dev/null \
             || [ "$global_build" = true ]; then
             changed_files=$(
               # find build context dirs
