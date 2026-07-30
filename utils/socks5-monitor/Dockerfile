@@ -30,5 +30,4 @@ LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 COPY --from=builder /usr/local/bin/socks5-monitor /usr/local/bin/
 
-ENV PATH=/usr/local/bin
 ENTRYPOINT ["socks5-monitor"]

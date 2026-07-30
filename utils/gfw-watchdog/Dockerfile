@@ -29,5 +29,4 @@ LABEL maintainer="pexcn <pexcn97@gmail.com>"
 COPY --from=builder /usr/local/bin/gfw-watchdog /usr/local/bin/
 COPY --from=builder /usr/local/bin/echo-server /usr/local/bin/
 
-ENV PATH=/usr/local/bin
 ENTRYPOINT ["gfw-watchdog"]
