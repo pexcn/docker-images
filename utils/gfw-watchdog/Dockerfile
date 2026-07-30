@@ -8,7 +8,7 @@
 FROM golang:1.26-alpine AS builder
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
-ARG VERSION=d6fd6acec2248991ce8656c761c6f6bd707fa99b
+ARG VERSION=0ca0306a5a20933a648f00bb8f174d21397a485d
 RUN apk add --no-cache --virtual .build-deps git make \
   && git clone https://github.com/pexcn/gfw-watchdog.git \
   && cd gfw-watchdog \
