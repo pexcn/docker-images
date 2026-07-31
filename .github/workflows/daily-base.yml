@@ -1,0 +1,66 @@
+name: Daily base build
+
+on:
+  schedule:
+    - cron: '30 3 * * *'
+      timezone: Asia/Taipei
+  workflow_dispatch:
+
+env:
+  TZ: Asia/Taipei
+
+jobs:
+  generate-matrix:
+    name: Generate matrix
+    runs-on: ubuntu-24.04
+    outputs:
+      matrix: ${{ steps.create-matrix.outputs.matrix_json }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Create matrix
+        id: create-matrix
+        run: |
+          matrix_json=$(
+            find base -type f -name Dockerfile -printf '%h\n' |
+              jq -Rs 'split("\n")[:-1] | {include: map({context: ., tag: (split("/") | last)})}'
+          )
+          echo "matrix_json=$matrix_json" >> "$GITHUB_OUTPUT"
+
+  daily-build:
+    name: Build base image
+    needs: generate-matrix
+    concurrency:
+      group: ${{ matrix.tag }}
+      cancel-in-progress: true
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.generate-matrix.outputs.matrix) }}
+    uses: pexcn/github-builder/.github/workflows/build.yml@main
+    permissions:
+      contents: read
+      packages: write
+    with:
+      output: image
+      push: true
+      context: ${{ matrix.context }}
+      platforms: linux/amd64,linux/arm64
+      cache: true
+      cache-scope: ${{ matrix.tag }}
+      meta-images: |
+        ${{ github.repository }}
+        ghcr.io/${{ github.repository }}
+      meta-tags: |
+        type=raw,value=${{ matrix.tag }}
+      sign: false
+      ssh: default
+    secrets:
+      registry-auths: |
+        - registry: docker.io
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+        - registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
