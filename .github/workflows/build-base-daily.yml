@@ -1,4 +1,4 @@
-name: Daily base build
+name: Build base daily
 
 on:
   schedule:
