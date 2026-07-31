@@ -34,7 +34,7 @@ jobs:
       matrix: ${{ steps.create-matrix.outputs.matrix_json }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -91,9 +91,9 @@ jobs:
             {
               include: [
                 $ctxs[] | . as $ctx | {
-                  BUILD_CONTEXT: $ctx,
-                  BUILD_TAG: ($ctx | split("/") | .[-1]),
-                  TARGET_PLATFORMS: (
+                  context: $ctx,
+                  tag: ($ctx | split("/") | .[-1]),
+                  platforms: (
                     if (
                       [
                         "buildbot/bookworm",
@@ -120,7 +120,7 @@ jobs:
     name: Build image
     needs: generate-matrix
     concurrency:
-      group: ${{ matrix.BUILD_CONTEXT }}
+      group: ${{ matrix.tag }}
       cancel-in-progress: true
     strategy:
       fail-fast: false
@@ -132,15 +132,15 @@ jobs:
     with:
       output: image
       push: true
-      context: ${{ matrix.BUILD_CONTEXT }}
-      platforms: ${{ matrix.TARGET_PLATFORMS }}
+      context: ${{ matrix.context }}
+      platforms: ${{ matrix.platforms }}
       cache: true
-      cache-scope: ${{ matrix.BUILD_TAG }}
+      cache-scope: ${{ matrix.tag }}
       meta-images: |
         ${{ github.repository }}
         ghcr.io/${{ github.repository }}
       meta-tags: |
-        type=raw,value=${{ matrix.BUILD_TAG }}
+        type=raw,value=${{ matrix.tag }}
       sign: false
       ssh: default
     secrets:
