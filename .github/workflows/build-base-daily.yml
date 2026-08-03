@@ -24,7 +24,7 @@ jobs:
         run: |
           matrix_json=$(
             find base -type f -name Dockerfile -printf '%h\n' |
-              jq -Rs 'split("\n")[:-1] | {include: map({context: ., tag: (split("/") | last)})}'
+              jq -Rsc 'split("\n")[:-1] | {include: map({context: ., tag: (split("/") | last)})}'
           )
           echo "matrix_json=$matrix_json" >> "$GITHUB_OUTPUT"
 
