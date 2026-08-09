@@ -59,7 +59,6 @@ RUN apk add --no-cache --virtual .build-deps tzdata \
   && rm -r "$selected_zoneinfo_dir"
 
 RUN apk add --no-cache ca-certificates
-RUN apk del --no-cache musl-utils
 
 FROM scratch
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
