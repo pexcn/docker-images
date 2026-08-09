@@ -21,7 +21,7 @@ RUN apk add --no-cache --virtual .build-deps \
   && git clone https://github.com/leev/ngx_http_geoip2_module.git --recurse-submodules ngx_geoip2 \
   && git clone https://github.com/pexcn/ngx_upstream_check.git ngx_upstream_check \
   && git clone https://github.com/yaoweibin/ngx_http_substitutions_filter_module.git ngx_subs_filter \
-  && cd ngx_brotli && git checkout $NGX_BROTLI_VER && cd - \
+  && cd ngx_brotli && git checkout $NGX_BROTLI_VER && sed -i 's/-lbrotlienc -lbrotlicommon/-l:libbrotlienc.a -l:libbrotlicommon.a/' filter/config && cd - \
   && cd ngx_geoip2 && git checkout $NGX_GEOIP2_VER && cd - \
   && cd ngx_upstream_check && git checkout $NGX_UPSTREAM_CHECK_VER && patch -d ../nginx-${NGINX_VER} -p1 < check_1.30.0+.patch && cd - \
   && cd ngx_subs_filter && git checkout $NGX_SUBS_FILTER_VER && cd - \
