@@ -5,14 +5,13 @@
 #
 # Build stage
 #
-FROM alpine:3.23 AS builder
+FROM alpine:3.24 AS builder
 
-ARG NGINX_VER=1.30.1
+ARG NGINX_VER=1.30.4
 ARG NGX_BROTLI_VER=a71f9312c2deb28875acc7bacfdd5695a111aa53
 ARG NGX_GEOIP2_VER=445df24ef3781e488cee3dfe8a1e111997fc1dfe
-ARG NGX_UPSTREAM_CHECK_VER=fce7807f39814bc5cd73a97c6b3b6343e71dda8c
+ARG NGX_UPSTREAM_CHECK_VER=871c57bddb511ee21c1ede8c47280d6df44f348c
 ARG NGX_SUBS_FILTER_VER=e12e965ac1837ca709709f9a26f572a54d83430e
-ARG NGX_GOOGLE_FILTER_VER=bab4e945db9170cb32b49ac928f14b06313893eb
 RUN apk add --no-cache --virtual .build-deps \
       curl git patch make gcc g++ linux-headers pcre2-dev pcre2-static \
       openssl-dev openssl-libs-static brotli-static zlib-static \
@@ -22,12 +21,10 @@ RUN apk add --no-cache --virtual .build-deps \
   && git clone https://github.com/leev/ngx_http_geoip2_module.git --recurse-submodules ngx_geoip2 \
   && git clone https://github.com/pexcn/ngx_upstream_check.git ngx_upstream_check \
   && git clone https://github.com/yaoweibin/ngx_http_substitutions_filter_module.git ngx_subs_filter \
-  && git clone https://github.com/GetPageSpeed/ngx_http_google_filter_module.git ngx_google_filter \
   && cd ngx_brotli && git checkout $NGX_BROTLI_VER && cd - \
   && cd ngx_geoip2 && git checkout $NGX_GEOIP2_VER && cd - \
   && cd ngx_upstream_check && git checkout $NGX_UPSTREAM_CHECK_VER && patch -d ../nginx-${NGINX_VER} -p1 < check_1.30.0+.patch && cd - \
   && cd ngx_subs_filter && git checkout $NGX_SUBS_FILTER_VER && cd - \
-  && cd ngx_google_filter && git checkout $NGX_GOOGLE_FILTER_VER && cd - \
   && cd nginx-${NGINX_VER} \
   && ./configure \
       --prefix=/etc/nginx \
@@ -47,14 +44,11 @@ RUN apk add --no-cache --virtual .build-deps \
       --group=nginx \
       --with-file-aio \
       --with-threads \
-      --with-http_addition_module \
       --with-http_auth_request_module \
-      --with-http_dav_module \
-      --with-http_flv_module \
-      --with-http_mp4_module \
       --with-http_gunzip_module \
       --with-http_gzip_static_module \
-      --with-http_random_index_module \
+      --with-http_dav_module \
+      --with-http_mp4_module \
       --with-http_realip_module \
       --with-http_secure_link_module \
       --with-http_slice_module \
@@ -74,20 +68,17 @@ RUN apk add --no-cache --virtual .build-deps \
       --add-dynamic-module=/ngx_geoip2 \
       --add-dynamic-module=/ngx_upstream_check \
       --add-dynamic-module=/ngx_subs_filter \
-      --add-dynamic-module=/ngx_google_filter \
   && make -j$(nproc) \
   && make install \
   && cd - \
-  && rm -r nginx-${NGINX_VER} ngx_brotli ngx_geoip2 ngx_upstream_check ngx_subs_filter ngx_google_filter \
+  && rm -r nginx-${NGINX_VER} ngx_brotli ngx_geoip2 ngx_upstream_check ngx_subs_filter \
   && apk del .build-deps
 
 #
 # Runtime stage
 #
-FROM alpine:3.23
+FROM pexcn/docker-images:alpine
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
-
-RUN apk add --no-cache ca-certificates tzdata
 
 COPY --from=builder /etc/nginx/ /etc/nginx/
 COPY --from=builder /etc/nginx/html/ /usr/share/nginx/html/
