@@ -1,6 +1,6 @@
 services:
   codex2api:
-    image: ghcr.io/james-6-23/codex2api:2.7.2
+    image: ghcr.io/james-6-23/codex2api:2.9.6
     container_name: codex2api
     restart: unless-stopped
     network_mode: host
