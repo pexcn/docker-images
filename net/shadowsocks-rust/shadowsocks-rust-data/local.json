@@ -45,6 +45,8 @@
     "nofile": 1048576,
     "no_delay": true,
     "fast_open": true,
+    "printable_salt": true,
+    "tcp_popcount": true,
     //"mptcp": true,
 
     "balancer": {

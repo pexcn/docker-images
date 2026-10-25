@@ -10,10 +10,11 @@ FROM rust:alpine AS builder-ss
 RUN apk update \
   && apk add --no-cache --virtual .build-deps musl-dev git
 
-ARG SS_VERSION=v1.25.0
-RUN git clone https://github.com/shadowsocks/shadowsocks-rust.git --branch $SS_VERSION \
+ARG SS_VERSION=3a01e004d1ed1c63d1797e9a7a22d2974cd6f05c
+RUN git clone https://github.com/pexcn/shadowsocks-rust.git \
   && cd shadowsocks-rust \
-  && cargo build --release --features "full dns-over-h3 aead-cipher-extra aead-cipher-2022-extra" \
+  && git checkout $SS_VERSION \
+  && cargo build --locked --release --features "full dns-over-h3 aead-cipher-extra aead-cipher-2022-extra" \
   && install target/release/ssservice target/release/ssserver target/release/sslocal target/release/ssmanager target/release/ssurl /usr/local/bin/ \
   && cd - \
   && rm -r /shadowsocks-rust
