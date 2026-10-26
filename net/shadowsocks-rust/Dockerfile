@@ -10,7 +10,7 @@ FROM rust:alpine AS builder-ss
 RUN apk update \
   && apk add --no-cache --virtual .build-deps musl-dev git
 
-ARG SS_VERSION=68ef3089f6d091f62c65d4a1227ec7a2e2d1800f
+ARG SS_VERSION=ece8e8a243720bb7023fbaa50f4cd9e471e5645d
 RUN git clone https://github.com/pexcn/shadowsocks-rust.git \
   && cd shadowsocks-rust \
   && git checkout $SS_VERSION \
