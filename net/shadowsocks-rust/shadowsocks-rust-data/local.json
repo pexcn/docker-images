@@ -35,6 +35,14 @@
             "server_port": 1984,
             "password": "${SHADOWSOCKS_PASSWORD_2}",
             "method": "2022-blake3-chacha8-poly1305"
+        },
+        {
+            "server": "11.22.33.44",
+            "server_port": 17760,
+            "password": "${SHADOWSOCKS_PASSWORD_2}",
+            "method": "2022-blake3-aes-256-gcm",
+            "printable_salt": true,
+            "tcp_popcount": true
         }
     ],
 
@@ -45,8 +53,6 @@
     "nofile": 1048576,
     "no_delay": true,
     "fast_open": true,
-    "printable_salt": true,
-    "tcp_popcount": true,
     //"mptcp": true,
 
     "balancer": {

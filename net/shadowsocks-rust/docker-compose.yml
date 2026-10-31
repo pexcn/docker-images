@@ -7,8 +7,8 @@ services:
     environment:
       TZ: Asia/Taipei
       CHILLING_EFFECT: 0
-      SHADOWSOCKS_PASSWORD_1: password_1
-      SHADOWSOCKS_PASSWORD_2: password_2
+      SHADOWSOCKS_PASSWORD_1: N2PQebHit6euMt8fz4bdiA==
+      SHADOWSOCKS_PASSWORD_2: sU33FAAoy26JnJ4GT6QyjSJ0DvozZyKSH5IlQG3rKHo=
     volumes:
       - ./shadowsocks-rust-data:/etc/shadowsocks-rust
       #- ../../utils/acme.sh/acme.sh-data/example.com_ecc:/.acme.sh/example.com
@@ -22,8 +22,8 @@ services:
     environment:
       TZ: Asia/Taipei
       CHILLING_EFFECT: 0
-      SHADOWSOCKS_PASSWORD_1: password_1
-      SHADOWSOCKS_PASSWORD_2: password_2
+      SHADOWSOCKS_PASSWORD_1: N2PQebHit6euMt8fz4bdiA==
+      SHADOWSOCKS_PASSWORD_2: sU33FAAoy26JnJ4GT6QyjSJ0DvozZyKSH5IlQG3rKHo=
     volumes:
       - ./shadowsocks-rust-data:/etc/shadowsocks-rust
     command: ssservice local --user nobody --config /etc/shadowsocks-rust/local.json
