@@ -7,7 +7,7 @@
 #
 FROM rust:alpine AS builder
 
-ARG VERSION=44665da6d8b98913218743065f47d9b6dd397fe0
+ARG VERSION=ed015a40266feaa143ab531d57f923b076f88cbd
 RUN apk update \
   && apk add --no-cache --virtual .build-deps git musl-dev \
   && git clone https://github.com/docker-images-source/pcap2socks.git \
@@ -24,7 +24,7 @@ RUN apk update \
 #
 # Runtime stage
 #
-FROM alpine
+FROM pexcn/docker-images:alpine
 LABEL maintainer="pexcn <pexcn97@gmail.com>"
 
 COPY --from=builder /usr/local/bin/pcap2socks /usr/local/bin/
